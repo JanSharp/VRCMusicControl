@@ -6,6 +6,7 @@ Control music in VRChat maps using trigger zones.
 Features:
 
 - MusicArea - a trigger zone with an associated MusicDescriptor
+- A MusicArea can have multiple triggers on the one game object
 - Default music, while outside of MusicAreas
 - Local muting
 - Priority

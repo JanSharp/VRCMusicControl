@@ -10,17 +10,28 @@ namespace JanSharp
     {
         public MusicDescriptor musicForThisArea;
         private uint id;
+        private int triggerCount;
 
         public override void OnPlayerTriggerEnter(VRCPlayerApi player)
         {
             if (player.isLocal)
-                id = musicForThisArea.AddThisMusic();
+            {
+                triggerCount++;
+                if (triggerCount == 1)
+                    id = musicForThisArea.AddThisMusic();
+            }
         }
 
         public override void OnPlayerTriggerExit(VRCPlayerApi player)
         {
             if (player.isLocal)
-                musicForThisArea.Manager.RemoveMusic(id);
+            {
+                if (triggerCount == 0)
+                    return;
+                triggerCount--;
+                if (triggerCount == 0)
+                    musicForThisArea.Manager.RemoveMusic(id);
+            }
         }
     }
 }
