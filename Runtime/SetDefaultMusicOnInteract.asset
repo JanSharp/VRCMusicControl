@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c333ccfdd0cbdbc4ca30cef2dd6e6b9b, type: 3}
   m_Name: SetDefaultMusicOnInteract
   m_EditorClassIdentifier: 
-  serializedUdonProgramAsset: {fileID: 11400000, guid: 11c647e2ecf57499b95e915803003105,
+  serializedUdonProgramAsset: {fileID: 11400000, guid: 54975b89682c998c4972351da48ab026,
     type: 2}
   udonAssembly: 
   assemblyError: 
@@ -62,7 +62,7 @@ MonoBehaviour:
       Data: 3|System.RuntimeType, mscorlib
     - Name: 
       Entry: 1
-      Data: JanSharp.MusicDescriptor, Assembly-CSharp
+      Data: JanSharp.MusicDescriptor, com.jansharp.music-control
     - Name: 
       Entry: 8
       Data: 

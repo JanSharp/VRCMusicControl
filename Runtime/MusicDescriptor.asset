@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c333ccfdd0cbdbc4ca30cef2dd6e6b9b, type: 3}
   m_Name: MusicDescriptor
   m_EditorClassIdentifier: 
-  serializedUdonProgramAsset: {fileID: 11400000, guid: 9f2c8cf3d14a314ea93fee7794084f7a,
+  serializedUdonProgramAsset: {fileID: 11400000, guid: 24f448615fd8a6e8ab1e2a59e512fd16,
     type: 2}
   udonAssembly: 
   assemblyError: 
@@ -342,7 +342,7 @@ MonoBehaviour:
       Data: 19|System.RuntimeType, mscorlib
     - Name: 
       Entry: 1
-      Data: JanSharp.MusicManager, Assembly-CSharp
+      Data: JanSharp.MusicManager, com.jansharp.music-control
     - Name: 
       Entry: 8
       Data: 
