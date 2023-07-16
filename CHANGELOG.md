@@ -1,6 +1,20 @@
 
 # Changelog
 
+## [0.2.2] - 2023-07-16
+
+### Changed
+
+- Add support for MusicAreas with multiple triggers ([`b429565`](https://github.com/JanSharp/VRCMusicControl/commit/b4295655cc89e0257078f3ffc7a4765f7e365405))
+
+### Added
+
+- Add note about MusicAreas at spawn in readme ([`d75eb40`](https://github.com/JanSharp/VRCMusicControl/commit/d75eb40c39cf9706de123fb7347e2db24000aff6))
+
+### Fixed
+
+- **Breaking:** Fix asemdef still being called com.jansharp.dummy ([`99776cc`](https://github.com/JanSharp/VRCMusicControl/commit/99776cca808e950ed1480af0d34c7b69823b83ca))
+
 ## [0.2.1] - 2023-07-16
 
 _First version of this package that is in the VCC listing._
@@ -42,6 +56,7 @@ _First version of this package that is in the VCC listing._
 - Add concept of a music stack, used by trigger zones which change music ([`3c33f1d`](https://github.com/JanSharp/VRCMusicControl/commit/3c33f1d1b8cf1bc5da6cb86c8ca8d8fdebf58822), [`eb6ebd3`](https://github.com/JanSharp/VRCMusicControl/commit/eb6ebd399a66753a392cf45b57a4b6eda4267dd5), [`ec5a4c7`](https://github.com/JanSharp/VRCMusicControl/commit/ec5a4c762d25ae5e80ec96be3ada19906f506722), [`4211fe2`](https://github.com/JanSharp/VRCMusicControl/commit/4211fe2ad233802a516cb3560102a5c5a4721b84), [`b4707fb`](https://github.com/JanSharp/VRCMusicControl/commit/b4707fbeed41edfc805a1fd94c6d80befc1648f5), [`9f72b56`](https://github.com/JanSharp/VRCMusicControl/commit/9f72b56ece6257f22cd21710a65ababbcf5d360d))
 - Add script to change default music ([`c5f49d9`](https://github.com/JanSharp/VRCMusicControl/commit/c5f49d9a0fbd3eff0578b1d8afe69f0165c05c64))
 
+[0.2.2]: https://github.com/JanSharp/VRCMusicControl/releases/tag/v0.2.2
 [0.2.1]: https://github.com/JanSharp/VRCMusicControl/releases/tag/v0.2.1
 [0.2.0]: https://github.com/JanSharp/VRCMusicControl/releases/tag/MusicControl_v0.2.0
 [0.1.1]: https://github.com/JanSharp/VRCMusicControl/releases/tag/MusicControl_v0.1.1
