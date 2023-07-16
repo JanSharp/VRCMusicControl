@@ -16,6 +16,10 @@ Features:
 
 Note that a MusicArea at the spawn point of the world is not supported. Unless we do get the on player trigger enter event for a player joining inside of a trigger, which I'm quite certain we don't.
 
+# Installing
+
+Head to my [VCC Listing](https://jansharp.github.io/vrc/vcclisting.xhtml) and follow the instructions there.
+
 # Ideas
 
 - There's an incredibly high chance that I'll change MusicDescriptors to accept multiple AudioSources.
