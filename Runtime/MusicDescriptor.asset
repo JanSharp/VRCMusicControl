@@ -342,7 +342,7 @@ MonoBehaviour:
       Data: 19|System.RuntimeType, mscorlib
     - Name: 
       Entry: 1
-      Data: JanSharp.MusicManager, com.jansharp.music-control
+      Data: JanSharp.MusicManager, JanSharp.MusicControl
     - Name: 
       Entry: 8
       Data: 
