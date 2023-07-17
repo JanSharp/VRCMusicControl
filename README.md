@@ -3,7 +3,11 @@
 
 Control music in VRChat maps using trigger zones.
 
-Features:
+# Installing
+
+Head to my [VCC Listing](https://jansharp.github.io/vrc/vcclisting.xhtml) and follow the instructions there.
+
+# Features
 
 - MusicArea - a trigger zone with an associated MusicDescriptor
 - A MusicArea can have multiple triggers on the one game object
@@ -15,10 +19,6 @@ Features:
 - Changing the default music at runtime with an option to sync said change
 
 Note that a MusicArea at the spawn point of the world is not supported. Unless we do get the on player trigger enter event for a player joining inside of a trigger, which I'm quite certain we don't.
-
-# Installing
-
-Head to my [VCC Listing](https://jansharp.github.io/vrc/vcclisting.xhtml) and follow the instructions there.
 
 # Ideas
 
