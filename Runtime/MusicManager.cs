@@ -45,9 +45,9 @@ namespace JanSharp
         /// but instead it removes a specific descriptor that's closest to top. If it was at top, music switches to the new top.
         /// Default/Default also breaks the rules because it always lives at index 0, even if it is null or when it gets replaced.
         /// </summary>
-        private MusicDescriptor[] musicList;
-        private uint[] musicListIds;
-        private int musicListCount;
+        private MusicDescriptor[] musicList = new MusicDescriptor[8];
+        private uint[] musicListIds = new uint[8];
+        private int musicListCount = 0;
         private uint nextMusicId;
         private bool muted;
         public bool Muted
@@ -85,8 +85,6 @@ namespace JanSharp
             }
             for (int i = 0; i < descriptors.Length; i++)
                 descriptors[i].Init(this, i);
-            musicList = new MusicDescriptor[8];
-            musicListIds = new uint[8];
             musicListCount++;
             SetMusic(0, nextMusicId++, DefaultMusic);
             defaultMusicIndex = DefaultMusic.Index;
