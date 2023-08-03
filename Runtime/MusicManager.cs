@@ -1,4 +1,4 @@
-﻿using UdonSharp;
+using UdonSharp;
 using UnityEngine;
 using VRC.SDKBase;
 using VRC.Udon;
@@ -79,7 +79,8 @@ namespace JanSharp
         {
             if (descriptors == null || descriptors.Length == 0)
             {
-                Debug.LogWarning($"<dlt> {nameof(MusicManager)} {name} is missing {nameof(MusicDescriptor)}s.", this);
+                Debug.LogWarning($"[MusicControl] {nameof(MusicManager)} {name} "
+                    + $"is missing {nameof(MusicDescriptor)}s.", this);
                 return;
             }
             for (int i = 0; i < descriptors.Length; i++)
@@ -94,7 +95,7 @@ namespace JanSharp
             return descriptor == null ? -1 : descriptor.Index;
         }
 
-        // for convenience, specifically for hooking them up with GUI buttons
+        // For convenience, specifically for hooking them up with GUI buttons.
         public void ToggleMuteMusic() => Muted = !Muted;
         public void MuteMusic() => Muted = true;
         public void UnMuteMusic() => Muted = false;
@@ -140,7 +141,7 @@ namespace JanSharp
         {
             if (musicListCount == musicList.Length)
                 GrowMusicList();
-            // figure out where to put the music in the active list based on priority
+            // Figure out where to put the music in the active list based on priority.
             for (int i = (musicListCount++) - 1; i >= 0; i--)
             {
                 MusicDescriptor descriptor = musicList[i];
@@ -153,7 +154,7 @@ namespace JanSharp
                     SetMusic(i + 1, toAdd, priority, nextMusicId);
                     break;
                 }
-                // move items up as we go so we don't need a second loop
+                // Move items up as we go so we don't need a second loop.
                 musicList[i + 1] = descriptor;
                 musicListPriorities[i + 1] = otherPriority;
                 musicListIds[i + 1] = musicListIds[i];
@@ -179,7 +180,8 @@ namespace JanSharp
         {
             if (musicListCount == 0)
             {
-                Debug.LogWarning($"<dlt> Attempt to {nameof(RemoveMusic)} the id {id} when the music stack is completely empty.", this);
+                Debug.LogWarning($"[MusicControl] Attempt to {nameof(RemoveMusic)} the id {id} "
+                    + $"when the music list is completely empty.", this);
                 return;
             }
 
@@ -189,7 +191,7 @@ namespace JanSharp
             uint prevId = 0;
             for (int i = musicListCount; i >= 0; i--)
             {
-                // move down as we go so we don't need a second loop
+                // Move down as we go so we don't need a second loop.
                 MusicDescriptor currentDescriptor = musicList[i];
                 int currentPriority = musicListPriorities[i];
                 uint currentId = musicListIds[i];
@@ -207,9 +209,11 @@ namespace JanSharp
                 prevId = currentId;
             }
 
-            Debug.LogWarning($"<dlt> Attempt to {nameof(RemoveMusic)} the id {id} that is not in the music stack.", this);
+            Debug.LogWarning($"[MusicControl] Attempt to {nameof(RemoveMusic)} the id {id} "
+                + $"that is not in the music stack.", this);
 
-            // To gracefully handle the error, restore the lists, since the previous loop ultimately removed musicList[0].
+            // To gracefully handle the error, restore the lists,
+            // since the previous loop ultimately removed musicList[0].
             for (int i = musicListCount - 1; i >= 0; i--)
             {
                 musicList[i + 1] = musicList[i];

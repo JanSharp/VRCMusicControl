@@ -40,7 +40,8 @@ namespace JanSharp
             audioSource = GetComponent<AudioSource>();
             if (audioSource == null)
             {
-                Debug.LogError($"Music Descriptor {name} is missing an AudioSource component.", this);
+                Debug.LogError($"[MusicControl] {nameof(MusicDescriptor)} {name} "
+                    + $"is missing an AudioSource component.", this);
                 return;
             }
             maxVolume = audioSource.volume;
@@ -65,7 +66,7 @@ namespace JanSharp
         }
 
         /// <summary>
-        /// isn't actually public, but has to be because it is invoked by `SendCustomEventDelayedSeconds`
+        /// Isn't actually public, but has to be because it is invoked by `SendCustomEventDelayedSeconds`.
         /// </summary>
         public void FadeIn()
         {
@@ -98,7 +99,7 @@ namespace JanSharp
         }
 
         /// <summary>
-        /// isn't actually public, but has to be because it is invoked by `SendCustomEventDelayedSeconds`
+        /// Isn't actually public, but has to be because it is invoked by `SendCustomEventDelayedSeconds`.
         /// </summary>
         public void FadeOut()
         {
