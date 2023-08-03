@@ -8,7 +8,22 @@ namespace JanSharp
     [UdonBehaviourSyncMode(BehaviourSyncMode.None)]
     public class MusicArea : UdonSharpBehaviour
     {
-        public MusicDescriptor musicForThisArea;
+        [SerializeField] private MusicDescriptor musicForThisArea;
+        public MusicDescriptor MusicForThisArea
+        {
+            get => musicForThisArea;
+            set
+            {
+                if (value == musicForThisArea)
+                    return;
+                if (IsInArea)
+                    RemoveMusicFromManager();
+                musicForThisArea = value;
+                if (IsInArea)
+                    AddMusicToManager();
+            }
+        }
+
         [SerializeField] private bool useDefaultPriority = true;
         public bool UseDefaultPriority
         {
@@ -60,13 +75,13 @@ namespace JanSharp
         private void AddMusicToManager()
         {
             id = UseDefaultPriority
-                ? musicForThisArea.AddThisMusic()
-                : musicForThisArea.AddThisMusic(Priority);
+                ? MusicForThisArea.AddThisMusic()
+                : MusicForThisArea.AddThisMusic(Priority);
         }
 
         private void RemoveMusicFromManager()
         {
-            musicForThisArea.Manager.RemoveMusic(id);
+            MusicForThisArea.Manager.RemoveMusic(id);
         }
 
         private void UseUpdatedPriorityIfInArea()
