@@ -95,7 +95,7 @@ namespace JanSharp
         public void MuteMusic() => Muted = true;
         public void UnMuteMusic() => Muted = false;
 
-        private void SwitchMusic(MusicDescriptor toSwitchTo)
+        private void SetCurrentlyPlaying(MusicDescriptor toSwitchTo)
         {
             if (toSwitchTo == currentlyPlaying)
                 return;
@@ -108,7 +108,7 @@ namespace JanSharp
 
         private void SwitchToTop()
         {
-            SwitchMusic(musicList[musicListCount - 1]);
+            SetCurrentlyPlaying(musicList[musicListCount - 1]);
         }
 
         private void SetMusic(int index, uint id, MusicDescriptor toSet)
