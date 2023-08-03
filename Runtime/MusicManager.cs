@@ -1,4 +1,4 @@
-using UdonSharp;
+﻿using UdonSharp;
 using UnityEngine;
 using VRC.SDKBase;
 using VRC.Udon;
@@ -9,6 +9,7 @@ namespace JanSharp
     public class MusicManager : UdonSharpBehaviour
     {
         [SerializeField] private MusicDescriptor[] descriptors;
+        public MusicDescriptor[] Descriptors => descriptors;
         [Tooltip("Null is valid and means it's silent by default.")]
         [SerializeField] private MusicDescriptor defaultMusic;
         [SerializeField] private bool syncCurrentDefaultMusic = true;
