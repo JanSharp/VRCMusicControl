@@ -11,7 +11,7 @@ namespace JanSharp
         [SerializeField] private MusicDescriptor[] descriptors;
         [Tooltip("Null is valid and means it's silent by default.")]
         [SerializeField] private MusicDescriptor defaultMusic;
-        [SerializeField] private bool syncCurrentDefaultMusic;
+        [SerializeField] private bool syncCurrentDefaultMusic = true;
         public MusicDescriptor DefaultMusic
         {
             get => defaultMusic;
