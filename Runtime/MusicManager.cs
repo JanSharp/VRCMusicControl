@@ -1,4 +1,4 @@
-﻿using UdonSharp;
+using UdonSharp;
 using UnityEngine;
 using VRC.SDKBase;
 using VRC.Udon;
@@ -148,14 +148,11 @@ namespace JanSharp
 
         private void GrowMusicList()
         {
-            var Length = musicList.Length;
-            var newMusicList = new MusicDescriptor[Length * 2];
-            var newMusicListIds = new uint[Length * 2];
-            for (int i = 0; i < Length; i++)
-            {
-                newMusicList[i] = musicList[i];
-                newMusicListIds[i] = musicListIds[i];
-            }
+            var newLength = musicList.Length * 2;
+            var newMusicList = new MusicDescriptor[newLength];
+            var newMusicListIds = new uint[newLength];
+            musicList.CopyTo(newMusicList, 0);
+            musicListIds.CopyTo(newMusicListIds, 0);
             musicList = newMusicList;
             musicListIds = newMusicListIds;
         }
