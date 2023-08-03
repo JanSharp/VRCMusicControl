@@ -9,6 +9,7 @@ namespace JanSharp
     public class MusicManager : UdonSharpBehaviour
     {
         public MusicDescriptor[] descriptors;
+        [Tooltip("Null is valid and means it's silent by default.")]
         [SerializeField] private MusicDescriptor defaultMusic;
         [SerializeField] private bool syncCurrentDefaultMusic;
         public MusicDescriptor DefaultMusic
@@ -20,7 +21,7 @@ namespace JanSharp
                     return;
                 ReplaceMusic(0, value);
                 defaultMusic = value;
-                defaultMusicIndex = value.Index;
+                defaultMusicIndex = GetMusicDescriptorIndex(value);
                 if (syncCurrentDefaultMusic && !receivingData)
                 {
                     Networking.SetOwner(Networking.LocalPlayer, this.gameObject);
@@ -35,15 +36,14 @@ namespace JanSharp
         public override void OnDeserialization()
         {
             receivingData = true;
-            DefaultMusic = descriptors[defaultMusicIndex];
+            DefaultMusic = defaultMusicIndex == -1 ? null : descriptors[defaultMusicIndex];
             receivingData = false;
         }
 
         private MusicDescriptor currentlyPlaying;
         /// <summary>
-        /// This isn't actually truly a stack. The only real difference is that popping doesn't pop off the top of the stack
-        /// but instead it removes a specific descriptor that's closest to top. If it was at top, music switches to the new top.
-        /// Default/Default also breaks the rules because it always lives at index 0, even if it is null or when it gets replaced.
+        /// This isn't actually truly a stack. There's no push/pop, it inserts using priority and removes
+        /// based on an id obtained when inserting. Default music always lives at index 0, even when null.
         /// </summary>
         private MusicDescriptor[] musicList = new MusicDescriptor[8];
         private int[] musicListPriorities = new int[8];
@@ -82,16 +82,16 @@ namespace JanSharp
                 Debug.LogWarning($"<dlt> {nameof(MusicManager)} {name} is missing {nameof(MusicDescriptor)}s.", this);
                 return;
             }
-            if (DefaultMusic == null)
-            {
-                Debug.LogError($"<dlt> {nameof(MusicManager)} {name}'s default music is null. Use a {nameof(MusicDescriptor)} with the silence flag instead.", this);
-                return;
-            }
             for (int i = 0; i < descriptors.Length; i++)
                 descriptors[i].Init(this, i);
             musicListCount++;
             SetMusic(0, DefaultMusic, int.MinValue, nextMusicId++);
-            defaultMusicIndex = DefaultMusic.Index;
+            defaultMusicIndex = GetMusicDescriptorIndex(DefaultMusic);
+        }
+
+        private int GetMusicDescriptorIndex(MusicDescriptor descriptor)
+        {
+            return descriptor == null ? -1 : descriptor.Index;
         }
 
         // for convenience, specifically for hooking them up with GUI buttons
