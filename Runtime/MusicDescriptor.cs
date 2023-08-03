@@ -1,5 +1,6 @@
 ﻿using UdonSharp;
 using UnityEngine;
+using UnityEngine.Serialization;
 using VRC.SDKBase;
 using VRC.Udon;
 
@@ -11,13 +12,12 @@ namespace JanSharp
         public float fadeInSeconds;
         public float fadeOutSeconds;
         public float updateIntervalInSeconds = 0.1f;
-        [SerializeField]
-        private int priority;
-        public int Priority => priority;
+        [FormerlySerializedAs("priority")]
+        [SerializeField] private int defaultPriority;
+        public int DefaultPriority => defaultPriority;
 
-        [SerializeField]
-        [Tooltip(@"A music descriptor describing the absence of music. When true, other properties get ignored, except for priority.")]
-        private bool isSilenceDescriptor;
+        [Tooltip(@"A music descriptor describing the absence of music. When true, other properties get ignored, except for default priority.")]
+        [SerializeField] private bool isSilenceDescriptor;
         public bool IsSilenceDescriptor => isSilenceDescriptor;
 
         public MusicManager Manager { get; private set; }
@@ -48,6 +48,7 @@ namespace JanSharp
         }
 
         public uint AddThisMusic() => Manager.AddMusic(this);
+        public uint AddThisMusic(int priority) => Manager.AddMusic(this, priority);
         public void SetAsDefault() => Manager.DefaultMusic = this;
 
         public void Play()

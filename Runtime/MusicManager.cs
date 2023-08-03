@@ -1,4 +1,4 @@
-using UdonSharp;
+﻿using UdonSharp;
 using UnityEngine;
 using VRC.SDKBase;
 using VRC.Udon;
@@ -46,6 +46,7 @@ namespace JanSharp
         /// Default/Default also breaks the rules because it always lives at index 0, even if it is null or when it gets replaced.
         /// </summary>
         private MusicDescriptor[] musicList = new MusicDescriptor[8];
+        private int[] musicListPriorities = new int[8];
         private uint[] musicListIds = new uint[8];
         private int musicListCount = 0;
         private uint nextMusicId;
@@ -57,6 +58,9 @@ namespace JanSharp
             {
                 if (muted == value)
                     return;
+                // Even though there will always be some music descriptor always playing because default music
+                // must not be null, another script running Start before this script would set Muted to true,
+                // in which case currentlyPlaying is still null.
                 if (muted)
                 {
                     if (currentlyPlaying != null)
@@ -86,7 +90,7 @@ namespace JanSharp
             for (int i = 0; i < descriptors.Length; i++)
                 descriptors[i].Init(this, i);
             musicListCount++;
-            SetMusic(0, nextMusicId++, DefaultMusic);
+            SetMusic(0, DefaultMusic, int.MinValue, nextMusicId++);
             defaultMusicIndex = DefaultMusic.Index;
         }
 
@@ -111,18 +115,28 @@ namespace JanSharp
             SetCurrentlyPlaying(musicList[musicListCount - 1]);
         }
 
-        private void SetMusic(int index, uint id, MusicDescriptor toSet)
+        private void SetMusic(int index, MusicDescriptor toSet, int priority, uint id)
         {
             musicList[index] = toSet;
+            musicListPriorities[index] = priority;
             musicListIds[index] = id;
             if (index == musicListCount - 1)
                 SwitchToTop();
         }
 
         /// <summary>
-        /// Returns an id used by `RemoveMusic` to remove the descriptor from the music list again
+        /// <para>Returns an id used by `RemoveMusic` to remove the descriptor from the music list again.</para>
+        /// <para>Uses the default priority of the given music descriptor.</para>
         /// </summary>
         public uint AddMusic(MusicDescriptor toAdd)
+        {
+            return AddMusic(toAdd, toAdd.DefaultPriority);
+        }
+
+        /// <summary>
+        /// Returns an id used by `RemoveMusic` to remove the descriptor from the music list again.
+        /// </summary>
+        public uint AddMusic(MusicDescriptor toAdd, int priority)
         {
             if (musicListCount == musicList.Length)
                 GrowMusicList();
@@ -130,15 +144,18 @@ namespace JanSharp
             for (int i = (musicListCount++) - 1; i >= 0; i--)
             {
                 var descriptor = musicList[i];
-                // on priority collision the last one added "wins"
-                // 0 is always the default music, so upon reaching index 0, set the music to be at index 1.
-                if (toAdd.Priority >= descriptor.Priority || i == 0)
+                var otherPriority = musicListPriorities[i];
+                // On priority collision the last one added "wins".
+                // Since default music uses int.MinValue, this condition is guaranteed to be true
+                // if i reaches 0, in which case index 1 is used, just above default music.
+                if (priority >= otherPriority)
                 {
-                    SetMusic(i + 1, nextMusicId, toAdd);
+                    SetMusic(i + 1, toAdd, priority, nextMusicId);
                     break;
                 }
                 // move items up as we go so we don't need a second loop
                 musicList[i + 1] = descriptor;
+                musicListPriorities[i + 1] = otherPriority;
                 musicListIds[i + 1] = musicListIds[i];
             }
             return nextMusicId++;
@@ -148,10 +165,13 @@ namespace JanSharp
         {
             var newLength = musicList.Length * 2;
             var newMusicList = new MusicDescriptor[newLength];
+            var newMusicListPriorities = new int[newLength];
             var newMusicListIds = new uint[newLength];
             musicList.CopyTo(newMusicList, 0);
+            musicListPriorities.CopyTo(newMusicListPriorities, 0);
             musicListIds.CopyTo(newMusicListIds, 0);
             musicList = newMusicList;
+            musicListPriorities = newMusicListPriorities;
             musicListIds = newMusicListIds;
         }
 
@@ -165,13 +185,16 @@ namespace JanSharp
 
             musicListCount--;
             MusicDescriptor prevDescriptor = null;
+            int prevPriority = 0;
             uint prevId = 0;
             for (int i = musicListCount; i >= 0; i--)
             {
                 // move down as we go so we don't need a second loop
                 var currentDescriptor = musicList[i];
+                var currentPriority = musicListPriorities[i];
                 var currentId = musicListIds[i];
                 musicList[i] = prevDescriptor;
+                musicListPriorities[i] = prevPriority;
                 musicListIds[i] = prevId;
                 if (currentId == id)
                 {
@@ -180,6 +203,7 @@ namespace JanSharp
                     return;
                 }
                 prevDescriptor = currentDescriptor;
+                prevPriority = currentPriority;
                 prevId = currentId;
             }
 
@@ -189,9 +213,11 @@ namespace JanSharp
             for (int i = musicListCount - 1; i >= 0; i--)
             {
                 musicList[i + 1] = musicList[i];
+                musicListPriorities[i + 1] = musicListPriorities[i];
                 musicListIds[i + 1] = musicListIds[i];
             }
             musicList[0] = prevDescriptor;
+            musicListPriorities[0] = prevPriority;
             musicListIds[0] = prevId;
             musicListCount++;
         }

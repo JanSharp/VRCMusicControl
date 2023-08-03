@@ -9,6 +9,8 @@ namespace JanSharp
     public class MusicArea : UdonSharpBehaviour
     {
         public MusicDescriptor musicForThisArea;
+        public bool useDefaultPriority = true;
+        public int priority = 0;
         private uint id;
         private int triggerCount;
 
@@ -18,7 +20,10 @@ namespace JanSharp
             {
                 triggerCount++;
                 if (triggerCount == 1)
-                    id = musicForThisArea.AddThisMusic();
+                    if (useDefaultPriority)
+                        id = musicForThisArea.AddThisMusic();
+                    else
+                        id = musicForThisArea.AddThisMusic(priority);
             }
         }
 
