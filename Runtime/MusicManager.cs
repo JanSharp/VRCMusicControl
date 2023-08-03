@@ -1,4 +1,4 @@
-﻿using UdonSharp;
+using UdonSharp;
 using UnityEngine;
 using VRC.SDKBase;
 using VRC.Udon;
@@ -29,8 +29,7 @@ namespace JanSharp
                 }
             }
         }
-        [UdonSynced]
-        private int defaultMusicIndex;
+        [UdonSynced] private int defaultMusicIndex;
         private bool receivingData;
 
         public override void OnDeserialization()
