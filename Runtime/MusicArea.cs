@@ -9,20 +9,43 @@ namespace JanSharp
     public class MusicArea : UdonSharpBehaviour
     {
         public MusicDescriptor musicForThisArea;
-        public bool useDefaultPriority = true;
-        public int priority = 0;
+        [SerializeField] private bool useDefaultPriority = true;
+        public bool UseDefaultPriority
+        {
+            get => useDefaultPriority;
+            set
+            {
+                if (value == useDefaultPriority)
+                    return;
+                useDefaultPriority = value;
+                UseUpdatedPriorityIfInArea();
+            }
+        }
+
+        [SerializeField] private int priority = 0;
+        public int Priority
+        {
+            get => priority;
+            set
+            {
+                if (value == priority)
+                    return;
+                priority = value;
+                UseUpdatedPriorityIfInArea();
+            }
+        }
+
         private uint id;
         // To support having multiple trigger colliders on one object, as the enter and exit events get fired
         // for each collider on the object, so this keeps track of how many colliders the player is in.
         private int triggerCount;
+        private bool IsInArea => triggerCount != 0;
 
         public override void OnPlayerTriggerEnter(VRCPlayerApi player)
         {
             if (!player.isLocal || (++triggerCount) > 1)
                 return;
-            id = useDefaultPriority
-                ? musicForThisArea.AddThisMusic()
-                : musicForThisArea.AddThisMusic(priority);
+            AddMusicToManager();
         }
 
         public override void OnPlayerTriggerExit(VRCPlayerApi player)
@@ -31,7 +54,27 @@ namespace JanSharp
             // spawn point of the world. It still has undefined behaviour when doing that though.
             if (!player.isLocal || triggerCount == 0 || (--triggerCount) > 0)
                 return;
+            RemoveMusicFromManager();
+        }
+
+        private void AddMusicToManager()
+        {
+            id = UseDefaultPriority
+                ? musicForThisArea.AddThisMusic()
+                : musicForThisArea.AddThisMusic(Priority);
+        }
+
+        private void RemoveMusicFromManager()
+        {
             musicForThisArea.Manager.RemoveMusic(id);
+        }
+
+        private void UseUpdatedPriorityIfInArea()
+        {
+            if (!IsInArea)
+                return;
+            RemoveMusicFromManager();
+            AddMusicToManager();
         }
     }
 }
