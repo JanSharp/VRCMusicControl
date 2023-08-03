@@ -143,8 +143,8 @@ namespace JanSharp
             // figure out where to put the music in the active list based on priority
             for (int i = (musicListCount++) - 1; i >= 0; i--)
             {
-                var descriptor = musicList[i];
-                var otherPriority = musicListPriorities[i];
+                MusicDescriptor descriptor = musicList[i];
+                int otherPriority = musicListPriorities[i];
                 // On priority collision the last one added "wins".
                 // Since default music uses int.MinValue, this condition is guaranteed to be true
                 // if i reaches 0, in which case index 1 is used, just above default music.
@@ -163,10 +163,10 @@ namespace JanSharp
 
         private void GrowMusicList()
         {
-            var newLength = musicList.Length * 2;
-            var newMusicList = new MusicDescriptor[newLength];
-            var newMusicListPriorities = new int[newLength];
-            var newMusicListIds = new uint[newLength];
+            int newLength = musicList.Length * 2;
+            MusicDescriptor[] newMusicList = new MusicDescriptor[newLength];
+            int[] newMusicListPriorities = new int[newLength];
+            uint[] newMusicListIds = new uint[newLength];
             musicList.CopyTo(newMusicList, 0);
             musicListPriorities.CopyTo(newMusicListPriorities, 0);
             musicListIds.CopyTo(newMusicListIds, 0);
@@ -190,9 +190,9 @@ namespace JanSharp
             for (int i = musicListCount; i >= 0; i--)
             {
                 // move down as we go so we don't need a second loop
-                var currentDescriptor = musicList[i];
-                var currentPriority = musicListPriorities[i];
-                var currentId = musicListIds[i];
+                MusicDescriptor currentDescriptor = musicList[i];
+                int currentPriority = musicListPriorities[i];
+                uint currentId = musicListIds[i];
                 musicList[i] = prevDescriptor;
                 musicListPriorities[i] = prevPriority;
                 musicListIds[i] = prevId;
