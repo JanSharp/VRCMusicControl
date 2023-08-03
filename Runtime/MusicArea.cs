@@ -8,12 +8,19 @@ namespace JanSharp
     [UdonBehaviourSyncMode(BehaviourSyncMode.Manual)]
     public class MusicArea : UdonSharpBehaviour
     {
+        [Tooltip("Must never be null.")]
         [SerializeField] private MusicDescriptor musicForThisArea;
         public MusicDescriptor MusicForThisArea
         {
             get => musicForThisArea;
             set
             {
+                if (value == null)
+                {
+                    Debug.LogError($"[MusicControl] Attempt to set {nameof(MusicForThisArea)} for "
+                        + $"{nameof(MusicArea)} {name} to null. It must never be null, ignoring.");
+                    return;
+                }
                 if (value == musicForThisArea)
                     return;
                 if (value.Manager != Manager)
@@ -33,6 +40,7 @@ namespace JanSharp
         }
         public MusicManager Manager => musicForThisArea.Manager;
 
+        [Tooltip("When true, the Default Priority from the Music Descriptor is used, otherwise the priority defined below is used.")]
         [SerializeField] private bool useDefaultPriority = true;
         public bool UseDefaultPriority
         {
@@ -47,6 +55,7 @@ namespace JanSharp
             }
         }
 
+        [Tooltip("Only used if 'Use Default Priority' is false.")]
         [SerializeField] private int priority = 0;
         public int Priority
         {
@@ -61,7 +70,7 @@ namespace JanSharp
             }
         }
 
-        [Tooltip("This setting does not affect the network impact of this script when music and priority are never changed at runtime.")]
+        // The tooltip for this field is in the MusicAreaEditor file.
         [SerializeField] private bool syncCurrentMusicAndPriority = true;
         private bool receivingData;
 
