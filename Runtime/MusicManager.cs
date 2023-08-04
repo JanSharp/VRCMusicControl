@@ -24,6 +24,9 @@ namespace JanSharp
         [Space(8f, order = 1)]
         [Tooltip("Music played when nothing else is playing, priority is not used for this. Null is valid and means it's silent by default.")]
         [SerializeField] private MusicDescriptor defaultMusic;
+        [Tooltip("When true, the current default music is synced whenever it is changed on any "
+            + "client. This setting does not affect the network impact of this script when the values "
+            + "are never changed at runtime.")]
         [SerializeField] private bool syncCurrentDefaultMusic = true;
         public MusicDescriptor DefaultMusic
         {
