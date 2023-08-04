@@ -15,9 +15,15 @@ namespace JanSharp
         Pause,
     }
 
-    [UdonBehaviourSyncMode(BehaviourSyncMode.None)]
+    #if !AdvancedMusicManager
+    [UdonBehaviourSyncMode(BehaviourSyncMode.Manual)]
+    #endif
     public class MusicDescriptor : UdonSharpBehaviour
     {
+        #if AdvancedMusicManager
+        [Header("The sync mode must either be Manual or None.", order = 0)]
+        [Space(16f, order = 1)]
+        #endif
         [Tooltip(@"A music descriptor describing the absence of music. When true, other properties get ignored, except for default priority.")]
         [SerializeField] private bool isSilenceDescriptor;
         public bool IsSilenceDescriptor => isSilenceDescriptor;
@@ -31,8 +37,11 @@ namespace JanSharp
             get => fadeInSeconds;
             set
             {
+                if (value == fadeInSeconds)
+                    return;
                 fadeInSeconds = value;
                 fadeInInterval = CalculateUpdateInterval(fadeInInterval);
+                CheckSync();
             }
         }
         public float FadeOutSeconds
@@ -40,8 +49,11 @@ namespace JanSharp
             get => fadeOutSeconds;
             set
             {
+                if (value == fadeOutSeconds)
+                    return;
                 fadeOutSeconds = value;
                 fadeOutInterval = CalculateUpdateInterval(fadeOutInterval);
+                CheckSync();
             }
         }
         [FormerlySerializedAs("priority")]
@@ -59,7 +71,21 @@ namespace JanSharp
         public MusicStartType StartType => startType;
 
         [Tooltip("When true, the below fade in seconds are used the very first time this music is played.")]
-        [SerializeField] private bool useDifferentFadeForFirstPlay = false;
+        [SerializeField] [UdonSynced] private bool useDifferentFadeForFirstPlay = false;
+        public bool UseDifferentFadeForFirstPlay
+        {
+            get => useDifferentFadeForFirstPlay;
+            set
+            {
+                if (value == useDifferentFadeForFirstPlay)
+                    return;
+                useDifferentFadeForFirstPlay = value;
+                // Does not require special handling when syncing and deserializing because this setting does
+                // nothing besides saving the value and checking for sync, which doesn't happen anyway when
+                // receiving data.
+                CheckSync();
+            }
+        }
         [Tooltip("Likely makes sense to use with 'Global Time Since First Play' or 'Pause'.")]
         [SerializeField] private float firstFadeInSeconds = 0.5f;
         [HideInInspector] [SerializeField] private float firstFadeInInterval;
@@ -68,17 +94,27 @@ namespace JanSharp
             get => firstFadeInSeconds;
             set
             {
+                if (value == firstFadeInSeconds)
+                    return;
                 firstFadeInSeconds = value;
                 CalculateUpdateInterval(firstFadeInSeconds);
+                CheckSync();
             }
         }
 
-        private float CurrentFadeInSeconds => useDifferentFadeForFirstPlay && isFirstPlay
+        private float CurrentFadeInSeconds => UseDifferentFadeForFirstPlay && isFirstPlay
             ? FirstFadeInSeconds
             : FadeInSeconds;
-        private float CurrentFadeInInterval => useDifferentFadeForFirstPlay && isFirstPlay
+        private float CurrentFadeInInterval => UseDifferentFadeForFirstPlay && isFirstPlay
             ? firstFadeInInterval
             : fadeInInterval;
+
+        [Tooltip("When true, all 4 values related to fading are synced whenever they are changed on any "
+            + "client. This setting does not affect the network impact of this script when the values "
+            + "are never changed at runtime.")]
+        [SerializeField] private bool syncFadeValues = true;
+        [UdonSynced] private Vector3 syncedFadeSeconds;
+        private bool receivingData;
 
         [HideInInspector] [SerializeField] private MusicManager manager;
         [HideInInspector] [SerializeField] private int index;
@@ -116,6 +152,27 @@ namespace JanSharp
                 waitingOnGlobalTimeSync = false;
                 Play();
             }
+        }
+
+        private void CheckSync()
+        {
+            if (!syncFadeValues || receivingData)
+                return;
+            syncedFadeSeconds.x = FadeInSeconds;
+            syncedFadeSeconds.y = FadeOutSeconds;
+            syncedFadeSeconds.z = FirstFadeInSeconds;
+            Networking.SetOwner(Networking.LocalPlayer, this.gameObject);
+            RequestSerialization();
+        }
+
+        public override void OnDeserialization()
+        {
+            // Only one MusicDescriptor can be on an object, no special handling that's in MusicArea.
+            receivingData = true;
+            FadeInSeconds = syncedFadeSeconds.x;
+            FadeOutSeconds = syncedFadeSeconds.y;
+            FirstFadeInSeconds = syncedFadeSeconds.z;
+            receivingData = false;
         }
 
         public uint AddThisMusic() => Manager.AddMusic(this);
