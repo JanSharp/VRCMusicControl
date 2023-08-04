@@ -38,7 +38,7 @@ namespace JanSharp
                 CheckSync();
             }
         }
-        public MusicManager Manager => musicForThisArea.Manager;
+        public MusicManager Manager => MusicForThisArea.Manager;
 
         [Tooltip("When true, the Default Priority from the Music Descriptor is used, otherwise the priority defined below is used.")]
         [SerializeField] private bool useDefaultPriority = true;
