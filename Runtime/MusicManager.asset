@@ -188,7 +188,8 @@ MonoBehaviour:
       Data: 14|UnityEngine.TooltipAttribute, UnityEngine.CoreModule
     - Name: tooltip
       Entry: 1
-      Data: Null is valid and means it's silent by default.
+      Data: Music played when nothing else is playing, priority is not used for this.
+        Null is valid and means it's silent by default.
     - Name: 
       Entry: 8
       Data: 

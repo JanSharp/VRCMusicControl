@@ -73,8 +73,8 @@ namespace JanSharp
         }
 
         private float CurrentFadeInSeconds => useDifferentFadeForFirstPlay && isFirstPlay
-            ? firstFadeInSeconds
-            : fadeInSeconds;
+            ? FirstFadeInSeconds
+            : FadeInSeconds;
         private float CurrentFadeInInterval => useDifferentFadeForFirstPlay && isFirstPlay
             ? firstFadeInInterval
             : fadeInInterval;
@@ -196,7 +196,7 @@ namespace JanSharp
             if (!fadingOut)
                 return;
             float currentVolume = audioSource.volume;
-            float volumePerSecond = maxVolume / fadeOutSeconds;
+            float volumePerSecond = maxVolume / FadeOutSeconds;
             float currentTime = Time.time;
             float deltaTime = currentTime - lastFadeOutTime;
             lastFadeOutTime = currentTime;
