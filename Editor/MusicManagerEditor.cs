@@ -68,6 +68,14 @@ namespace JanSharp
                 descriptorProxy.ApplyModifiedProperties();
             }
 
+            if (musicManager.DefaultMusic != null
+                && !musicManager.Descriptors.Contains(musicManager.DefaultMusic))
+            {
+                Debug.LogError($"[MusicControl] {nameof(MusicManager)}'s Default Music must be managed by "
+                    + $"this music manager, aka it must be a child of it.", musicManager);
+                return false;
+            }
+
             return true;
         }
     }
