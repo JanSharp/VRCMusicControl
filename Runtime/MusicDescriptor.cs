@@ -6,13 +6,34 @@ using VRC.Udon;
 
 namespace JanSharp
 {
+    public enum MusicStartType
+    {
+        GlobalTimeSinceFirstPlay,
+        GlobalTimeSinceWorldStart,
+        GlobalTimeSinceWorldStartSynced,
+        Restart,
+        Pause,
+    }
+
     [UdonBehaviourSyncMode(BehaviourSyncMode.None)]
     public class MusicDescriptor : UdonSharpBehaviour
     {
-        [SerializeField] private float fadeInSeconds;
-        [SerializeField] private float fadeOutSeconds;
+        [Tooltip("Only used when Music Start Type is 'Global Time Since First Play' or 'Pause'.")]
+        [SerializeField] private float firstFadeInSeconds = 0.5f;
+        [SerializeField] private float fadeInSeconds = 1f;
+        [SerializeField] private float fadeOutSeconds = 1f;
+        private float firstFadeInInterval;
         private float fadeInInterval;
         private float fadeOutInterval;
+        public float FirstFadeInSeconds
+        {
+            get => firstFadeInSeconds;
+            set
+            {
+                firstFadeInSeconds = value;
+                CalculateUpdateInterval(firstFadeInSeconds);
+            }
+        }
         public float FadeInSeconds
         {
             get => fadeInSeconds;
@@ -39,6 +60,15 @@ namespace JanSharp
         [SerializeField] private bool isSilenceDescriptor;
         public bool IsSilenceDescriptor => isSilenceDescriptor;
 
+        [Tooltip(
+@"When starting to play this music, where in the audio clip should it start?
+- Global Time Since First Play: It starts that the beginning of the clip the very first time, after that it calculates at which timestamp music would be if it kept running constantly.
+- Global Time Since World Start: The same as GlobalTimeSinceFirstPlay the very first time doesn't get special handling, it instead pretends the music started at world start.
+- Global Time Since World Start Synced: The same as GlobalTimeSinceWorldStart, but it uses a synced world start time, which ultimately means the music will be truly the same for everyone whenever this music is  playing.
+- Restart: It'll restart at the beginning of the clip every time it starts playing, unless it was still fading out.
+- Pause: It starts the the beginning of the clip the very first time, after that whenever it stops it remembers where it stopped and picks back up from there.")]
+        [SerializeField] private MusicStartType musicStartType = MusicStartType.GlobalTimeSinceFirstPlay;
+
         public MusicManager Manager { get; private set; }
         public int Index { get; private set; }
         private AudioSource audioSource;
@@ -49,6 +79,12 @@ namespace JanSharp
         private bool fadingOut;
 
         private bool isPlaying;
+        private bool waitingOnGlobalTimeSync;
+        public bool IsPlaying => isPlaying || waitingOnGlobalTimeSync;
+
+        private float pausedTime = 0f;
+        private float globalTimeStart;
+        private bool isFirstPlay;
 
         private float CalculateUpdateInterval(float fadeSeconds)
         {
@@ -73,8 +109,21 @@ namespace JanSharp
             }
             maxVolume = audioSource.volume;
             audioSource.volume = 0;
+            firstFadeInInterval = CalculateUpdateInterval(FirstFadeInSeconds);
             fadeInInterval = CalculateUpdateInterval(FadeInSeconds);
             fadeOutInterval = CalculateUpdateInterval(FadeOutSeconds);
+            isFirstPlay = musicStartType == MusicStartType.GlobalTimeSinceFirstPlay
+                || musicStartType == MusicStartType.Pause;
+        }
+
+        public void ReceivedGlobalStartTime()
+        {
+            globalTimeStart = -(Time.time + Manager.GlobalStartTimeOffset);
+            if (waitingOnGlobalTimeSync)
+            {
+                waitingOnGlobalTimeSync = false;
+                Play();
+            }
         }
 
         public uint AddThisMusic() => Manager.AddMusic(this);
@@ -83,14 +132,28 @@ namespace JanSharp
 
         public void Play()
         {
+            if (musicStartType == MusicStartType.GlobalTimeSinceWorldStartSynced
+                && !Manager.HasReceivedGlobalStartTime)
+            {
+                waitingOnGlobalTimeSync = true;
+                return;
+            }
             if (isSilenceDescriptor)
                 return;
             if (!isPlaying)
+            {
+                if (isFirstPlay && musicStartType == MusicStartType.GlobalTimeSinceFirstPlay)
+                    globalTimeStart = Time.time;
                 audioSource.Play();
+                if (musicStartType == MusicStartType.Pause)
+                    audioSource.time = pausedTime;
+                else if (musicStartType != MusicStartType.Restart)
+                    audioSource.time = (Time.time - globalTimeStart) % audioSource.clip.length;
+            }
             isPlaying = true;
             fadingIn = true;
             fadingOut = false;
-            lastFadeInTime = Time.time - fadeInInterval;
+            lastFadeInTime = Time.time - (isFirstPlay ? firstFadeInInterval : fadeInInterval);
             FadeIn();
         }
 
@@ -102,7 +165,7 @@ namespace JanSharp
             if (!fadingIn)
                 return;
             float currentVolume = audioSource.volume;
-            float volumePerSecond = maxVolume / fadeInSeconds;
+            float volumePerSecond = maxVolume / (isFirstPlay ? firstFadeInSeconds : fadeInSeconds);
             float currentTime = Time.time;
             float deltaTime = currentTime - lastFadeInTime;
             lastFadeInTime = currentTime;
@@ -114,16 +177,22 @@ namespace JanSharp
                 fadingIn = false;
                 return;
             }
-            SendCustomEventDelayedSeconds(nameof(FadeIn), fadeInInterval);
+            SendCustomEventDelayedSeconds(nameof(FadeIn), isFirstPlay ? firstFadeInInterval : fadeInInterval);
         }
 
         public void Stop()
         {
+            if (waitingOnGlobalTimeSync)
+            {
+                waitingOnGlobalTimeSync = false;
+                return;
+            }
             if (isSilenceDescriptor || !isPlaying)
                 return;
             fadingIn = false;
             fadingOut = true;
             lastFadeOutTime = Time.time - fadeOutInterval;
+            isFirstPlay = false;
             FadeOut();
         }
 
@@ -145,6 +214,8 @@ namespace JanSharp
             if (currentVolume == 0)
             {
                 fadingOut = false;
+                if (musicStartType == MusicStartType.Pause)
+                    pausedTime = audioSource.time;
                 audioSource.Stop();
                 isPlaying = false;
                 return;

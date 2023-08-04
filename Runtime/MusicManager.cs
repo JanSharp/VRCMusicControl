@@ -2,6 +2,7 @@
 using UnityEngine;
 using VRC.SDKBase;
 using VRC.Udon;
+using VRC.Udon.Common;
 
 namespace JanSharp
 {
@@ -31,13 +32,31 @@ namespace JanSharp
             }
         }
         [UdonSynced] private int defaultMusicIndex;
+        [UdonSynced] private float syncedGlobalStartTime;
+        public float GlobalStartTimeOffset { get; private set; } = float.NaN;
+        public bool HasReceivedGlobalStartTime => !float.IsNaN(GlobalStartTimeOffset);
         private bool receivingData;
 
-        public override void OnDeserialization()
+        public override void OnPreSerialization()
         {
-            receivingData = true;
-            DefaultMusic = defaultMusicIndex == -1 ? null : descriptors[defaultMusicIndex];
-            receivingData = false;
+            syncedGlobalStartTime = Time.time + GlobalStartTimeOffset;
+        }
+
+        public override void OnDeserialization(DeserializationResult result)
+        {
+            if (syncCurrentDefaultMusic)
+            {
+                receivingData = true;
+                DefaultMusic = defaultMusicIndex == -1 ? null : descriptors[defaultMusicIndex];
+                receivingData = false;
+            }
+
+            if (float.IsNaN(GlobalStartTimeOffset))
+            {
+                syncedGlobalStartTime += result.receiveTime - result.sendTime;
+                GlobalStartTimeOffset = syncedGlobalStartTime - Time.time;
+                ReceivedGlobalStartTime();
+            }
         }
 
         private MusicDescriptor currentlyPlaying;
@@ -85,9 +104,42 @@ namespace JanSharp
             }
             for (int i = 0; i < descriptors.Length; i++)
                 descriptors[i].Init(this, i);
+
+            if (Networking.LocalPlayer.isMaster)
+            {
+                GlobalStartTimeOffset = -Time.time;
+                ReceivedGlobalStartTime();
+                RequestSerialization();
+            }
+            else
+                SendCustomEventDelayedSeconds(nameof(GlobalStartTimeFallback), 15f);
+
             musicListCount++;
             SetMusic(0, DefaultMusic, int.MinValue, nextMusicId++);
             defaultMusicIndex = GetMusicDescriptorIndex(DefaultMusic);
+        }
+
+        private void GlobalStartTimeFallback()
+        {
+            if (HasReceivedGlobalStartTime)
+                return;
+            // Just in case we just don't receive the synced time, set it to the current time and inform all
+            // scripts, that way music is guaranteed to play, be it different for this player.
+            GlobalStartTimeOffset = -Time.time;
+            ReceivedGlobalStartTime();
+        }
+
+        public override void OnOwnershipTransferred(VRCPlayerApi player)
+        {
+            // Make sure new players receive the proper synced value.
+            if (player.isLocal)
+                RequestSerialization();
+        }
+
+        private void ReceivedGlobalStartTime()
+        {
+            foreach (MusicDescriptor descriptor in descriptors)
+                descriptor.ReceivedGlobalStartTime();
         }
 
         private int GetMusicDescriptorIndex(MusicDescriptor descriptor)
