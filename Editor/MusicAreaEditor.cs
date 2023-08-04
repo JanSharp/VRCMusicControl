@@ -9,6 +9,24 @@ using System.Collections.Generic;
 
 namespace JanSharp
 {
+    [InitializeOnLoad]
+    public static class MusicAreaOnBuild
+    {
+        static MusicAreaOnBuild() => JanSharp.OnBuildUtil.RegisterType<MusicArea>(OnBuild);
+
+        private static bool OnBuild(MusicArea musicArea)
+        {
+            if (musicArea.MusicForThisArea == null)
+            {
+                Debug.LogError($"[MusicControl] {nameof(MusicArea)} {musicArea.name} "
+                    + $"must have a non null Music For This Area.", musicArea);
+                return false;
+            }
+
+            return true;
+        }
+    }
+
     [CanEditMultipleObjects]
     [CustomEditor(typeof(MusicArea))]
     public class MusicAreaEditor : Editor
