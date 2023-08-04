@@ -1,7 +1,7 @@
 
 # Music Control
 
-Control music in VRChat maps using trigger zones.
+Control music and ambiance in VRChat maps using trigger zones and more. Supports fading, priority, muting, global timing, etc.
 
 # Installing
 

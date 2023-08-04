@@ -1,7 +1,7 @@
 {
   "name": "com.jansharp.music-control",
   "version": "0.2.4",
-  "description": "Control music with music areas, fading in and out and local muting.",
+  "description": "Control music and ambiance using trigger zones and more. Supports fading, priority, muting, global timing, etc.",
   "displayName": "Music Control",
   "unity": "2019.4",
   "author": {
