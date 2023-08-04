@@ -5,9 +5,15 @@ using VRC.Udon;
 
 namespace JanSharp
 {
+    #if !AdvancedMusicManager
     [UdonBehaviourSyncMode(BehaviourSyncMode.Manual)]
+    #endif
     public class MusicArea : UdonSharpBehaviour
     {
+        #if AdvancedMusicManager
+        [Header("The sync mode must either be Manual or None.", order = 0)]
+        [Space(16f, order = 1)]
+        #endif
         [Tooltip("Must never be null.")]
         [SerializeField] private MusicDescriptor musicForThisArea;
         public MusicDescriptor MusicForThisArea

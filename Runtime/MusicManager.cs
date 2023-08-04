@@ -7,9 +7,15 @@ using VRC.Udon.Common;
 namespace JanSharp
 {
     [DefaultExecutionOrder(-2000)]
+    #if !AdvancedMusicManager
     [UdonBehaviourSyncMode(BehaviourSyncMode.Manual)]
+    #endif
     public class MusicManager : UdonSharpBehaviour
     {
+        #if AdvancedMusicManager
+        [Header("The sync mode must either be Manual or None.", order = 0)]
+        [Space(16f, order = 1)]
+        #endif
         [SerializeField] [HideInInspector] private MusicDescriptor[] descriptors;
         public MusicDescriptor[] Descriptors => descriptors;
         [Header("Music Descriptors managed by this Manager must be a child of this object.", order = 0)]
