@@ -14,14 +14,22 @@ namespace JanSharp
     #endif
     public class MusicManager : UdonSharpBehaviour
     {
-        #if AdvancedMusicManager
-        [Header("The sync mode must either be Manual or None.", order = 0)]
-        [Space(16f, order = 1)]
-        #endif
         [SerializeField] [HideInInspector] private MusicDescriptor[] descriptors;
         public MusicDescriptor[] Descriptors => descriptors;
-        [Header("Music Descriptors managed by this Manager must be a child of this object.", order = 0)]
-        [Space(8f, order = 1)]
+        #if AdvancedMusicManager
+        [Header("The sync mode must either be Manual or None.", order = 0)]
+        [Space(-8f, order = 1)]
+        [Header("Note that even when 'Sync Current Default Music'", order = 2)]
+        [Space(-8f, order = 3)]
+        [Header("is false, this script is still used to sync the", order = 4)]
+        [Space(-8f, order = 5)]
+        [Header("global start time if any of the descriptors for", order = 6)]
+        [Space(-8f, order = 7)]
+        [Header("this manager are using the synced music start type.", order = 8)]
+        [Space(16f, order = 9)]
+        #endif
+        [Header("Music Descriptors managed by this Manager must be a child of this object.", order = 10)]
+        [Space(8f, order = 11)]
         [Tooltip("Music played when nothing else is playing, priority is not used for this. "
             + "Null is valid and means it's silent by default.")]
         [SerializeField] private MusicDescriptor defaultMusic;
