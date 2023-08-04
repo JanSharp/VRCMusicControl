@@ -18,22 +18,10 @@ namespace JanSharp
     [UdonBehaviourSyncMode(BehaviourSyncMode.None)]
     public class MusicDescriptor : UdonSharpBehaviour
     {
-        [Tooltip("Only used when Music Start Type is 'Global Time Since First Play' or 'Pause'.")]
-        [SerializeField] private float firstFadeInSeconds = 0.5f;
         [SerializeField] private float fadeInSeconds = 1f;
         [SerializeField] private float fadeOutSeconds = 1f;
-        private float firstFadeInInterval;
         private float fadeInInterval;
         private float fadeOutInterval;
-        public float FirstFadeInSeconds
-        {
-            get => firstFadeInSeconds;
-            set
-            {
-                firstFadeInSeconds = value;
-                CalculateUpdateInterval(firstFadeInSeconds);
-            }
-        }
         public float FadeInSeconds
         {
             get => fadeInSeconds;
@@ -69,6 +57,28 @@ namespace JanSharp
 - Pause: It starts the the beginning of the clip the very first time, after that whenever it stops it remembers where it stopped and picks back up from there.")]
         [SerializeField] private MusicStartType musicStartType = MusicStartType.GlobalTimeSinceFirstPlay;
 
+        [Tooltip("When true, the below fade in seconds are used the very first time this music is played.")]
+        [SerializeField] private bool useDifferentFadeForFirstPlay = false;
+        [Tooltip("Likely makes sense to use with 'Global Time Since First Play' or 'Pause'.")]
+        [SerializeField] private float firstFadeInSeconds = 0.5f;
+        private float firstFadeInInterval;
+        public float FirstFadeInSeconds
+        {
+            get => firstFadeInSeconds;
+            set
+            {
+                firstFadeInSeconds = value;
+                CalculateUpdateInterval(firstFadeInSeconds);
+            }
+        }
+
+        private float CurrentFadeInSeconds => useDifferentFadeForFirstPlay && isFirstPlay
+            ? firstFadeInSeconds
+            : fadeInSeconds;
+        private float CurrentFadeInInterval => useDifferentFadeForFirstPlay && isFirstPlay
+            ? firstFadeInInterval
+            : fadeInInterval;
+
         public MusicManager Manager { get; private set; }
         public int Index { get; private set; }
         private AudioSource audioSource;
@@ -84,7 +94,7 @@ namespace JanSharp
 
         private float pausedTime = 0f;
         private float globalTimeStart;
-        private bool isFirstPlay;
+        private bool isFirstPlay = true;
 
         private float CalculateUpdateInterval(float fadeSeconds)
         {
@@ -112,8 +122,6 @@ namespace JanSharp
             firstFadeInInterval = CalculateUpdateInterval(FirstFadeInSeconds);
             fadeInInterval = CalculateUpdateInterval(FadeInSeconds);
             fadeOutInterval = CalculateUpdateInterval(FadeOutSeconds);
-            isFirstPlay = musicStartType == MusicStartType.GlobalTimeSinceFirstPlay
-                || musicStartType == MusicStartType.Pause;
         }
 
         public void ReceivedGlobalStartTime()
@@ -153,7 +161,7 @@ namespace JanSharp
             isPlaying = true;
             fadingIn = true;
             fadingOut = false;
-            lastFadeInTime = Time.time - (isFirstPlay ? firstFadeInInterval : fadeInInterval);
+            lastFadeInTime = Time.time - CurrentFadeInInterval;
             FadeIn();
         }
 
@@ -165,7 +173,7 @@ namespace JanSharp
             if (!fadingIn)
                 return;
             float currentVolume = audioSource.volume;
-            float volumePerSecond = maxVolume / (isFirstPlay ? firstFadeInSeconds : fadeInSeconds);
+            float volumePerSecond = maxVolume / CurrentFadeInSeconds;
             float currentTime = Time.time;
             float deltaTime = currentTime - lastFadeInTime;
             lastFadeInTime = currentTime;
@@ -177,7 +185,7 @@ namespace JanSharp
                 fadingIn = false;
                 return;
             }
-            SendCustomEventDelayedSeconds(nameof(FadeIn), isFirstPlay ? firstFadeInInterval : fadeInInterval);
+            SendCustomEventDelayedSeconds(nameof(FadeIn), CurrentFadeInInterval);
         }
 
         public void Stop()
