@@ -42,6 +42,8 @@ namespace JanSharp
         }
         [UdonSynced] private int defaultMusicIndex;
         [UdonSynced] private float syncedGlobalStartTime;
+        // Offset from Time.time to the proper start time (which is also in the Time.time scale) where music
+        // started playing on a different client, in order to sync this one up with the other one.
         public float GlobalStartTimeOffset { get; private set; } = float.NaN;
         public bool HasReceivedGlobalStartTime => !float.IsNaN(GlobalStartTimeOffset);
         private bool receivingData;

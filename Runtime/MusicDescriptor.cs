@@ -96,6 +96,7 @@ namespace JanSharp
         public bool IsPlaying => isPlaying || waitingOnGlobalTimeSync;
 
         private int pausedTimeSamples = 0;
+        // It's like a point in Time.time, can be negative due to syncing with other clients.
         private float globalTimeStart;
         private bool isFirstPlay = true;
 
