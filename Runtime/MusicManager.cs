@@ -6,6 +6,8 @@ using VRC.Udon.Common;
 
 namespace JanSharp
 {
+    // 2 on one object are nonsensical because they'd use the same descriptors, which is not supported.
+    [DisallowMultipleComponent]
     [DefaultExecutionOrder(-2000)]
     #if !AdvancedMusicManager
     [UdonBehaviourSyncMode(BehaviourSyncMode.Manual)]

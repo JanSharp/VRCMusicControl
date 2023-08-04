@@ -15,6 +15,8 @@ namespace JanSharp
         Pause,
     }
 
+    // 2 on one object are disallowed because they'd use the same audio source which is not supported.
+    [DisallowMultipleComponent]
     #if !AdvancedMusicManager
     [UdonBehaviourSyncMode(BehaviourSyncMode.Manual)]
     #endif
