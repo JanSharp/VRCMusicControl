@@ -18,6 +18,10 @@ namespace JanSharp
     [UdonBehaviourSyncMode(BehaviourSyncMode.None)]
     public class MusicDescriptor : UdonSharpBehaviour
     {
+        [Tooltip(@"A music descriptor describing the absence of music. When true, other properties get ignored, except for default priority.")]
+        [SerializeField] private bool isSilenceDescriptor;
+        public bool IsSilenceDescriptor => isSilenceDescriptor;
+
         [SerializeField] private float fadeInSeconds = 1f;
         [SerializeField] private float fadeOutSeconds = 1f;
         [HideInInspector] [SerializeField] private float fadeInInterval;
@@ -43,10 +47,6 @@ namespace JanSharp
         [FormerlySerializedAs("priority")]
         [SerializeField] private int defaultPriority;
         public int DefaultPriority => defaultPriority;
-
-        [Tooltip(@"A music descriptor describing the absence of music. When true, other properties get ignored, except for default priority.")]
-        [SerializeField] private bool isSilenceDescriptor;
-        public bool IsSilenceDescriptor => isSilenceDescriptor;
 
         [Tooltip(
 @"When starting to play this music, where in the audio clip should it start?

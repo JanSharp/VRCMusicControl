@@ -50,19 +50,19 @@ MonoBehaviour:
       Data: 
     - Name: $k
       Entry: 1
-      Data: fadeInSeconds
+      Data: isSilenceDescriptor
     - Name: $v
       Entry: 7
       Data: 2|UdonSharp.Compiler.FieldDefinition, UdonSharp.Editor
     - Name: <Name>k__BackingField
       Entry: 1
-      Data: fadeInSeconds
+      Data: isSilenceDescriptor
     - Name: <UserType>k__BackingField
       Entry: 7
       Data: 3|System.RuntimeType, mscorlib
     - Name: 
       Entry: 1
-      Data: System.Single, mscorlib
+      Data: System.Boolean, mscorlib
     - Name: 
       Entry: 8
       Data: 
@@ -86,10 +86,80 @@ MonoBehaviour:
       Data: 4|System.Collections.Generic.List`1[[System.Attribute, mscorlib]], mscorlib
     - Name: 
       Entry: 12
+      Data: 2
+    - Name: 
+      Entry: 7
+      Data: 5|UnityEngine.TooltipAttribute, UnityEngine.CoreModule
+    - Name: tooltip
+      Entry: 1
+      Data: A music descriptor describing the absence of music. When true, other
+        properties get ignored, except for default priority.
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 6|UnityEngine.SerializeField, UnityEngine.CoreModule
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 1
+      Data: fadeInSeconds
+    - Name: $v
+      Entry: 7
+      Data: 7|UdonSharp.Compiler.FieldDefinition, UdonSharp.Editor
+    - Name: <Name>k__BackingField
+      Entry: 1
+      Data: fadeInSeconds
+    - Name: <UserType>k__BackingField
+      Entry: 7
+      Data: 8|System.RuntimeType, mscorlib
+    - Name: 
+      Entry: 1
+      Data: System.Single, mscorlib
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: <SystemType>k__BackingField
+      Entry: 9
+      Data: 8
+    - Name: <SyncMode>k__BackingField
+      Entry: 7
+      Data: System.Nullable`1[[UdonSharp.UdonSyncMode, UdonSharp.Runtime]], mscorlib
+    - Name: 
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: <IsSerialized>k__BackingField
+      Entry: 5
+      Data: true
+    - Name: _fieldAttributes
+      Entry: 7
+      Data: 9|System.Collections.Generic.List`1[[System.Attribute, mscorlib]], mscorlib
+    - Name: 
+      Entry: 12
       Data: 1
     - Name: 
       Entry: 7
-      Data: 5|UnityEngine.SerializeField, UnityEngine.CoreModule
+      Data: 10|UnityEngine.SerializeField, UnityEngine.CoreModule
     - Name: 
       Entry: 8
       Data: 
@@ -113,16 +183,16 @@ MonoBehaviour:
       Data: fadeOutSeconds
     - Name: $v
       Entry: 7
-      Data: 6|UdonSharp.Compiler.FieldDefinition, UdonSharp.Editor
+      Data: 11|UdonSharp.Compiler.FieldDefinition, UdonSharp.Editor
     - Name: <Name>k__BackingField
       Entry: 1
       Data: fadeOutSeconds
     - Name: <UserType>k__BackingField
       Entry: 9
-      Data: 3
+      Data: 8
     - Name: <SystemType>k__BackingField
       Entry: 9
-      Data: 3
+      Data: 8
     - Name: <SyncMode>k__BackingField
       Entry: 7
       Data: System.Nullable`1[[UdonSharp.UdonSyncMode, UdonSharp.Runtime]], mscorlib
@@ -137,13 +207,13 @@ MonoBehaviour:
       Data: true
     - Name: _fieldAttributes
       Entry: 7
-      Data: 7|System.Collections.Generic.List`1[[System.Attribute, mscorlib]], mscorlib
+      Data: 12|System.Collections.Generic.List`1[[System.Attribute, mscorlib]], mscorlib
     - Name: 
       Entry: 12
       Data: 1
     - Name: 
       Entry: 7
-      Data: 8|UnityEngine.SerializeField, UnityEngine.CoreModule
+      Data: 13|UnityEngine.SerializeField, UnityEngine.CoreModule
     - Name: 
       Entry: 8
       Data: 
@@ -167,16 +237,16 @@ MonoBehaviour:
       Data: fadeInInterval
     - Name: $v
       Entry: 7
-      Data: 9|UdonSharp.Compiler.FieldDefinition, UdonSharp.Editor
+      Data: 14|UdonSharp.Compiler.FieldDefinition, UdonSharp.Editor
     - Name: <Name>k__BackingField
       Entry: 1
       Data: fadeInInterval
     - Name: <UserType>k__BackingField
       Entry: 9
-      Data: 3
+      Data: 8
     - Name: <SystemType>k__BackingField
       Entry: 9
-      Data: 3
+      Data: 8
     - Name: <SyncMode>k__BackingField
       Entry: 7
       Data: System.Nullable`1[[UdonSharp.UdonSyncMode, UdonSharp.Runtime]], mscorlib
@@ -191,19 +261,19 @@ MonoBehaviour:
       Data: true
     - Name: _fieldAttributes
       Entry: 7
-      Data: 10|System.Collections.Generic.List`1[[System.Attribute, mscorlib]], mscorlib
+      Data: 15|System.Collections.Generic.List`1[[System.Attribute, mscorlib]], mscorlib
     - Name: 
       Entry: 12
       Data: 2
     - Name: 
       Entry: 7
-      Data: 11|UnityEngine.HideInInspector, UnityEngine.CoreModule
+      Data: 16|UnityEngine.HideInInspector, UnityEngine.CoreModule
     - Name: 
       Entry: 8
       Data: 
     - Name: 
       Entry: 7
-      Data: 12|UnityEngine.SerializeField, UnityEngine.CoreModule
+      Data: 17|UnityEngine.SerializeField, UnityEngine.CoreModule
     - Name: 
       Entry: 8
       Data: 
@@ -227,82 +297,16 @@ MonoBehaviour:
       Data: fadeOutInterval
     - Name: $v
       Entry: 7
-      Data: 13|UdonSharp.Compiler.FieldDefinition, UdonSharp.Editor
+      Data: 18|UdonSharp.Compiler.FieldDefinition, UdonSharp.Editor
     - Name: <Name>k__BackingField
       Entry: 1
       Data: fadeOutInterval
     - Name: <UserType>k__BackingField
       Entry: 9
-      Data: 3
+      Data: 8
     - Name: <SystemType>k__BackingField
       Entry: 9
-      Data: 3
-    - Name: <SyncMode>k__BackingField
-      Entry: 7
-      Data: System.Nullable`1[[UdonSharp.UdonSyncMode, UdonSharp.Runtime]], mscorlib
-    - Name: 
-      Entry: 6
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: <IsSerialized>k__BackingField
-      Entry: 5
-      Data: true
-    - Name: _fieldAttributes
-      Entry: 7
-      Data: 14|System.Collections.Generic.List`1[[System.Attribute, mscorlib]], mscorlib
-    - Name: 
-      Entry: 12
-      Data: 2
-    - Name: 
-      Entry: 7
-      Data: 15|UnityEngine.HideInInspector, UnityEngine.CoreModule
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 7
-      Data: 16|UnityEngine.SerializeField, UnityEngine.CoreModule
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 13
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 7
-      Data: 
-    - Name: $k
-      Entry: 1
-      Data: defaultPriority
-    - Name: $v
-      Entry: 7
-      Data: 17|UdonSharp.Compiler.FieldDefinition, UdonSharp.Editor
-    - Name: <Name>k__BackingField
-      Entry: 1
-      Data: defaultPriority
-    - Name: <UserType>k__BackingField
-      Entry: 7
-      Data: 18|System.RuntimeType, mscorlib
-    - Name: 
-      Entry: 1
-      Data: System.Int32, mscorlib
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: <SystemType>k__BackingField
-      Entry: 9
-      Data: 18
+      Data: 8
     - Name: <SyncMode>k__BackingField
       Entry: 7
       Data: System.Nullable`1[[UdonSharp.UdonSyncMode, UdonSharp.Runtime]], mscorlib
@@ -323,7 +327,7 @@ MonoBehaviour:
       Data: 2
     - Name: 
       Entry: 7
-      Data: 20|UnityEngine.Serialization.FormerlySerializedAsAttribute, UnityEngine.CoreModule
+      Data: 20|UnityEngine.HideInInspector, UnityEngine.CoreModule
     - Name: 
       Entry: 8
       Data: 
@@ -350,19 +354,19 @@ MonoBehaviour:
       Data: 
     - Name: $k
       Entry: 1
-      Data: isSilenceDescriptor
+      Data: defaultPriority
     - Name: $v
       Entry: 7
       Data: 22|UdonSharp.Compiler.FieldDefinition, UdonSharp.Editor
     - Name: <Name>k__BackingField
       Entry: 1
-      Data: isSilenceDescriptor
+      Data: defaultPriority
     - Name: <UserType>k__BackingField
       Entry: 7
       Data: 23|System.RuntimeType, mscorlib
     - Name: 
       Entry: 1
-      Data: System.Boolean, mscorlib
+      Data: System.Int32, mscorlib
     - Name: 
       Entry: 8
       Data: 
@@ -389,11 +393,7 @@ MonoBehaviour:
       Data: 2
     - Name: 
       Entry: 7
-      Data: 25|UnityEngine.TooltipAttribute, UnityEngine.CoreModule
-    - Name: tooltip
-      Entry: 1
-      Data: A music descriptor describing the absence of music. When true, other
-        properties get ignored, except for default priority.
+      Data: 25|UnityEngine.Serialization.FormerlySerializedAsAttribute, UnityEngine.CoreModule
     - Name: 
       Entry: 8
       Data: 
@@ -438,7 +438,7 @@ MonoBehaviour:
       Data: 
     - Name: <SystemType>k__BackingField
       Entry: 9
-      Data: 18
+      Data: 23
     - Name: <SyncMode>k__BackingField
       Entry: 7
       Data: System.Nullable`1[[UdonSharp.UdonSyncMode, UdonSharp.Runtime]], mscorlib
@@ -520,10 +520,10 @@ MonoBehaviour:
       Data: useDifferentFadeForFirstPlay
     - Name: <UserType>k__BackingField
       Entry: 9
-      Data: 23
+      Data: 3
     - Name: <SystemType>k__BackingField
       Entry: 9
-      Data: 23
+      Data: 3
     - Name: <SyncMode>k__BackingField
       Entry: 7
       Data: System.Nullable`1[[UdonSharp.UdonSyncMode, UdonSharp.Runtime]], mscorlib
@@ -584,10 +584,10 @@ MonoBehaviour:
       Data: firstFadeInSeconds
     - Name: <UserType>k__BackingField
       Entry: 9
-      Data: 3
+      Data: 8
     - Name: <SystemType>k__BackingField
       Entry: 9
-      Data: 3
+      Data: 8
     - Name: <SyncMode>k__BackingField
       Entry: 7
       Data: System.Nullable`1[[UdonSharp.UdonSyncMode, UdonSharp.Runtime]], mscorlib
@@ -647,10 +647,10 @@ MonoBehaviour:
       Data: firstFadeInInterval
     - Name: <UserType>k__BackingField
       Entry: 9
-      Data: 3
+      Data: 8
     - Name: <SystemType>k__BackingField
       Entry: 9
-      Data: 3
+      Data: 8
     - Name: <SyncMode>k__BackingField
       Entry: 7
       Data: System.Nullable`1[[UdonSharp.UdonSyncMode, UdonSharp.Runtime]], mscorlib
@@ -779,10 +779,10 @@ MonoBehaviour:
       Data: index
     - Name: <UserType>k__BackingField
       Entry: 9
-      Data: 18
+      Data: 23
     - Name: <SystemType>k__BackingField
       Entry: 9
-      Data: 18
+      Data: 23
     - Name: <SyncMode>k__BackingField
       Entry: 7
       Data: System.Nullable`1[[UdonSharp.UdonSyncMode, UdonSharp.Runtime]], mscorlib
@@ -905,10 +905,10 @@ MonoBehaviour:
       Data: maxVolume
     - Name: <UserType>k__BackingField
       Entry: 9
-      Data: 3
+      Data: 8
     - Name: <SystemType>k__BackingField
       Entry: 9
-      Data: 3
+      Data: 8
     - Name: <SyncMode>k__BackingField
       Entry: 7
       Data: System.Nullable`1[[UdonSharp.UdonSyncMode, UdonSharp.Runtime]], mscorlib
@@ -965,10 +965,10 @@ MonoBehaviour:
       Data: lastFadeInTime
     - Name: <UserType>k__BackingField
       Entry: 9
-      Data: 3
+      Data: 8
     - Name: <SystemType>k__BackingField
       Entry: 9
-      Data: 3
+      Data: 8
     - Name: <SyncMode>k__BackingField
       Entry: 7
       Data: System.Nullable`1[[UdonSharp.UdonSyncMode, UdonSharp.Runtime]], mscorlib
@@ -1013,10 +1013,10 @@ MonoBehaviour:
       Data: fadingIn
     - Name: <UserType>k__BackingField
       Entry: 9
-      Data: 23
+      Data: 3
     - Name: <SystemType>k__BackingField
       Entry: 9
-      Data: 23
+      Data: 3
     - Name: <SyncMode>k__BackingField
       Entry: 7
       Data: System.Nullable`1[[UdonSharp.UdonSyncMode, UdonSharp.Runtime]], mscorlib
@@ -1061,10 +1061,10 @@ MonoBehaviour:
       Data: lastFadeOutTime
     - Name: <UserType>k__BackingField
       Entry: 9
-      Data: 3
+      Data: 8
     - Name: <SystemType>k__BackingField
       Entry: 9
-      Data: 3
+      Data: 8
     - Name: <SyncMode>k__BackingField
       Entry: 7
       Data: System.Nullable`1[[UdonSharp.UdonSyncMode, UdonSharp.Runtime]], mscorlib
@@ -1109,10 +1109,10 @@ MonoBehaviour:
       Data: fadingOut
     - Name: <UserType>k__BackingField
       Entry: 9
-      Data: 23
+      Data: 3
     - Name: <SystemType>k__BackingField
       Entry: 9
-      Data: 23
+      Data: 3
     - Name: <SyncMode>k__BackingField
       Entry: 7
       Data: System.Nullable`1[[UdonSharp.UdonSyncMode, UdonSharp.Runtime]], mscorlib
@@ -1157,10 +1157,10 @@ MonoBehaviour:
       Data: isPlaying
     - Name: <UserType>k__BackingField
       Entry: 9
-      Data: 23
+      Data: 3
     - Name: <SystemType>k__BackingField
       Entry: 9
-      Data: 23
+      Data: 3
     - Name: <SyncMode>k__BackingField
       Entry: 7
       Data: System.Nullable`1[[UdonSharp.UdonSyncMode, UdonSharp.Runtime]], mscorlib
@@ -1205,10 +1205,10 @@ MonoBehaviour:
       Data: waitingOnGlobalTimeSync
     - Name: <UserType>k__BackingField
       Entry: 9
-      Data: 23
+      Data: 3
     - Name: <SystemType>k__BackingField
       Entry: 9
-      Data: 23
+      Data: 3
     - Name: <SyncMode>k__BackingField
       Entry: 7
       Data: System.Nullable`1[[UdonSharp.UdonSyncMode, UdonSharp.Runtime]], mscorlib
@@ -1253,10 +1253,10 @@ MonoBehaviour:
       Data: pausedTime
     - Name: <UserType>k__BackingField
       Entry: 9
-      Data: 3
+      Data: 8
     - Name: <SystemType>k__BackingField
       Entry: 9
-      Data: 3
+      Data: 8
     - Name: <SyncMode>k__BackingField
       Entry: 7
       Data: System.Nullable`1[[UdonSharp.UdonSyncMode, UdonSharp.Runtime]], mscorlib
@@ -1301,10 +1301,10 @@ MonoBehaviour:
       Data: globalTimeStart
     - Name: <UserType>k__BackingField
       Entry: 9
-      Data: 3
+      Data: 8
     - Name: <SystemType>k__BackingField
       Entry: 9
-      Data: 3
+      Data: 8
     - Name: <SyncMode>k__BackingField
       Entry: 7
       Data: System.Nullable`1[[UdonSharp.UdonSyncMode, UdonSharp.Runtime]], mscorlib
@@ -1349,10 +1349,10 @@ MonoBehaviour:
       Data: isFirstPlay
     - Name: <UserType>k__BackingField
       Entry: 9
-      Data: 23
+      Data: 3
     - Name: <SystemType>k__BackingField
       Entry: 9
-      Data: 23
+      Data: 3
     - Name: <SyncMode>k__BackingField
       Entry: 7
       Data: System.Nullable`1[[UdonSharp.UdonSyncMode, UdonSharp.Runtime]], mscorlib
