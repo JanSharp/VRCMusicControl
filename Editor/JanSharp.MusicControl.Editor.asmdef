@@ -2,6 +2,8 @@
     "name": "JanSharp.MusicControl.Editor",
     "references": [
         "JanSharp.MusicControl",
+        "JanSharp.Common",
+        "JanSharp.Common.Editor",
         "UdonSharp.Runtime",
         "UdonSharp.Editor",
         "VRC.SDK3",

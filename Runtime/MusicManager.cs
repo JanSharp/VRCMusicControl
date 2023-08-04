@@ -9,8 +9,10 @@ namespace JanSharp
     [UdonBehaviourSyncMode(BehaviourSyncMode.Manual)]
     public class MusicManager : UdonSharpBehaviour
     {
-        [SerializeField] private MusicDescriptor[] descriptors;
+        [SerializeField] [HideInInspector] private MusicDescriptor[] descriptors;
         public MusicDescriptor[] Descriptors => descriptors;
+        [Header("Music Descriptors managed by this Manager must be a child of this object.", order = 0)]
+        [Space(8f, order = 1)]
         [Tooltip("Null is valid and means it's silent by default.")]
         [SerializeField] private MusicDescriptor defaultMusic;
         [SerializeField] private bool syncCurrentDefaultMusic = true;
@@ -96,12 +98,6 @@ namespace JanSharp
 
         void Start()
         {
-            if (descriptors == null || descriptors.Length == 0)
-            {
-                Debug.LogWarning($"[MusicControl] {nameof(MusicManager)} {name} "
-                    + $"is missing {nameof(MusicDescriptor)}s.", this);
-                return;
-            }
             for (int i = 0; i < descriptors.Length; i++)
                 descriptors[i].Init(this, i);
 
