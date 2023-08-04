@@ -95,7 +95,7 @@ namespace JanSharp
         private bool waitingOnGlobalTimeSync;
         public bool IsPlaying => isPlaying || waitingOnGlobalTimeSync;
 
-        private float pausedTime = 0f;
+        private int pausedTimeSamples = 0;
         private float globalTimeStart;
         private bool isFirstPlay = true;
 
@@ -121,6 +121,15 @@ namespace JanSharp
         public uint AddThisMusic(int priority) => Manager.AddMusic(this, priority);
         public void SetAsDefault() => Manager.DefaultMusic = this;
 
+        private void SetTime(float time)
+        {
+            AudioClip clip = audioSource.clip;
+            time = (time * audioSource.pitch) % clip.length;
+            if (time < 0f)
+                time += clip.length; // time is negative, so this says "subtract time since end from length".
+            audioSource.timeSamples = (int)(time * (float)clip.frequency);
+        }
+
         public void Play()
         {
             if (startType == MusicStartType.GlobalTimeSinceWorldStartSynced
@@ -139,9 +148,9 @@ namespace JanSharp
                     globalTimeStart = Time.time;
                 audioSource.Play();
                 if (startType == MusicStartType.Pause)
-                    audioSource.time = pausedTime;
+                    audioSource.timeSamples = pausedTimeSamples;
                 else if (startType != MusicStartType.Restart)
-                    audioSource.time = (Time.time - globalTimeStart) % audioSource.clip.length;
+                    SetTime(Time.time - globalTimeStart);
             }
             isPlaying = true;
             fadingIn = true;
@@ -208,7 +217,7 @@ namespace JanSharp
             {
                 fadingOut = false;
                 if (startType == MusicStartType.Pause)
-                    pausedTime = audioSource.time;
+                    pausedTimeSamples = audioSource.timeSamples;
                 audioSource.Stop();
                 isPlaying = false;
                 return;
