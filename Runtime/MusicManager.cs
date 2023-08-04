@@ -6,6 +6,7 @@ using VRC.Udon.Common;
 
 namespace JanSharp
 {
+    [DefaultExecutionOrder(-2000)]
     [UdonBehaviourSyncMode(BehaviourSyncMode.Manual)]
     public class MusicManager : UdonSharpBehaviour
     {
