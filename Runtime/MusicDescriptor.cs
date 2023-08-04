@@ -20,8 +20,8 @@ namespace JanSharp
     {
         [SerializeField] private float fadeInSeconds = 1f;
         [SerializeField] private float fadeOutSeconds = 1f;
-        private float fadeInInterval;
-        private float fadeOutInterval;
+        [HideInInspector] [SerializeField] private float fadeInInterval;
+        [HideInInspector] [SerializeField] private float fadeOutInterval;
         public float FadeInSeconds
         {
             get => fadeInSeconds;
@@ -61,7 +61,7 @@ namespace JanSharp
         [SerializeField] private bool useDifferentFadeForFirstPlay = false;
         [Tooltip("Likely makes sense to use with 'Global Time Since First Play' or 'Pause'.")]
         [SerializeField] private float firstFadeInSeconds = 0.5f;
-        private float firstFadeInInterval;
+        [HideInInspector] [SerializeField] private float firstFadeInInterval;
         public float FirstFadeInSeconds
         {
             get => firstFadeInSeconds;
@@ -79,10 +79,12 @@ namespace JanSharp
             ? firstFadeInInterval
             : fadeInInterval;
 
-        public MusicManager Manager { get; private set; }
-        public int Index { get; private set; }
-        private AudioSource audioSource;
-        private float maxVolume;
+        [HideInInspector] [SerializeField] private MusicManager manager;
+        [HideInInspector] [SerializeField] private int index;
+        public MusicManager Manager => manager;
+        public int Index => index;
+        [HideInInspector] [SerializeField] private AudioSource audioSource;
+        [HideInInspector] [SerializeField] private float maxVolume;
         private float lastFadeInTime;
         private bool fadingIn;
         private float lastFadeOutTime;
@@ -96,32 +98,12 @@ namespace JanSharp
         private float globalTimeStart;
         private bool isFirstPlay = true;
 
-        private float CalculateUpdateInterval(float fadeSeconds)
+        public static float CalculateUpdateInterval(float fadeSeconds)
         {
             // At 1 fade second, 15 updates per second.
             // At 10 fade seconds, 50 updates per second.
             // Updates per second is clamped between 15 and 50.
             return fadeSeconds / Mathf.Clamp((fadeSeconds - 1f) / 9f * 35f + 15f, 15f, 50f);
-        }
-
-        public void Init(MusicManager manager, int index)
-        {
-            this.Manager = manager;
-            this.Index = index;
-            if (isSilenceDescriptor)
-                return;
-            audioSource = GetComponent<AudioSource>();
-            if (audioSource == null)
-            {
-                Debug.LogError($"[MusicControl] {nameof(MusicDescriptor)} {name} "
-                    + $"is missing an AudioSource component.", this);
-                return;
-            }
-            maxVolume = audioSource.volume;
-            audioSource.volume = 0;
-            firstFadeInInterval = CalculateUpdateInterval(FirstFadeInSeconds);
-            fadeInInterval = CalculateUpdateInterval(FadeInSeconds);
-            fadeOutInterval = CalculateUpdateInterval(FadeOutSeconds);
         }
 
         public void ReceivedGlobalStartTime()
@@ -150,6 +132,8 @@ namespace JanSharp
                 return;
             if (!isPlaying)
             {
+                if (isFirstPlay)
+                    audioSource.volume = 0;
                 if (isFirstPlay && musicStartType == MusicStartType.GlobalTimeSinceFirstPlay)
                     globalTimeStart = Time.time;
                 audioSource.Play();

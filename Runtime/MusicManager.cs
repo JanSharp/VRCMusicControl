@@ -98,9 +98,6 @@ namespace JanSharp
 
         void Start()
         {
-            for (int i = 0; i < descriptors.Length; i++)
-                descriptors[i].Init(this, i);
-
             if (Networking.LocalPlayer.isMaster)
             {
                 GlobalStartTimeOffset = -Time.time;

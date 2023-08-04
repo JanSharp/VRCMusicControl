@@ -35,6 +35,39 @@ namespace JanSharp
             );
             musicManagerProxy.ApplyModifiedProperties();
 
+            int i = 0;
+            foreach (MusicDescriptor descriptor in musicManager.Descriptors)
+            {
+                SerializedObject descriptorProxy = new SerializedObject(descriptor);
+                descriptorProxy.FindProperty("manager").objectReferenceValue = musicManager;
+                descriptorProxy.FindProperty("index").intValue = i++;
+                descriptorProxy.ApplyModifiedProperties();
+
+                if (descriptor.IsSilenceDescriptor)
+                {
+                    descriptorProxy.ApplyModifiedProperties();
+                    continue;
+                }
+
+                AudioSource audioSource = descriptor.GetComponent<AudioSource>();
+                if (audioSource == null)
+                {
+                    Debug.LogError($"[MusicControl] {nameof(MusicDescriptor)} {descriptor.name} "
+                        + $"is missing an AudioSource component.", descriptor);
+                    return false;
+                }
+                descriptorProxy.FindProperty("audioSource").objectReferenceValue = audioSource;
+                descriptorProxy.FindProperty("maxVolume").floatValue = audioSource.volume;
+                descriptorProxy.FindProperty("firstFadeInInterval").floatValue
+                    = MusicDescriptor.CalculateUpdateInterval(descriptor.FirstFadeInSeconds);
+                descriptorProxy.FindProperty("fadeInInterval").floatValue
+                    = MusicDescriptor.CalculateUpdateInterval(descriptor.FadeInSeconds);
+                descriptorProxy.FindProperty("fadeOutInterval").floatValue
+                    = MusicDescriptor.CalculateUpdateInterval(descriptor.FadeOutSeconds);
+
+                descriptorProxy.ApplyModifiedProperties();
+            }
+
             return true;
         }
     }
