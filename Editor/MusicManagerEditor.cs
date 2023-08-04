@@ -28,11 +28,14 @@ namespace JanSharp
             }
 
             SerializedObject musicManagerProxy = new SerializedObject(musicManager);
+            MusicDescriptor[] descriptors = musicManager.GetComponentsInChildren<MusicDescriptor>();
             EditorUtil.SetArrayProperty(
                 musicManagerProxy.FindProperty("descriptors"),
-                musicManager.GetComponentsInChildren<MusicDescriptor>(),
+                descriptors,
                 (p, v) => p.objectReferenceValue = v
             );
+            musicManagerProxy.FindProperty("syncGlobalStartTime").boolValue
+                = descriptors.Any(d => d.StartType == MusicStartType.GlobalTimeSinceWorldStartSynced);
             musicManagerProxy.ApplyModifiedProperties();
 
             int i = 0;

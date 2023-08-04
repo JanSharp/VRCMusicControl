@@ -45,10 +45,12 @@ namespace JanSharp
         public float GlobalStartTimeOffset { get; private set; } = float.NaN;
         public bool HasReceivedGlobalStartTime => !float.IsNaN(GlobalStartTimeOffset);
         private bool receivingData;
+        [SerializeField] [HideInInspector] private bool syncGlobalStartTime; // Set in OnBuild.
 
         public override void OnPreSerialization()
         {
-            syncedGlobalStartTime = Time.time + GlobalStartTimeOffset;
+            if (syncGlobalStartTime)
+                syncedGlobalStartTime = Time.time + GlobalStartTimeOffset;
         }
 
         public override void OnDeserialization(DeserializationResult result)
@@ -60,7 +62,7 @@ namespace JanSharp
                 receivingData = false;
             }
 
-            if (float.IsNaN(GlobalStartTimeOffset))
+            if (syncGlobalStartTime && float.IsNaN(GlobalStartTimeOffset))
             {
                 syncedGlobalStartTime += result.receiveTime - result.sendTime;
                 GlobalStartTimeOffset = syncedGlobalStartTime - Time.time;
@@ -105,14 +107,17 @@ namespace JanSharp
 
         void Start()
         {
-            if (Networking.LocalPlayer.isMaster)
+            if (syncGlobalStartTime)
             {
-                GlobalStartTimeOffset = -Time.time;
-                ReceivedGlobalStartTime();
-                RequestSerialization();
+                if (Networking.LocalPlayer.isMaster)
+                {
+                    GlobalStartTimeOffset = -Time.time;
+                    ReceivedGlobalStartTime();
+                    RequestSerialization();
+                }
+                else
+                    SendCustomEventDelayedSeconds(nameof(GlobalStartTimeFallback), 15f);
             }
-            else
-                SendCustomEventDelayedSeconds(nameof(GlobalStartTimeFallback), 15f);
 
             musicListCount++;
             SetMusic(0, DefaultMusic, int.MinValue, nextMusicId++);
@@ -132,7 +137,7 @@ namespace JanSharp
         public override void OnOwnershipTransferred(VRCPlayerApi player)
         {
             // Make sure new players receive the proper synced value.
-            if (player.isLocal)
+            if (syncGlobalStartTime && player.isLocal)
                 RequestSerialization();
         }
 
