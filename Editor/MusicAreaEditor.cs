@@ -65,13 +65,7 @@ namespace JanSharp
                     + (defaultPriorities.Count > 1 ? "Mixed" : defaultPriorities.First().Key.ToString()));
 
             EditorGUILayout.PropertyField(priorityProp);
-
-            EditorGUILayout.PropertyField(syncCurrentMusicAndPriorityProp, new GUIContent(
-                "Sync Current Music And Priority",
-                "When enabled, all values above will be synced whenever they are changed on any client. "
-                    + "This setting does not affect the network impact of this script when the values "
-                    + "are never changed at runtime."
-            ));
+            EditorGUILayout.PropertyField(syncCurrentMusicAndPriorityProp);
 
             serializedObject.ApplyModifiedProperties();
         }

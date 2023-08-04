@@ -46,7 +46,8 @@ namespace JanSharp
         }
         public MusicManager Manager => MusicForThisArea.Manager;
 
-        [Tooltip("When true, the Default Priority from the Music Descriptor is used, otherwise the priority defined below is used.")]
+        [Tooltip("When true, the Default Priority from the Music Descriptor is used, "
+            + "otherwise the priority defined below is used.")]
         [SerializeField] private bool useDefaultPriority = true;
         public bool UseDefaultPriority
         {
@@ -76,7 +77,9 @@ namespace JanSharp
             }
         }
 
-        // The tooltip for this field is in the MusicAreaEditor file.
+        [Tooltip("When enabled, all values above will be synced whenever they are changed on any client. "
+            + "This setting does not affect the network impact of this script when the values are never "
+            + "changed at runtime.")]
         [SerializeField] private bool syncCurrentMusicAndPriority = true;
         private bool receivingData;
 

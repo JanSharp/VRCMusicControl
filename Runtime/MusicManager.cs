@@ -22,7 +22,8 @@ namespace JanSharp
         public MusicDescriptor[] Descriptors => descriptors;
         [Header("Music Descriptors managed by this Manager must be a child of this object.", order = 0)]
         [Space(8f, order = 1)]
-        [Tooltip("Music played when nothing else is playing, priority is not used for this. Null is valid and means it's silent by default.")]
+        [Tooltip("Music played when nothing else is playing, priority is not used for this. "
+            + "Null is valid and means it's silent by default.")]
         [SerializeField] private MusicDescriptor defaultMusic;
         [Tooltip("When true, the current default music is synced whenever it is changed on any "
             + "client. This setting does not affect the network impact of this script when the values "
