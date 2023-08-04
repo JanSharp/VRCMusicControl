@@ -9,9 +9,28 @@ namespace JanSharp
     [UdonBehaviourSyncMode(BehaviourSyncMode.None)]
     public class MusicDescriptor : UdonSharpBehaviour
     {
-        public float fadeInSeconds;
-        public float fadeOutSeconds;
-        public float updateIntervalInSeconds = 0.1f;
+        [SerializeField] private float fadeInSeconds;
+        [SerializeField] private float fadeOutSeconds;
+        private float fadeInInterval;
+        private float fadeOutInterval;
+        public float FadeInSeconds
+        {
+            get => fadeInSeconds;
+            set
+            {
+                fadeInSeconds = value;
+                fadeInInterval = CalculateUpdateInterval(fadeInInterval);
+            }
+        }
+        public float FadeOutSeconds
+        {
+            get => fadeOutSeconds;
+            set
+            {
+                fadeOutSeconds = value;
+                fadeOutInterval = CalculateUpdateInterval(fadeOutInterval);
+            }
+        }
         [FormerlySerializedAs("priority")]
         [SerializeField] private int defaultPriority;
         public int DefaultPriority => defaultPriority;
@@ -31,6 +50,14 @@ namespace JanSharp
 
         private bool isPlaying;
 
+        private float CalculateUpdateInterval(float fadeSeconds)
+        {
+            // At 1 fade second, 15 updates per second.
+            // At 10 fade seconds, 50 updates per second.
+            // Updates per second is clamped between 15 and 50.
+            return fadeSeconds / Mathf.Clamp((fadeSeconds - 1f) / 9f * 35f + 15f, 15f, 50f);
+        }
+
         public void Init(MusicManager manager, int index)
         {
             this.Manager = manager;
@@ -46,6 +73,8 @@ namespace JanSharp
             }
             maxVolume = audioSource.volume;
             audioSource.volume = 0;
+            fadeInInterval = CalculateUpdateInterval(FadeInSeconds);
+            fadeOutInterval = CalculateUpdateInterval(FadeOutSeconds);
         }
 
         public uint AddThisMusic() => Manager.AddMusic(this);
@@ -61,7 +90,7 @@ namespace JanSharp
             isPlaying = true;
             fadingIn = true;
             fadingOut = false;
-            lastFadeInTime = Time.time - updateIntervalInSeconds;
+            lastFadeInTime = Time.time - fadeInInterval;
             FadeIn();
         }
 
@@ -85,7 +114,7 @@ namespace JanSharp
                 fadingIn = false;
                 return;
             }
-            SendCustomEventDelayedSeconds(nameof(FadeIn), updateIntervalInSeconds);
+            SendCustomEventDelayedSeconds(nameof(FadeIn), fadeInInterval);
         }
 
         public void Stop()
@@ -94,7 +123,7 @@ namespace JanSharp
                 return;
             fadingIn = false;
             fadingOut = true;
-            lastFadeOutTime = Time.time - updateIntervalInSeconds;
+            lastFadeOutTime = Time.time - fadeOutInterval;
             FadeOut();
         }
 
@@ -120,7 +149,7 @@ namespace JanSharp
                 isPlaying = false;
                 return;
             }
-            SendCustomEventDelayedSeconds(nameof(FadeOut), updateIntervalInSeconds);
+            SendCustomEventDelayedSeconds(nameof(FadeOut), fadeOutInterval);
         }
     }
 }
