@@ -195,6 +195,10 @@ namespace JanSharp
             if (time < 0f)
                 time += clip.length; // time is negative, so this says "subtract time since end from length".
             audioSource.timeSamples = (int)(time * (float)clip.frequency);
+            // This is using `timeSamples` instead of `time` because supposedly timeSamples is more accurate
+            // than `time`. The docs mention "2 to 3 seconds of packets" when talking about this inaccuracy
+            // about `time`, however no matter what I did I could not reproduce this inaccuracy. However even
+            // still, this is now using `timeSamples` instead of `time`.
         }
 
         /// <summary>
