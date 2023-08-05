@@ -146,6 +146,9 @@ namespace JanSharp
         private bool isFirstPlay = true;
         private bool isInitialized = false;
 
+        /// <summary>
+        /// This is not public API, do not call this function.
+        /// </summary>
         public static float CalculateUpdateInterval(float fadeSeconds)
         {
             // At 1 fade second, 15 total updates.
@@ -154,13 +157,16 @@ namespace JanSharp
             return fadeSeconds / Mathf.Clamp((fadeSeconds - 1f) / 9f * 35f + 15f, 15f, 50f);
         }
 
-        public void ReceivedGlobalStartTime()
+        /// <summary>
+        /// This is not public API, do not call this function.
+        /// </summary>
+        public void InternalReceivedGlobalStartTime()
         {
-            globalTimeStart = -(Time.time + Manager.GlobalStartTimeOffset);
+            globalTimeStart = -(Time.time + Manager.InternalGlobalStartTimeOffset);
             if (waitingOnGlobalTimeSync)
             {
                 waitingOnGlobalTimeSync = false;
-                Play();
+                InternalPlay();
             }
         }
 
@@ -215,10 +221,13 @@ namespace JanSharp
             pausedTimeSamples = 0;
         }
 
-        internal void Play()
+        /// <summary>
+        /// This is not public API, do not call this function.
+        /// </summary>
+        public void InternalPlay()
         {
             if (startType == MusicStartType.GlobalTimeSinceWorldStartSynced
-                && !Manager.HasReceivedGlobalStartTime)
+                && !Manager.InternalHasReceivedGlobalStartTime)
             {
                 waitingOnGlobalTimeSync = true;
                 return;
@@ -244,13 +253,13 @@ namespace JanSharp
             fadingIn = true;
             fadingOut = false;
             lastFadeInTime = Time.time - CurrentFadeInInterval;
-            FadeIn();
+            InternalFadeIn();
         }
 
         /// <summary>
         /// This is not public API, do not call this function.
         /// </summary>
-        public void FadeIn()
+        public void InternalFadeIn()
         {
             if (!fadingIn)
                 return;
@@ -267,10 +276,13 @@ namespace JanSharp
                 fadingIn = false;
                 return;
             }
-            SendCustomEventDelayedSeconds(nameof(FadeIn), CurrentFadeInInterval);
+            SendCustomEventDelayedSeconds(nameof(InternalFadeIn), CurrentFadeInInterval);
         }
 
-        internal void Stop()
+        /// <summary>
+        /// This is not public API, do not call this function.
+        /// </summary>
+        public void InternalStop()
         {
             if (waitingOnGlobalTimeSync)
             {
@@ -283,13 +295,13 @@ namespace JanSharp
             fadingOut = true;
             lastFadeOutTime = Time.time - fadeOutInterval;
             isFirstPlay = false;
-            FadeOut();
+            InternalFadeOut();
         }
 
         /// <summary>
         /// This is not public API, do not call this function.
         /// </summary>
-        public void FadeOut()
+        public void InternalFadeOut()
         {
             if (!fadingOut)
                 return;
@@ -310,7 +322,7 @@ namespace JanSharp
                 isPlaying = false;
                 return;
             }
-            SendCustomEventDelayedSeconds(nameof(FadeOut), fadeOutInterval);
+            SendCustomEventDelayedSeconds(nameof(InternalFadeOut), fadeOutInterval);
         }
     }
 }

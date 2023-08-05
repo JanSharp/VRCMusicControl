@@ -62,15 +62,21 @@ namespace JanSharp
         [UdonSynced] private float syncedGlobalStartTime;
         // Offset from Time.time to the proper start time (which is also in the Time.time scale) where music
         // started playing on a different client, in order to sync this one up with the other one.
-        internal float GlobalStartTimeOffset { get; private set; } = float.NaN;
-        internal bool HasReceivedGlobalStartTime => !float.IsNaN(GlobalStartTimeOffset);
+        /// <summary>
+        /// This is not public API, do not use this property.
+        /// </summary>
+        public float InternalGlobalStartTimeOffset { get; private set; } = float.NaN;
+        /// <summary>
+        /// This is not public API, do not use this property.
+        /// </summary>
+        public bool InternalHasReceivedGlobalStartTime => !float.IsNaN(InternalGlobalStartTimeOffset);
         private bool receivingData;
         [SerializeField] [HideInInspector] private bool syncGlobalStartTime; // Set in OnBuild.
 
         public override void OnPreSerialization()
         {
             if (syncGlobalStartTime)
-                syncedGlobalStartTime = Time.time + GlobalStartTimeOffset;
+                syncedGlobalStartTime = Time.time + InternalGlobalStartTimeOffset;
         }
 
         public override void OnDeserialization(DeserializationResult result)
@@ -82,10 +88,10 @@ namespace JanSharp
                 receivingData = false;
             }
 
-            if (syncGlobalStartTime && float.IsNaN(GlobalStartTimeOffset))
+            if (syncGlobalStartTime && float.IsNaN(InternalGlobalStartTimeOffset))
             {
                 syncedGlobalStartTime += result.receiveTime - result.sendTime;
-                GlobalStartTimeOffset = syncedGlobalStartTime - Time.time;
+                InternalGlobalStartTimeOffset = syncedGlobalStartTime - Time.time;
                 ReceivedGlobalStartTime();
             }
         }
@@ -114,12 +120,12 @@ namespace JanSharp
                 if (muted)
                 {
                     if (currentlyPlaying != null)
-                        currentlyPlaying.Play();
+                        currentlyPlaying.InternalPlay();
                 }
                 else
                 {
                     if (currentlyPlaying != null)
-                        currentlyPlaying.Stop();
+                        currentlyPlaying.InternalStop();
                 }
                 muted = value;
             }
@@ -131,12 +137,12 @@ namespace JanSharp
             {
                 if (Networking.LocalPlayer.isMaster)
                 {
-                    GlobalStartTimeOffset = -Time.time;
+                    InternalGlobalStartTimeOffset = -Time.time;
                     ReceivedGlobalStartTime();
                     RequestSerialization();
                 }
                 else
-                    SendCustomEventDelayedSeconds(nameof(GlobalStartTimeFallback), 15f);
+                    SendCustomEventDelayedSeconds(nameof(InternalGlobalStartTimeFallback), 15f);
             }
 
             musicListCount++;
@@ -147,13 +153,13 @@ namespace JanSharp
         /// <summary>
         /// This is not public API, do not call this function.
         /// </summary>
-        public void GlobalStartTimeFallback()
+        public void InternalGlobalStartTimeFallback()
         {
-            if (HasReceivedGlobalStartTime)
+            if (InternalHasReceivedGlobalStartTime)
                 return;
             // Just in case we just don't receive the synced time, set it to the current time and inform all
             // scripts, that way music is guaranteed to play, be it different for this player.
-            GlobalStartTimeOffset = -Time.time;
+            InternalGlobalStartTimeOffset = -Time.time;
             ReceivedGlobalStartTime();
         }
 
@@ -167,7 +173,7 @@ namespace JanSharp
         private void ReceivedGlobalStartTime()
         {
             foreach (MusicDescriptor descriptor in descriptors)
-                descriptor.ReceivedGlobalStartTime();
+                descriptor.InternalReceivedGlobalStartTime();
         }
 
         private int GetMusicDescriptorIndex(MusicDescriptor descriptor)
@@ -185,9 +191,9 @@ namespace JanSharp
             if (toSwitchTo == currentlyPlaying)
                 return;
             if (currentlyPlaying != null)
-                currentlyPlaying.Stop();
+                currentlyPlaying.InternalStop();
             if (toSwitchTo != null && !Muted)
-                toSwitchTo.Play();
+                toSwitchTo.InternalPlay();
             currentlyPlaying = toSwitchTo;
         }
 
