@@ -170,7 +170,7 @@ MonoBehaviour:
       Data: 12|UnityEngine.HeaderAttribute, UnityEngine.CoreModule
     - Name: header
       Entry: 1
-      Data: Music Descriptors managed by this Manager must be a child of this object.
+      Data: Music Descriptors managed by this Manager must be children of this object.
     - Name: 
       Entry: 8
       Data: 

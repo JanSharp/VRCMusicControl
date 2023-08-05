@@ -32,7 +32,7 @@ namespace JanSharp
         [Header("this manager are using the synced music start type.", order = 8)]
         [Space(16f, order = 9)]
         #endif
-        [Header("Music Descriptors managed by this Manager must be a child of this object.", order = 10)]
+        [Header("Music Descriptors managed by this Manager must be children of this object.", order = 10)]
         [Space(8f, order = 11)]
         [Tooltip("Music played when nothing else is playing, priority is not used for this. "
             + "Null is valid and means it's silent by default.")]
