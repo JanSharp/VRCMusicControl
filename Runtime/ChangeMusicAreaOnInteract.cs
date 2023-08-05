@@ -9,10 +9,12 @@ namespace JanSharp
     [UdonBehaviourSyncMode(BehaviourSyncMode.None)]
     public class ChangeMusicAreaOnInteract : UdonSharpBehaviour
     {
+        [PublicAPI] public bool changeIsActive = false;
         [PublicAPI] public bool changeMusicForThisArea = false;
         [PublicAPI] public bool changeUseDefaultPriority = false;
         [PublicAPI] public bool changePriority = false;
         [Space(8f)]
+        [PublicAPI] public bool isActive = true;
         [Tooltip("Actually changing it to null is not possible, but if 'Change Music For This Area' "
             + "is false, this is not used anyway, so leaving it null is fine in that case.")]
         [PublicAPI] public MusicDescriptor musicForThisArea = null;
@@ -38,6 +40,8 @@ namespace JanSharp
                         + $"ignoring it.");
                     continue;
                 }
+                if (changeIsActive)
+                    target.IsActive = isActive;
                 if (changeMusicForThisArea)
                     target.MusicForThisArea = musicForThisArea;
                 if (changeUseDefaultPriority)

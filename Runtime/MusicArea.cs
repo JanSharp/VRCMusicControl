@@ -15,6 +15,26 @@ namespace JanSharp
         [Header("The sync mode must either be Manual or None.", order = 0)]
         [Space(16f, order = 1)]
         #endif
+        [Tooltip("When false it still keeps track of the player, but music will not be played. "
+            + "Generally speaking use this instead of toggling the entire object or toggling this component "
+            + "- unless you really, really know what you're doing.")]
+        [SerializeField] private bool isActive = true;
+        [PublicAPI] public bool IsActive
+        {
+            get => isActive;
+            set
+            {
+                if (value == isActive)
+                    return;
+                isActive = value;
+                if (IsInArea)
+                    if (value)
+                        AddMusicToManager();
+                    else
+                        RemoveMusicFromManager();
+                CheckSync();
+            }
+        }
         [Tooltip("Must never be null.")]
         [SerializeField] private MusicDescriptor musicForThisArea;
         [PublicAPI] public MusicDescriptor MusicForThisArea
@@ -37,10 +57,10 @@ namespace JanSharp
                         + $"at changing music.", this);
                     return;
                 }
-                if (IsInArea)
+                if (IsInArea && IsActive)
                     RemoveMusicFromManager();
                 musicForThisArea = value;
-                if (IsInArea)
+                if (IsInArea && IsActive)
                     AddMusicToManager();
                 CheckSync();
             }
@@ -84,8 +104,9 @@ namespace JanSharp
         [SerializeField] private bool syncCurrentMusicAndPriority = true;
         private bool receivingData;
 
-        // The music index itself is left shifted by 1 and the first bit actually
-        // indicates if default priority is used. I refuse to use synced bool, such a waste of data.
+        // The music index itself is left shifted by 2 and the first 2 bits are actually used for the IsActive
+        // and UseDefaultPriority flags. Synced booleans would be such a waste of space, and at the end of the
+        // day this still supports 1 million music descriptors.
         [UdonSynced] private uint syncedMusicIndex;
         [UdonSynced] private int syncedPriority;
 
@@ -99,7 +120,9 @@ namespace JanSharp
         {
             if (!syncCurrentMusicAndPriority || receivingData)
                 return;
-            syncedMusicIndex = (((uint)MusicForThisArea.Index) << 1) | (UseDefaultPriority ? 1u : 0u);
+            syncedMusicIndex = (((uint)MusicForThisArea.Index) << 2)
+                | (UseDefaultPriority ? 2u : 0u)
+                | (IsActive ? 1u : 0u);
             syncedPriority = Priority;
             Networking.SetOwner(Networking.LocalPlayer, this.gameObject);
             RequestSerialization();
@@ -112,7 +135,8 @@ namespace JanSharp
             if (!syncCurrentMusicAndPriority)
                 return;
             receivingData = true;
-            UseDefaultPriority = (syncedMusicIndex & 1) != 0;
+            IsActive = (syncedMusicIndex & 1u) != 0;
+            UseDefaultPriority = (syncedMusicIndex & 2u) != 0;
             MusicForThisArea = Manager.Descriptors[syncedMusicIndex >> 1];
             Priority = syncedPriority;
             receivingData = false;
@@ -122,7 +146,8 @@ namespace JanSharp
         {
             if (!player.isLocal || (++triggerCount) > 1)
                 return;
-            AddMusicToManager();
+            if (IsActive)
+                AddMusicToManager();
         }
 
         public override void OnPlayerTriggerExit(VRCPlayerApi player)
@@ -131,7 +156,8 @@ namespace JanSharp
             // spawn point of the world. It still has undefined behaviour when doing that though.
             if (!player.isLocal || triggerCount == 0 || (--triggerCount) > 0)
                 return;
-            RemoveMusicFromManager();
+            if (IsActive)
+                RemoveMusicFromManager();
         }
 
         private void AddMusicToManager()
@@ -148,7 +174,7 @@ namespace JanSharp
 
         private void UseUpdatedPriorityIfInArea()
         {
-            if (!IsInArea)
+            if (!IsInArea || !IsActive)
                 return;
             RemoveMusicFromManager();
             AddMusicToManager();
