@@ -26,6 +26,4 @@ Note that a MusicArea at the spawn point of the world is not supported. Unless w
 
 # Ideas
 
-- There's an incredibly high chance that I'll change MusicDescriptors to accept multiple AudioSources.
-- I've currently got ideas for grouping, which would make using multiple controllers obsolete, but it does add complexity.
-- I'm thinking about volume sliders, possibly with category support
+- I'm thinking about volume sliders, for each music manager
