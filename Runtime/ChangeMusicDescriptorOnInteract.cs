@@ -14,10 +14,10 @@ namespace JanSharp
         [PublicAPI] public bool changeUseDifferentFadeForFirstPlay = false;
         [PublicAPI] public bool changeFirstFadeInSeconds = false;
         [Space(8f)]
-        [PublicAPI] public float fadeInSeconds = 1f;
-        [PublicAPI] public float fadeOutSeconds = 1f;
+        [PublicAPI] [Min(0f)] public float fadeInSeconds = 1f;
+        [PublicAPI] [Min(0f)] public float fadeOutSeconds = 1f;
         [PublicAPI] public bool useDifferentFadeForFirstPlay = false;
-        [PublicAPI] public float firstFadeInSeconds = 0.5f;
+        [PublicAPI] [Min(0f)] public float firstFadeInSeconds = 0.5f;
         [Space(8f)]
         [PublicAPI] public MusicDescriptor[] targets;
 

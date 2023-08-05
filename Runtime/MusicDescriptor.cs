@@ -32,8 +32,8 @@ namespace JanSharp
         [SerializeField] private bool isSilenceDescriptor;
         [PublicAPI] public bool IsSilenceDescriptor => isSilenceDescriptor;
 
-        [SerializeField] private float fadeInSeconds = 1f;
-        [SerializeField] private float fadeOutSeconds = 1f;
+        [SerializeField] [Min(0f)] private float fadeInSeconds = 1f;
+        [SerializeField] [Min(0f)] private float fadeOutSeconds = 1f;
         [HideInInspector] [SerializeField] private float fadeInInterval;
         [HideInInspector] [SerializeField] private float fadeOutInterval;
         [PublicAPI] public float FadeInSeconds
@@ -96,7 +96,7 @@ namespace JanSharp
             }
         }
         [Tooltip("Likely makes sense to use with 'Global Time Since First Play' or 'Pause'.")]
-        [SerializeField] private float firstFadeInSeconds = 0.5f;
+        [SerializeField] [Min(0f)] private float firstFadeInSeconds = 0.5f;
         [HideInInspector] [SerializeField] private float firstFadeInInterval;
         [PublicAPI] public float FirstFadeInSeconds
         {
