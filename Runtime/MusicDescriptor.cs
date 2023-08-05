@@ -143,6 +143,7 @@ namespace JanSharp
         // It's like a point in Time.time, can be negative due to syncing with other clients.
         private float globalTimeStart;
         private bool isFirstPlay = true;
+        private bool isInitialized = false;
 
         public static float CalculateUpdateInterval(float fadeSeconds)
         {
@@ -196,6 +197,19 @@ namespace JanSharp
             audioSource.timeSamples = (int)(time * (float)clip.frequency);
         }
 
+        /// <summary>
+        /// <para>Does nothing if this descriptor is currently playing.</para>
+        /// <para>Causes the FirstFadeInSeconds to be used another time, even if it played already.</para>
+        /// <para>For 'GlobalTimeSinceFirstPlay' and 'Pause' it forgets where it was and starts at the
+        /// beginning again.</para>
+        /// <para>Does not do any syncing.</para>
+        /// </summary>
+        public void Reset()
+        {
+            isFirstPlay = true;
+            pausedTimeSamples = 0;
+        }
+
         public void Play()
         {
             if (startType == MusicStartType.GlobalTimeSinceWorldStartSynced
@@ -208,8 +222,11 @@ namespace JanSharp
                 return;
             if (!isPlaying)
             {
-                if (isFirstPlay)
+                if (!isInitialized)
+                {
+                    isInitialized = true;
                     audioSource.volume = 0;
+                }
                 if (isFirstPlay && startType == MusicStartType.GlobalTimeSinceFirstPlay)
                     globalTimeStart = Time.time;
                 audioSource.Play();
