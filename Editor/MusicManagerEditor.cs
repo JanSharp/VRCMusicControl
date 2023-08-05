@@ -38,8 +38,10 @@ namespace JanSharp
                 = descriptors.Any(d => d.StartType == MusicStartType.GlobalTimeSinceWorldStartSynced);
             musicManagerProxy.ApplyModifiedProperties();
 
+            List<AudioSource> audioSources = new List<AudioSource>();
+
             int i = 0;
-            foreach (MusicDescriptor descriptor in musicManager.Descriptors)
+            foreach (MusicDescriptor descriptor in descriptors)
             {
                 SerializedObject descriptorProxy = new SerializedObject(descriptor);
                 descriptorProxy.FindProperty("manager").objectReferenceValue = musicManager;
@@ -59,6 +61,7 @@ namespace JanSharp
                         + $"is missing an AudioSource component.", descriptor);
                     return false;
                 }
+                audioSources.Add(audioSource);
                 descriptorProxy.FindProperty("audioSource").objectReferenceValue = audioSource;
                 descriptorProxy.FindProperty("maxVolume").floatValue = audioSource.volume;
                 descriptorProxy.FindProperty("firstFadeInInterval").floatValue
@@ -71,8 +74,19 @@ namespace JanSharp
                 descriptorProxy.ApplyModifiedProperties();
             }
 
+            // NOTE: When changing this logic, remember that there are tooltips about this for buttons in the
+            // MusicDescriptorEditor file.
+            var unfinishedAudioSources = audioSources.Where(a => a.playOnAwake || !a.loop);
+            if (unfinishedAudioSources.Any())
+            {
+                SerializedObject audioSourceProxy = new SerializedObject(unfinishedAudioSources.ToArray());
+                audioSourceProxy.FindProperty("m_PlayOnAwake").boolValue = false;
+                audioSourceProxy.FindProperty("Loop").boolValue = true;
+                audioSourceProxy.ApplyModifiedProperties();
+            }
+
             if (musicManager.DefaultMusic != null
-                && !musicManager.Descriptors.Contains(musicManager.DefaultMusic))
+                && !descriptors.Contains(musicManager.DefaultMusic))
             {
                 Debug.LogError($"[MusicControl] {nameof(MusicManager)}'s Default Music must be managed by "
                     + $"this music manager, aka it must be a child of it.", musicManager);
