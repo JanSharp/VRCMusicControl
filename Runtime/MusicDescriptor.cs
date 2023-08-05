@@ -184,7 +184,9 @@ namespace JanSharp
 
         public override void OnDeserialization()
         {
-            // Only one MusicDescriptor can be on an object, no special handling that's in MusicArea.
+            // Just in case some other random script requested serialization on this object.
+            if (!syncFadeValues)
+                return;
             receivingData = true;
             FadeInSeconds = syncedFadeSeconds.x;
             FadeOutSeconds = syncedFadeSeconds.y;
