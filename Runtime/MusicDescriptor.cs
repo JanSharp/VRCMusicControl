@@ -1,8 +1,9 @@
-using UdonSharp;
+﻿using UdonSharp;
 using UnityEngine;
 using UnityEngine.Serialization;
 using VRC.SDKBase;
 using VRC.Udon;
+using JetBrains.Annotations;
 
 namespace JanSharp
 {
@@ -29,13 +30,13 @@ namespace JanSharp
         [Tooltip("A music descriptor describing the absence of music. When true, "
             + "other properties get ignored, except for default priority.")]
         [SerializeField] private bool isSilenceDescriptor;
-        public bool IsSilenceDescriptor => isSilenceDescriptor;
+        [PublicAPI] public bool IsSilenceDescriptor => isSilenceDescriptor;
 
         [SerializeField] private float fadeInSeconds = 1f;
         [SerializeField] private float fadeOutSeconds = 1f;
         [HideInInspector] [SerializeField] private float fadeInInterval;
         [HideInInspector] [SerializeField] private float fadeOutInterval;
-        public float FadeInSeconds
+        [PublicAPI] public float FadeInSeconds
         {
             get => fadeInSeconds;
             set
@@ -47,7 +48,7 @@ namespace JanSharp
                 CheckSync();
             }
         }
-        public float FadeOutSeconds
+        [PublicAPI] public float FadeOutSeconds
         {
             get => fadeOutSeconds;
             set
@@ -61,7 +62,7 @@ namespace JanSharp
         }
         [FormerlySerializedAs("priority")]
         [SerializeField] private int defaultPriority;
-        public int DefaultPriority => defaultPriority;
+        [PublicAPI] public int DefaultPriority => defaultPriority;
 
         [Tooltip("When starting to play this music, where in the audio clip should it start?\n"
             + "- Global Time Since First Play: It starts that the beginning of the clip the very first time, "
@@ -76,11 +77,11 @@ namespace JanSharp
             + "- Pause: It starts the the beginning of the clip the very first time, after that whenever it "
             + "stops it remembers where it stopped and picks back up from there.")]
         [SerializeField] private MusicStartType startType = MusicStartType.GlobalTimeSinceFirstPlay;
-        public MusicStartType StartType => startType;
+        [PublicAPI] public MusicStartType StartType => startType;
 
         [Tooltip("When true, the below fade in seconds are used the very first time this music is played.")]
         [SerializeField] [UdonSynced] private bool useDifferentFadeForFirstPlay = false;
-        public bool UseDifferentFadeForFirstPlay
+        [PublicAPI] public bool UseDifferentFadeForFirstPlay
         {
             get => useDifferentFadeForFirstPlay;
             set
@@ -97,7 +98,7 @@ namespace JanSharp
         [Tooltip("Likely makes sense to use with 'Global Time Since First Play' or 'Pause'.")]
         [SerializeField] private float firstFadeInSeconds = 0.5f;
         [HideInInspector] [SerializeField] private float firstFadeInInterval;
-        public float FirstFadeInSeconds
+        [PublicAPI] public float FirstFadeInSeconds
         {
             get => firstFadeInSeconds;
             set
@@ -126,8 +127,8 @@ namespace JanSharp
 
         [HideInInspector] [SerializeField] private MusicManager manager;
         [HideInInspector] [SerializeField] private int index;
-        public MusicManager Manager => manager;
-        public int Index => index;
+        [PublicAPI] public MusicManager Manager => manager;
+        [PublicAPI] public int Index => index;
         [HideInInspector] [SerializeField] private AudioSource audioSource;
         [HideInInspector] [SerializeField] private float maxVolume;
         private float lastFadeInTime;
@@ -137,7 +138,7 @@ namespace JanSharp
 
         private bool isPlaying;
         private bool waitingOnGlobalTimeSync;
-        public bool IsPlaying => isPlaying || waitingOnGlobalTimeSync;
+        [PublicAPI] public bool IsPlaying => isPlaying || waitingOnGlobalTimeSync;
 
         private int pausedTimeSamples = 0;
         // It's like a point in Time.time, can be negative due to syncing with other clients.
@@ -184,9 +185,9 @@ namespace JanSharp
             receivingData = false;
         }
 
-        public uint AddThisMusic() => Manager.AddMusic(this);
-        public uint AddThisMusic(int priority) => Manager.AddMusic(this, priority);
-        public void SetAsDefault() => Manager.DefaultMusic = this;
+        [PublicAPI] public uint AddThisMusic() => Manager.AddMusic(this);
+        [PublicAPI] public uint AddThisMusic(int priority) => Manager.AddMusic(this, priority);
+        [PublicAPI] public void SetAsDefault() => Manager.DefaultMusic = this;
 
         private void SetTime(float time)
         {
@@ -208,13 +209,13 @@ namespace JanSharp
         /// beginning again.</para>
         /// <para>Does not do any syncing.</para>
         /// </summary>
-        public void Reset()
+        [PublicAPI] public void Reset()
         {
             isFirstPlay = true;
             pausedTimeSamples = 0;
         }
 
-        public void Play()
+        internal void Play()
         {
             if (startType == MusicStartType.GlobalTimeSinceWorldStartSynced
                 && !Manager.HasReceivedGlobalStartTime)
@@ -269,7 +270,7 @@ namespace JanSharp
             SendCustomEventDelayedSeconds(nameof(FadeIn), CurrentFadeInInterval);
         }
 
-        public void Stop()
+        internal void Stop()
         {
             if (waitingOnGlobalTimeSync)
             {

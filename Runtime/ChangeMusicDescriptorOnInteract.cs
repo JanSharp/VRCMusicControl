@@ -2,25 +2,26 @@
 using UnityEngine;
 using VRC.SDKBase;
 using VRC.Udon;
+using JetBrains.Annotations;
 
 namespace JanSharp
 {
     [UdonBehaviourSyncMode(BehaviourSyncMode.None)]
     public class ChangeMusicDescriptorOnInteract : UdonSharpBehaviour
     {
-        public bool changeFadeInSeconds = false;
-        public bool changeFadeOutSeconds = false;
-        public bool changeUseDifferentFadeForFirstPlay = false;
-        public bool changeFirstFadeInSeconds = false;
+        [PublicAPI] public bool changeFadeInSeconds = false;
+        [PublicAPI] public bool changeFadeOutSeconds = false;
+        [PublicAPI] public bool changeUseDifferentFadeForFirstPlay = false;
+        [PublicAPI] public bool changeFirstFadeInSeconds = false;
         [Space(8f)]
-        public float fadeInSeconds = 1f;
-        public float fadeOutSeconds = 1f;
-        public bool useDifferentFadeForFirstPlay = false;
-        public float firstFadeInSeconds = 0.5f;
+        [PublicAPI] public float fadeInSeconds = 1f;
+        [PublicAPI] public float fadeOutSeconds = 1f;
+        [PublicAPI] public bool useDifferentFadeForFirstPlay = false;
+        [PublicAPI] public float firstFadeInSeconds = 0.5f;
         [Space(8f)]
-        public MusicDescriptor[] targets;
+        [PublicAPI] public MusicDescriptor[] targets;
 
-        public override void Interact()
+        [PublicAPI] public override void Interact()
         {
             if (targets == null)
             {

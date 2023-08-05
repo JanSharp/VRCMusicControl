@@ -1,8 +1,9 @@
-using UdonSharp;
+﻿using UdonSharp;
 using UnityEngine;
 using VRC.SDKBase;
 using VRC.Udon;
 using VRC.Udon.Common;
+using JetBrains.Annotations;
 
 namespace JanSharp
 {
@@ -15,7 +16,10 @@ namespace JanSharp
     public class MusicManager : UdonSharpBehaviour
     {
         [SerializeField] [HideInInspector] private MusicDescriptor[] descriptors;
-        public MusicDescriptor[] Descriptors => descriptors;
+        /// <summary>
+        /// Must not modify this array, it is read only.
+        /// </summary>
+        [PublicAPI] public MusicDescriptor[] Descriptors => descriptors;
         #if AdvancedMusicManager
         [Header("The sync mode must either be Manual or None.", order = 0)]
         [Space(-8f, order = 1)]
@@ -37,7 +41,7 @@ namespace JanSharp
             + "client. This setting does not affect the network impact of this script when the values "
             + "are never changed at runtime.")]
         [SerializeField] private bool syncCurrentDefaultMusic = true;
-        public MusicDescriptor DefaultMusic
+        [PublicAPI] public MusicDescriptor DefaultMusic
         {
             get => defaultMusic;
             set
@@ -58,8 +62,8 @@ namespace JanSharp
         [UdonSynced] private float syncedGlobalStartTime;
         // Offset from Time.time to the proper start time (which is also in the Time.time scale) where music
         // started playing on a different client, in order to sync this one up with the other one.
-        public float GlobalStartTimeOffset { get; private set; } = float.NaN;
-        public bool HasReceivedGlobalStartTime => !float.IsNaN(GlobalStartTimeOffset);
+        internal float GlobalStartTimeOffset { get; private set; } = float.NaN;
+        internal bool HasReceivedGlobalStartTime => !float.IsNaN(GlobalStartTimeOffset);
         private bool receivingData;
         [SerializeField] [HideInInspector] private bool syncGlobalStartTime; // Set in OnBuild.
 
@@ -97,7 +101,7 @@ namespace JanSharp
         private int musicListCount = 0;
         private uint nextMusicId;
         private bool muted;
-        public bool Muted
+        [PublicAPI] public bool Muted
         {
             get => muted;
             set
@@ -121,7 +125,7 @@ namespace JanSharp
             }
         }
 
-        void Start()
+        private void Start()
         {
             if (syncGlobalStartTime)
             {
@@ -172,9 +176,9 @@ namespace JanSharp
         }
 
         // For convenience, specifically for hooking them up with GUI buttons.
-        public void ToggleMuteMusic() => Muted = !Muted;
-        public void MuteMusic() => Muted = true;
-        public void UnMuteMusic() => Muted = false;
+        [PublicAPI] public void ToggleMuteMusic() => Muted = !Muted;
+        [PublicAPI] public void MuteMusic() => Muted = true;
+        [PublicAPI] public void UnMuteMusic() => Muted = false;
 
         private void SetCurrentlyPlaying(MusicDescriptor toSwitchTo)
         {
@@ -205,7 +209,7 @@ namespace JanSharp
         /// <para>Returns an id used by `RemoveMusic` to remove the descriptor from the music list again.</para>
         /// <para>Uses the default priority of the given music descriptor.</para>
         /// </summary>
-        public uint AddMusic(MusicDescriptor toAdd)
+        [PublicAPI] public uint AddMusic(MusicDescriptor toAdd)
         {
             return AddMusic(toAdd, toAdd.DefaultPriority);
         }
@@ -213,7 +217,7 @@ namespace JanSharp
         /// <summary>
         /// Returns an id used by `RemoveMusic` to remove the descriptor from the music list again.
         /// </summary>
-        public uint AddMusic(MusicDescriptor toAdd, int priority)
+        [PublicAPI] public uint AddMusic(MusicDescriptor toAdd, int priority)
         {
             if (musicListCount == musicList.Length)
                 GrowMusicList();
@@ -252,7 +256,7 @@ namespace JanSharp
             musicListIds = newMusicListIds;
         }
 
-        public void RemoveMusic(uint id)
+        [PublicAPI] public void RemoveMusic(uint id)
         {
             if (musicListCount == 0)
             {

@@ -2,25 +2,26 @@
 using UnityEngine;
 using VRC.SDKBase;
 using VRC.Udon;
+using JetBrains.Annotations;
 
 namespace JanSharp
 {
     [UdonBehaviourSyncMode(BehaviourSyncMode.None)]
     public class ChangeMusicAreaOnInteract : UdonSharpBehaviour
     {
-        public bool changeMusicForThisArea = false;
-        public bool changeUseDefaultPriority = false;
-        public bool changePriority = false;
+        [PublicAPI] public bool changeMusicForThisArea = false;
+        [PublicAPI] public bool changeUseDefaultPriority = false;
+        [PublicAPI] public bool changePriority = false;
         [Space(8f)]
         [Tooltip("Actually changing it to null is not possible, but if 'Change Music For This Area' "
             + "is false, this is not used anyway, so leaving it null is fine in that case.")]
-        public MusicDescriptor musicForThisArea = null;
-        public bool useDefaultPriority = true;
-        public int priority = 0;
+        [PublicAPI] public MusicDescriptor musicForThisArea = null;
+        [PublicAPI] public bool useDefaultPriority = true;
+        [PublicAPI] public int priority = 0;
         [Space(8f)]
-        public MusicArea[] targets;
+        [PublicAPI] public MusicArea[] targets;
 
-        public override void Interact()
+        [PublicAPI] public override void Interact()
         {
             if (targets == null)
             {

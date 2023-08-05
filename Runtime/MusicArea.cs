@@ -2,6 +2,7 @@
 using UnityEngine;
 using VRC.SDKBase;
 using VRC.Udon;
+using JetBrains.Annotations;
 
 namespace JanSharp
 {
@@ -16,7 +17,7 @@ namespace JanSharp
         #endif
         [Tooltip("Must never be null.")]
         [SerializeField] private MusicDescriptor musicForThisArea;
-        public MusicDescriptor MusicForThisArea
+        [PublicAPI] public MusicDescriptor MusicForThisArea
         {
             get => musicForThisArea;
             set
@@ -44,12 +45,12 @@ namespace JanSharp
                 CheckSync();
             }
         }
-        public MusicManager Manager => MusicForThisArea.Manager;
+        [PublicAPI] public MusicManager Manager => MusicForThisArea.Manager;
 
         [Tooltip("When true, the Default Priority from the Music Descriptor is used, "
             + "otherwise the priority defined below is used.")]
         [SerializeField] private bool useDefaultPriority = true;
-        public bool UseDefaultPriority
+        [PublicAPI] public bool UseDefaultPriority
         {
             get => useDefaultPriority;
             set
@@ -64,7 +65,7 @@ namespace JanSharp
 
         [Tooltip("Only used if 'Use Default Priority' is false.")]
         [SerializeField] private int priority = 0;
-        public int Priority
+        [PublicAPI] public int Priority
         {
             get => priority;
             set

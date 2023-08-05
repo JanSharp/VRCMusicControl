@@ -2,14 +2,15 @@
 using UnityEngine;
 using VRC.SDKBase;
 using VRC.Udon;
+using JetBrains.Annotations;
 
 namespace JanSharp
 {
     [UdonBehaviourSyncMode(BehaviourSyncMode.None)]
     public class SetDefaultMusicOnInteract : UdonSharpBehaviour
     {
-        public MusicDescriptor musicToSwitchTo;
+        [PublicAPI] public MusicDescriptor musicToSwitchTo;
 
-        public override void Interact() => musicToSwitchTo.SetAsDefault();
+        [PublicAPI] public override void Interact() => musicToSwitchTo.SetAsDefault();
     }
 }
