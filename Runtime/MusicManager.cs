@@ -1,4 +1,4 @@
-﻿using UdonSharp;
+using UdonSharp;
 using UnityEngine;
 using VRC.SDKBase;
 using VRC.Udon;
@@ -140,7 +140,10 @@ namespace JanSharp
             defaultMusicIndex = GetMusicDescriptorIndex(DefaultMusic);
         }
 
-        private void GlobalStartTimeFallback()
+        /// <summary>
+        /// This is not public API, do not call this function.
+        /// </summary>
+        public void GlobalStartTimeFallback()
         {
             if (HasReceivedGlobalStartTime)
                 return;

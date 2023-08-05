@@ -1,4 +1,4 @@
-﻿using UdonSharp;
+using UdonSharp;
 using UnityEngine;
 using UnityEngine.Serialization;
 using VRC.SDKBase;
@@ -247,7 +247,7 @@ namespace JanSharp
         }
 
         /// <summary>
-        /// Isn't actually public, but has to be because it is invoked by `SendCustomEventDelayedSeconds`.
+        /// This is not public API, do not call this function.
         /// </summary>
         public void FadeIn()
         {
@@ -286,7 +286,7 @@ namespace JanSharp
         }
 
         /// <summary>
-        /// Isn't actually public, but has to be because it is invoked by `SendCustomEventDelayedSeconds`.
+        /// This is not public API, do not call this function.
         /// </summary>
         public void FadeOut()
         {
