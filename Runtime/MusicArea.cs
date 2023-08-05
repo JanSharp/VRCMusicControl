@@ -114,7 +114,7 @@ namespace JanSharp
         // To support having multiple trigger colliders on one object, as the enter and exit events get fired
         // for each collider on the object, so this keeps track of how many colliders the player is in.
         private int triggerCount;
-        private bool IsInArea => triggerCount != 0;
+        [PublicAPI] public bool IsInArea => triggerCount != 0;
 
         private void CheckSync()
         {
