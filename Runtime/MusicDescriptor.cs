@@ -43,7 +43,7 @@ namespace JanSharp
                 if (value == fadeInSeconds)
                     return;
                 fadeInSeconds = value;
-                fadeInInterval = CalculateUpdateInterval(fadeInInterval);
+                fadeInInterval = CalculateUpdateInterval(fadeInSeconds);
                 CheckSync();
             }
         }
@@ -55,7 +55,7 @@ namespace JanSharp
                 if (value == fadeOutSeconds)
                     return;
                 fadeOutSeconds = value;
-                fadeOutInterval = CalculateUpdateInterval(fadeOutInterval);
+                fadeOutInterval = CalculateUpdateInterval(fadeOutSeconds);
                 CheckSync();
             }
         }
@@ -105,7 +105,7 @@ namespace JanSharp
                 if (value == firstFadeInSeconds)
                     return;
                 firstFadeInSeconds = value;
-                CalculateUpdateInterval(firstFadeInSeconds);
+                firstFadeInInterval = CalculateUpdateInterval(firstFadeInSeconds);
                 CheckSync();
             }
         }
@@ -147,9 +147,9 @@ namespace JanSharp
 
         public static float CalculateUpdateInterval(float fadeSeconds)
         {
-            // At 1 fade second, 15 updates per second.
-            // At 10 fade seconds, 50 updates per second.
-            // Updates per second is clamped between 15 and 50.
+            // At 1 fade second, 15 total updates.
+            // At 10 fade seconds, 50 total updates.
+            // Total updates is clamped between 15 and 50.
             return fadeSeconds / Mathf.Clamp((fadeSeconds - 1f) / 9f * 35f + 15f, 15f, 50f);
         }
 
