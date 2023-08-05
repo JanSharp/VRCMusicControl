@@ -122,6 +122,7 @@ namespace JanSharp
             + "client. This setting does not affect the network impact of this script when the values "
             + "are never changed at runtime.")]
         [SerializeField] private bool syncFadeValues = true;
+        [PublicAPI] public bool SyncFadeValues => syncFadeValues;
         [UdonSynced] private Vector3 syncedFadeSeconds;
         private bool receivingData;
 

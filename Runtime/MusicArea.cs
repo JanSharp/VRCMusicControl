@@ -102,6 +102,7 @@ namespace JanSharp
             + "This setting does not affect the network impact of this script when the values are never "
             + "changed at runtime.")]
         [SerializeField] private bool syncCurrentMusicAndPriority = true;
+        [PublicAPI] public bool SyncCurrentMusicAndPriority => syncCurrentMusicAndPriority;
         private bool receivingData;
 
         // The music index itself is left shifted by 2 and the first 2 bits are actually used for the IsActive

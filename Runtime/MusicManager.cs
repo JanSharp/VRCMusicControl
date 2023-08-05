@@ -41,6 +41,7 @@ namespace JanSharp
             + "client. This setting does not affect the network impact of this script when the values "
             + "are never changed at runtime.")]
         [SerializeField] private bool syncCurrentDefaultMusic = true;
+        [PublicAPI] public bool SyncCurrentDefaultMusic => syncCurrentDefaultMusic;
         [PublicAPI] public MusicDescriptor DefaultMusic
         {
             get => defaultMusic;
