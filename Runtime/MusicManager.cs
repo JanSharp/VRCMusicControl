@@ -226,6 +226,22 @@ namespace JanSharp
         /// </summary>
         [PublicAPI] public uint AddMusic(MusicDescriptor toAdd, int priority)
         {
+            if (toAdd == null)
+            {
+                Debug.LogError($"[MusicControl] Attempt to {nameof(AddMusic)} a null "
+                    + $"{nameof(MusicDescriptor)} to the {nameof(MusicManager)} {name}. "
+                    + $"Ignoring and returning uint.MaxValue.");
+                return uint.MaxValue;
+            }
+            if (toAdd.Manager != this)
+            {
+                Debug.LogError($"[MusicControl] Attempt to {nameof(AddMusic)} the {nameof(MusicDescriptor)} "
+                    + $"{toAdd.name} to the {nameof(MusicManager)} {name}, however the "
+                    + $"{nameof(MusicDescriptor)}'s {nameof(MusicManager)} is {toAdd.Manager.name} which is a"
+                    + $"mismatch and not allowed. Ignoring and returning uint.MaxValue.");
+                return uint.MaxValue;
+            }
+
             if (musicListCount == musicList.Length)
                 GrowMusicList();
             // Figure out where to put the music in the active list based on priority.
