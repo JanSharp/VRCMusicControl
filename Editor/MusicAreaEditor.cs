@@ -31,6 +31,7 @@ namespace JanSharp
     [CustomEditor(typeof(MusicArea))]
     public class MusicAreaEditor : Editor
     {
+        private SerializedProperty isActiveProp;
         private SerializedProperty musicForThisAreaProp;
         private SerializedProperty useDefaultPriorityProp;
         private SerializedProperty priorityProp;
@@ -38,6 +39,7 @@ namespace JanSharp
 
         private void OnEnable()
         {
+            isActiveProp = serializedObject.FindProperty("isActive");
             musicForThisAreaProp = serializedObject.FindProperty("musicForThisArea");
             useDefaultPriorityProp = serializedObject.FindProperty("useDefaultPriority");
             priorityProp = serializedObject.FindProperty("priority");
@@ -53,6 +55,7 @@ namespace JanSharp
             // Intentionally not using this, as I want the 'default priority' label in the middle of the props
             // base.OnInspectorGUI(); // draws public/serializable fields
 
+            EditorGUILayout.PropertyField(isActiveProp);
             EditorGUILayout.PropertyField(musicForThisAreaProp);
             EditorGUILayout.PropertyField(useDefaultPriorityProp);
 
