@@ -28,7 +28,7 @@ namespace JanSharp
             }
 
             SerializedObject musicManagerProxy = new SerializedObject(musicManager);
-            MusicDescriptor[] descriptors = musicManager.GetComponentsInChildren<MusicDescriptor>();
+            MusicDescriptor[] descriptors = musicManager.GetComponentsInChildren<MusicDescriptor>(true);
             EditorUtil.SetArrayProperty(
                 musicManagerProxy.FindProperty("descriptors"),
                 descriptors,
