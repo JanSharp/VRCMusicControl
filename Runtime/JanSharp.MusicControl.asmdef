@@ -1,7 +1,12 @@
 {
     "name": "JanSharp.MusicControl",
     "references": [
-        "UdonSharp.Runtime"
+        "JanSharp.Common",
+        "UdonSharp.Runtime",
+        "VRC.SDK3",
+        "VRC.SDKBase",
+        "VRC.Udon",
+        "Unity.TextMeshPro"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
