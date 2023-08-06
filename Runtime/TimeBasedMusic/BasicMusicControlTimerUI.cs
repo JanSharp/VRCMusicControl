@@ -42,9 +42,7 @@ namespace JanSharp
         [SerializeField] private Toggle autoHideToggle;
         [SerializeField] private GameObject loadingOverlay;
         [SerializeField] private GameObject hiddenOverlay;
-        private bool isManuallyHidden;
-        private bool isOutOfRangeHidden;
-        private bool IsHidden => isManuallyHidden || isOutOfRangeHidden;
+        private bool isHidden;
         private bool updateLoopRunning;
         private int lastAutoHideCheck = -1;
         private const float AutoHideCheckInterval = 10f;
@@ -54,7 +52,7 @@ namespace JanSharp
             timeSlider.maxValue = maxTime;
             speedSlider.minValue = minSliderSpeed;
             speedSlider.maxValue = maxSliderSpeed;
-            isManuallyHidden = hiddenByDefault;
+            isHidden = hiddenByDefault;
             sharedTimer.RegisterOnTimerReady(this);
             sharedTimer.RegisterOnTimerSettingsChanged(this);
         }
@@ -67,13 +65,15 @@ namespace JanSharp
 
         private void StartUpdateLoop()
         {
+            if (updateLoopRunning)
+                return;
             updateLoopRunning = true;
             SendCustomEventDelayedSeconds(nameof(InternalUpdateLoop), 1f / uiUpdatesPerSecond);
         }
 
         public void OnTimerSettingsChanged()
         {
-            if (IsHidden)
+            if (isHidden)
                 return;
 
             float speed = sharedTimer.Speed;
@@ -108,7 +108,7 @@ namespace JanSharp
                     CheckHiddenState();
                 }
             }
-            if (IsHidden)
+            if (isHidden)
             {
                 updateLoopRunning = false;
                 return;
@@ -117,19 +117,16 @@ namespace JanSharp
             SendCustomEventDelayedSeconds(nameof(InternalUpdateLoop), 1f / uiUpdatesPerSecond);
         }
 
-        private void CalculateOutOfRangeHidden()
-        {
-            isOutOfRangeHidden
-                = Vector3.Distance(Networking.LocalPlayer.GetPosition(), transform.position) >= autoHideDistance;
-        }
+        private bool IsBeyondHideRange()
+            => Vector3.Distance(Networking.LocalPlayer.GetPosition(), transform.position) >= autoHideDistance;
 
         private void CheckHiddenState()
         {
-            if (!isManuallyHidden)
-                CalculateOutOfRangeHidden();
+            if (!isHidden)
+                isHidden = IsBeyondHideRange();
             OnTimerSettingsChanged(); // To update settings when its no longer hidden.
-            hiddenOverlay.SetActive(IsHidden);
-            if (!IsHidden && !updateLoopRunning)
+            hiddenOverlay.SetActive(isHidden);
+            if (!isHidden)
                 StartUpdateLoop();
         }
 
@@ -141,13 +138,13 @@ namespace JanSharp
 
         public void OnHideButtonClick()
         {
-            isManuallyHidden = true;
+            isHidden = true;
             CheckHiddenState();
         }
 
         public void OnShowButtonClick()
         {
-            isManuallyHidden = false;
+            isHidden = false;
             CheckHiddenState();
         }
     }
