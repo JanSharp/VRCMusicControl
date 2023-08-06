@@ -142,7 +142,12 @@ namespace JanSharp
         }
 
         /// <summary>
-        /// Raises the 'OnTimerReady' event as soon as the timer knows what time it is.
+        /// <para>Raises the 'OnTimerReady' event as soon as the timer knows what time it is.</para>
+        /// <para>Guaranteed to run before 'OnTimerSettingsChanged', so long as this one is registered first.</para>
+        /// <para>By the time this runs CurrentTime is ready to be read, however other values may change
+        /// nearly instantly after this event runs. However the OnTimerSettingsChanged event will be raised
+        /// for those cases anyway, and even when nothing else changes, the OnTimerSettingsChanged event will
+        /// get raised right after this. This isn't the best API at the moment, but it's better than nothing</para>
         /// </summary>
         [PublicAPI] public void RegisterOnTimerReady(UdonSharpBehaviour listener)
         {

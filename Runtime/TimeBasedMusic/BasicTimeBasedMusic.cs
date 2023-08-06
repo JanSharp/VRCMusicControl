@@ -16,6 +16,9 @@ namespace JanSharp
             sharedTimer.RegisterOnTimerReady(this);
         }
 
+        /// <summary>
+        /// This is not public API, do not call this function.
+        /// </summary>
         public void OnTimerReady() => UpdateCurrentMusic();
 
         protected override float GetTime() => sharedTimer.CurrentTime;
