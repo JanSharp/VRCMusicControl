@@ -45,7 +45,6 @@ namespace JanSharp
 
         public void OnTimerReady()
         {
-            Debug.Log($"OnTimerReady {sharedTimer.IsReady} {sharedTimer.CurrentTime} {sharedTimer.Speed} {sharedTimer.IsPaused}");
             loadingOverlay.SetActive(false);
             CheckHiddenState(); // This also starts the update loop, if it should be started.
         }
