@@ -64,18 +64,20 @@ namespace JanSharp
         [SerializeField] private int defaultPriority;
         [PublicAPI] public int DefaultPriority => defaultPriority;
 
-        [Tooltip("When starting to play this music, where in the audio clip should it start?\n"
-            + "- Global Time Since First Play: It starts that the beginning of the clip the very first time, "
-            +"after that it calculates at which timestamp music would be if it kept running constantly.\n"
-            + "- Global Time Since World Start: The same as GlobalTimeSinceFirstPlay the very first time "
-            + "doesn't get special handling, it instead pretends the music started at world start.\n"
+        [Tooltip("When starting to play this music, where in the audio clip should it start?\n\n"
+            + "- Global Time Since First Play: It starts at the beginning of the clip the first time "
+            + "playing, after that it calculates at which timestamp music would be at if it kept running "
+            + "constantly.\n\n"
+            + "- Global Time Since World Start: The same as GlobalTimeSinceFirstPlay except the first time "
+            + "playing doesn't get special handling, it instead pretends the music started at world "
+            + "start.\n\n"
             + "- Global Time Since World Start Synced: The same as GlobalTimeSinceWorldStart, but it uses "
             + "a synced world start time, which ultimately means the music will be truly the same "
-            + "for everyone whenever this music is  playing.\n"
+            + "for everyone whenever this music is playing.\n\n"
             + "- Restart: It'll restart at the beginning of the clip every time it starts playing, "
-            + "unless it was still fading out.\n"
-            + "- Pause: It starts the the beginning of the clip the very first time, after that whenever it "
-            + "stops it remembers where it stopped and picks back up from there.")]
+            + "unless it was still fading out.\n\n"
+            + "- Pause: It starts at the beginning of the clip the first time playing, after that whenever "
+            + "it stops it remembers where it stopped and picks back up from there.")]
         [SerializeField] private MusicStartType startType = MusicStartType.GlobalTimeSinceFirstPlay;
         [PublicAPI] public MusicStartType StartType => startType;
 
