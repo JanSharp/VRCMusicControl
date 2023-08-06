@@ -124,12 +124,20 @@ namespace JanSharp
         {
             if (!syncCurrentMusicAndPriority || receivingData)
                 return;
+            Networking.SetOwner(Networking.LocalPlayer, this.gameObject);
+            RequestSerialization();
+        }
+
+        public override void OnPreSerialization()
+        {
+            if (!syncCurrentMusicAndPriority)
+                return;
+            // Use OnPreSerialization instead of CheckSync for this just in case some other script requested
+            // serialization on this object.
             syncedMusicIndex = (((uint)MusicForThisArea.Index) << SyncedMusicIndexShift)
                 | (UseDefaultPriority ? UseDefaultPriorityFlag : 0u)
                 | (IsActive ? IsActiveFlag : 0u);
             syncedPriority = Priority;
-            Networking.SetOwner(Networking.LocalPlayer, this.gameObject);
-            RequestSerialization();
         }
 
         public override void OnDeserialization()

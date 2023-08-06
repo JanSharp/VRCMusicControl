@@ -177,11 +177,19 @@ namespace JanSharp
         {
             if (!syncFadeValues || receivingData)
                 return;
+            Networking.SetOwner(Networking.LocalPlayer, this.gameObject);
+            RequestSerialization();
+        }
+
+        public override void OnPreSerialization()
+        {
+            if (!syncFadeValues)
+                return;
+            // Use OnPreSerialization instead of CheckSync for this just in case some other script requested
+            // serialization on this object.
             syncedFadeSeconds.x = FadeInSeconds;
             syncedFadeSeconds.y = FadeOutSeconds;
             syncedFadeSeconds.z = FirstFadeInSeconds;
-            Networking.SetOwner(Networking.LocalPlayer, this.gameObject);
-            RequestSerialization();
         }
 
         public override void OnDeserialization()
