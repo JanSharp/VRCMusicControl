@@ -118,30 +118,11 @@ namespace JanSharp
                 StartUpdateLoop();
         }
 
-        public void OnTimeSliderValueChanged()
-        {
-            sharedTimer.CurrentTime = timeSlider.value;
-        }
-
-        public void OnTimeTextFieldConfirmed()
-        {
-            sharedTimer.CurrentTime = float.Parse(timeInput.text);
-        }
-
-        public void OnSpeedSliderValueChanged()
-        {
-            sharedTimer.Speed = speedSlider.value;
-        }
-
-        public void OnSpeedTextFieldConfirmed()
-        {
-            sharedTimer.Speed = float.Parse(speedInput.text);
-        }
-
-        public void OnPauseButtonClick()
-        {
-            sharedTimer.IsPaused = !sharedTimer.IsPaused;
-        }
+        public void OnTimeSliderValueChanged() => sharedTimer.CurrentTime = timeSlider.value;
+        public void OnTimeTextFieldConfirmed() => sharedTimer.CurrentTime = float.Parse(timeInput.text);
+        public void OnSpeedSliderValueChanged() => sharedTimer.Speed = speedSlider.value;
+        public void OnSpeedTextFieldConfirmed() => sharedTimer.Speed = float.Parse(speedInput.text);
+        public void OnPauseButtonClick() => sharedTimer.IsPaused = !sharedTimer.IsPaused;
 
         public void OnHideButtonClick()
         {
