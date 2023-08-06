@@ -105,6 +105,9 @@ namespace JanSharp
         [PublicAPI] public bool SyncCurrentMusicAndPriority => syncCurrentMusicAndPriority;
         private bool receivingData;
 
+        private const uint IsActiveFlag = 0b0001;
+        private const uint UseDefaultPriorityFlag = 0b0010;
+        private const int SyncedMusicIndexShift = 2;
         // The music index itself is left shifted by 2 and the first 2 bits are actually used for the IsActive
         // and UseDefaultPriority flags. Synced booleans would be such a waste of space, and at the end of the
         // day this still supports 1 million music descriptors.
@@ -121,9 +124,9 @@ namespace JanSharp
         {
             if (!syncCurrentMusicAndPriority || receivingData)
                 return;
-            syncedMusicIndex = (((uint)MusicForThisArea.Index) << 2)
-                | (UseDefaultPriority ? 2u : 0u)
-                | (IsActive ? 1u : 0u);
+            syncedMusicIndex = (((uint)MusicForThisArea.Index) << SyncedMusicIndexShift)
+                | (UseDefaultPriority ? UseDefaultPriorityFlag : 0u)
+                | (IsActive ? IsActiveFlag : 0u);
             syncedPriority = Priority;
             Networking.SetOwner(Networking.LocalPlayer, this.gameObject);
             RequestSerialization();
@@ -136,9 +139,9 @@ namespace JanSharp
             if (!syncCurrentMusicAndPriority)
                 return;
             receivingData = true;
-            IsActive = (syncedMusicIndex & 1u) != 0;
-            UseDefaultPriority = (syncedMusicIndex & 2u) != 0;
-            MusicForThisArea = Manager.Descriptors[syncedMusicIndex >> 1];
+            IsActive = (syncedMusicIndex & IsActiveFlag) != 0;
+            UseDefaultPriority = (syncedMusicIndex & UseDefaultPriorityFlag) != 0;
+            MusicForThisArea = Manager.Descriptors[syncedMusicIndex >> SyncedMusicIndexShift];
             Priority = syncedPriority;
             receivingData = false;
         }
