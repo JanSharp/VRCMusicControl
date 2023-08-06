@@ -17,6 +17,7 @@ namespace JanSharp
         private float currentTimeOffset = float.NaN;
         [SerializeField] private float speed = 1f;
         [SerializeField] [UdonSynced] private bool isPaused = false;
+        [SerializeField] private bool syncTimer = true;
 
         [UdonSynced] private Vector2 syncedValues;
 
@@ -89,12 +90,16 @@ namespace JanSharp
             // OnDeserialization raises it manually, otherwise it would raise twice. So only raise it when not
             // receiving data.
             RaiseOnTimerSettingsChanged();
+            if (!syncTimer)
+                return;
             Networking.SetOwner(Networking.LocalPlayer, this.gameObject);
             RequestSerialization();
         }
 
         public override void OnPreSerialization()
         {
+            if (!syncTimer)
+                return;
             syncedValues.x = Time.time + currentTimeOffset;
             syncedValues.y = speed;
             // Paused is synced without special handling.
@@ -102,6 +107,8 @@ namespace JanSharp
 
         public override void OnDeserialization(DeserializationResult result)
         {
+            if (!syncTimer)
+                return;
             receivingData = true;
             // The fact that it reassigns these values every time it syncs will cause it to jump back and
             // forth in time by a few milliseconds, but it should not be noticeable, hopefully.
@@ -113,6 +120,12 @@ namespace JanSharp
 
         private void Start()
         {
+            if (!syncTimer)
+            {
+                StartTime = 0f;
+                return;
+            }
+
             if (Networking.LocalPlayer.isMaster)
             {
                 StartTime = 0f;
@@ -125,7 +138,7 @@ namespace JanSharp
         public override void OnOwnershipTransferred(VRCPlayerApi player)
         {
             // Make sure new players receive the proper synced value.
-            if (player.isLocal)
+            if (syncTimer && player.isLocal)
                 RequestSerialization();
         }
 
