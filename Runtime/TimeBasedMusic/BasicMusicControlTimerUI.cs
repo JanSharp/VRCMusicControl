@@ -24,7 +24,6 @@ namespace JanSharp
         [SerializeField] private InputField speedInput;
         [SerializeField] private TextMeshProUGUI pauseButtonText;
         [SerializeField] private Toggle autoHideToggle;
-        [SerializeField] private Toggle instantlyApplyToggle;
         [SerializeField] private GameObject loadingOverlay;
         [SerializeField] private GameObject hiddenOverlay;
         private bool isManuallyHidden;
