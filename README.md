@@ -40,6 +40,10 @@ Head to my [VCC Listing](https://jansharp.github.io/vrc/vcclisting.xhtml) and fo
 - There mustn't be a MusicArea at the spawn point of the world, the system wouldn't get the on player trigger enter event (I'm quite certain)
 - Each MusicDescriptor can only have 1 AudioSource and each MusicManager can only have 1 MusicDescriptor currently playing. This is a limitation which both significantly simplifies the implementation and encourages people to have fewer audio sources for music active at the same time which is also a performance improvement. However there are times where multiple audio sources are totally necessary to achieve certain effects, like having music and ambiance, in which case using multiple MusicManagers would be required. Note that an object can have multiple MusicArea components, and they can have differing sync settings
 
+# Documentation
+
+Unfortunately there currently isn't any in the documentation folder, however there are a lot of headers and **tooltips**, which should be a good starting point.
+
 # Priority
 
 Priority is pretty straight forward: If music has higher priority, it will get played. If 2 MusicDescriptors get added to the MusicManager's music list with the same priority, the last one added will get played. Negative values work.
