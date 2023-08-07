@@ -1160,6 +1160,7 @@ MonoBehaviour:
     SerializationNodes: []
   _udonSharpBackingUdonBehaviour: {fileID: 2450439209564413478}
   sharedTimer: {fileID: 0}
+  minTime: 0
   maxTime: 1
   minSliderSpeed: 1
   maxSliderSpeed: 60
@@ -3379,7 +3380,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
-    m_Mode: 3
+    m_Mode: 0
     m_SelectOnUp: {fileID: 0}
     m_SelectOnDown: {fileID: 0}
     m_SelectOnLeft: {fileID: 0}
