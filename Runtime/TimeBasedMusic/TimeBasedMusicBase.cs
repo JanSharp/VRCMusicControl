@@ -9,14 +9,16 @@ namespace JanSharp
 {
     public abstract class TimeBasedMusicBase : UdonSharpBehaviour
     {
-        public float[] timeStamps;
-        public float lastMusicEndTime;
-        public MusicDescriptor[] musicAtTimeStamps;
+        [SerializeField] private float[] timeStamps;
+        [SerializeField] private float lastMusicEndTime;
+        [SerializeField] private MusicDescriptor[] musicAtTimeStamps;
         [Space(8f)]
-        public float updateInterval = 10f;
-        public bool callResetBeforeEachSwitch = true;
-        public MusicManager targetManager;
+        [PublicAPI] public float updateInterval = 10f;
+        [PublicAPI] public bool callResetBeforeEachSwitch = true;
+        [SerializeField] private MusicManager targetManager;
 
+        private float musicStartTime;
+        private float totalMusicLength;
         // -1 is evaluated at runtime too and means null. -2 here means that if -1 is evaluated as the first
         // index to use, it will actually set the current default music to null instead of not doing anything.
         private int currentIndex = -2;
@@ -26,6 +28,8 @@ namespace JanSharp
 
         protected virtual void Start()
         {
+            musicStartTime = timeStamps[0];
+            totalMusicLength = lastMusicEndTime - musicStartTime;
             if ((targetManager.SyncCurrentDefaultMusic && !Networking.LocalPlayer.isMaster)
                 || isStepLoopRunning) // It should always be false here, but order of operation trust issues.
             {
@@ -66,9 +70,10 @@ namespace JanSharp
             float time = GetTime();
             if (float.IsNaN(time))
                 return;
-            time %= lastMusicEndTime;
+            time = (time - musicStartTime) % totalMusicLength;
             if (time < 0)
-                time += lastMusicEndTime;
+                time += totalMusicLength;
+            time += musicStartTime;
 
             int length = timeStamps.Length;
             int indexToUse = length - 1; // Default to last, because the loop below never gets that far.

@@ -15,6 +15,7 @@ namespace JanSharp
         private float startTime = float.NaN;
         // Offset from Time.time to the proper current time.
         private float currentTimeOffset = float.NaN;
+        [SerializeField] private float initialTime = 0f;
         [SerializeField] private float speed = 1f;
         [SerializeField] [UdonSynced] private bool isPaused = false;
         [SerializeField] private bool syncTimer = true;
@@ -122,13 +123,13 @@ namespace JanSharp
         {
             if (!syncTimer)
             {
-                StartTime = 0f;
+                StartTime = initialTime;
                 return;
             }
 
             if (Networking.LocalPlayer.isMaster)
             {
-                StartTime = 0f;
+                StartTime = initialTime;
                 RequestSerialization();
             }
             else
@@ -151,7 +152,7 @@ namespace JanSharp
                 return;
             // Just in case we just don't receive the synced time, set it to the current time and inform all
             // scripts, that way music is guaranteed to play, be it different for this player.
-            StartTime = 0f;
+            StartTime = initialTime;
         }
 
         /// <summary>

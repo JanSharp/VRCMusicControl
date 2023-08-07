@@ -11,8 +11,15 @@ namespace JanSharp
     public class BasicMusicControlTimerUI : UdonSharpBehaviour
     {
         [SerializeField] private BasicMusicControlTimer sharedTimer;
-        [Tooltip("The time frame is the timer working with. It starts at 0, until this number. "
-            + "Used to properly scale the time slider.")]
+        [Tooltip("The time frame is the timer working with. It starts at minTime, and goes until maxTime and "
+            + "loops back around.\n"
+            + "Used to properly scale the time slider. The input field will move the input value into this "
+            + "range using modulo.")]
+        [SerializeField] private float minTime = 0f;
+        [Tooltip("The time frame is the timer working with. It starts at minTime, and goes until maxTime and "
+            + "loops back around.\n"
+            + "Used to properly scale the time slider. The input field will move the input value into this "
+            + "range using modulo.")]
         [SerializeField] [Min(1f)] private float maxTime = 1f;
         [Tooltip("The min speed that can be set using the speed slider. "
             + "The input field allows exceeding this limitation.")]
@@ -42,6 +49,7 @@ namespace JanSharp
         [SerializeField] private Toggle autoHideToggle;
         [SerializeField] private GameObject loadingOverlay;
         [SerializeField] private GameObject hiddenOverlay;
+        private float totalTime;
         private bool isHidden;
         private bool updateLoopRunning;
         private int lastAutoHideCheck = -1;
@@ -49,6 +57,8 @@ namespace JanSharp
 
         private void Start()
         {
+            totalTime = maxTime - minTime;
+            timeSlider.minValue = minTime;
             timeSlider.maxValue = maxTime;
             speedSlider.minValue = minSliderSpeed;
             speedSlider.maxValue = maxSliderSpeed;
@@ -89,9 +99,10 @@ namespace JanSharp
 
         private void UpdateTimeUI()
         {
-            float time = sharedTimer.CurrentTime % maxTime;
+            float time = (sharedTimer.CurrentTime - minTime) % totalTime;
             if (time < 0f)
-                time += maxTime;
+                time += totalTime;
+            time += minTime;
             timeSlider.SetValueWithoutNotify(time);
             if (!timeInput.isFocused)
                 timeInput.text = time.ToString("f3");
