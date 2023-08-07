@@ -1,6 +1,30 @@
 
 # Changelog
 
+## [1.0.1] - 2023-08-07
+
+### Changed
+
+- Use first time stamp as start in time based music instead of assuming 0 is start ([`91f9cb8`](https://github.com/JanSharp/VRCMusicControl/commit/91f9cb888dcc8c947f848d073c03d7d8786293c5))
+- Improve aesthetics of basic timer UI ([`f97b741`](https://github.com/JanSharp/VRCMusicControl/commit/f97b741765604207c9c4d0fb97d8201be6b82799), [`004f1a9`](https://github.com/JanSharp/VRCMusicControl/commit/004f1a9abe225e42bdffe7d715c71c3a7f43ee11))
+- Use OnPreSerialization to ensure that other scripts won't break this system's syncing ([`e231360`](https://github.com/JanSharp/VRCMusicControl/commit/e231360d27f970018980c042b5f7b5190c1847f3))
+- Improve music descriptor start time tooltip ([`8538dcc`](https://github.com/JanSharp/VRCMusicControl/commit/8538dcc9532f80e20637edb19dd5dc12530ddea8))
+
+### Added
+
+- Add option for basic timer to not be synced ([`3df525a`](https://github.com/JanSharp/VRCMusicControl/commit/3df525a71050c767345d4671ce044343e7f3c489), [`b3a9f98`](https://github.com/JanSharp/VRCMusicControl/commit/b3a9f98b867bd36651ec7d251199a4c12c99ac0a))
+- Add tooltips to basic timer UI ([`49036d8`](https://github.com/JanSharp/VRCMusicControl/commit/49036d89be22016323375f12248f4e202aef9e0f))
+
+### Removed
+
+- Remove unused objects from basic timer UI ([`788174d`](https://github.com/JanSharp/VRCMusicControl/commit/788174df7e0638e3785cde7491ef75120dc81b07))
+- Remove residual debug log from timer UI ([`7e7a996`](https://github.com/JanSharp/VRCMusicControl/commit/7e7a996240c982282c00c788f99d839e3a6a9911))
+
+### Fixed
+
+- Fix syncing for music for an area off by 1 shift ([`5eb157b`](https://github.com/JanSharp/VRCMusicControl/commit/5eb157b5f686e00bdff20437df1e7fbd40ddc05f))
+- Fix timer UI update loop potentially running twice ([`195a72a`](https://github.com/JanSharp/VRCMusicControl/commit/195a72a0075c72815930278fcaa6c35a8f028d71))
+
 ## [1.0.0] - 2023-08-06
 
 _For more info about breaking changes see [Migration Instructions](Documentation~/Migration.md#migrating-to-v100)._
@@ -115,6 +139,7 @@ _First version of this package that is in the VCC listing._
 - Add concept of a music stack, used by trigger zones which change music ([`3c33f1d`](https://github.com/JanSharp/VRCMusicControl/commit/3c33f1d1b8cf1bc5da6cb86c8ca8d8fdebf58822), [`eb6ebd3`](https://github.com/JanSharp/VRCMusicControl/commit/eb6ebd399a66753a392cf45b57a4b6eda4267dd5), [`ec5a4c7`](https://github.com/JanSharp/VRCMusicControl/commit/ec5a4c762d25ae5e80ec96be3ada19906f506722), [`4211fe2`](https://github.com/JanSharp/VRCMusicControl/commit/4211fe2ad233802a516cb3560102a5c5a4721b84), [`b4707fb`](https://github.com/JanSharp/VRCMusicControl/commit/b4707fbeed41edfc805a1fd94c6d80befc1648f5), [`9f72b56`](https://github.com/JanSharp/VRCMusicControl/commit/9f72b56ece6257f22cd21710a65ababbcf5d360d))
 - Add script to change default music ([`c5f49d9`](https://github.com/JanSharp/VRCMusicControl/commit/c5f49d9a0fbd3eff0578b1d8afe69f0165c05c64))
 
+[1.0.1]: https://github.com/JanSharp/VRCMusicControl/releases/tag/v1.0.1
 [1.0.0]: https://github.com/JanSharp/VRCMusicControl/releases/tag/v1.0.0
 [0.2.3]: https://github.com/JanSharp/VRCMusicControl/releases/tag/v0.2.3
 [0.2.2]: https://github.com/JanSharp/VRCMusicControl/releases/tag/v0.2.2
