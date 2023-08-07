@@ -18,6 +18,9 @@ namespace JanSharp
         [SerializeField] private float initialTime = 0f;
         [SerializeField] private float speed = 1f;
         [SerializeField] [UdonSynced] private bool isPaused = false;
+        [Tooltip("When enabled, all values above will be synced whenever they are changed on any client. "
+            + "This setting does not affect the network impact of this script when the values are never "
+            + "changed at runtime.")]
         [SerializeField] private bool syncTimer = true;
 
         [UdonSynced] private Vector2 syncedValues;
