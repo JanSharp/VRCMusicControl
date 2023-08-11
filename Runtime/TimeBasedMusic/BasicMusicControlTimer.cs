@@ -11,7 +11,13 @@ namespace JanSharp
     [UdonBehaviourSyncMode(BehaviourSyncMode.Manual)]
     public class BasicMusicControlTimer : UdonSharpBehaviour
     {
-        [PublicAPI] public bool IsReady => !float.IsNaN(startTime);
+        /// <summary>
+        /// Returns false until right before the 'OnTimerReady' event is raised. Values may already be
+        /// initialized before the event is raised, therefore before this value is true, however this is not
+        /// part of the specification for this API, so it should not be relied upon. Values are guaranteed to
+        /// be correct and readable as soon as 'OnTimerReady' event is raised and this value is true.
+        /// </summary>
+        [PublicAPI] public bool IsReady => readyEventHasBeenRaised;
         private float startTime = float.NaN;
         // Offset from Time.time to the proper current time.
         private float currentTimeOffset = float.NaN;
@@ -35,14 +41,21 @@ namespace JanSharp
                     return;
                 // Even if the given value is equal to the current value of startTime, Time.time is used when
                 // setting currentTimeOffset, therefore it cannot be ignored.
-                bool gotReady = !IsReady;
                 startTime = value;
                 currentTimeOffset = startTime - Time.time;
-                if (gotReady)
+                if (!readyEventHasBeenRaised)
                     FlagForOnTimerReady();
                 SettingsChanged();
             }
         }
+        /// <summary>
+        /// <para>Returns the current time, taking start time, 'Speed' and 'IsPaused' into account.</para>
+        /// <para>Can be read while 'IsReady' is false, however it will return NaN at the beginning, until at
+        /// some point the value is correct. By the time 'IsReady' is true, this is guaranteed to return a
+        /// correct value.</para>
+        /// <para>Must not be written to until 'IsReady' is true. Note that 'IsReady' is true as soon as
+        /// 'OnTimerReady' is being raised.</para>
+        /// </summary>
         [PublicAPI] public float CurrentTime
         {
             // Returns NaN if it's not initialized yet, which makes the TimeBasedMusicBase script "wait".
@@ -50,6 +63,12 @@ namespace JanSharp
             get => isPaused ? startTime : startTime + speed * (Time.time + currentTimeOffset - startTime);
             set => StartTime = value;
         }
+        /// <summary>
+        /// <para>The current speed, 1 == 1 unit per second, 2 == 2 units per second.</para>
+        /// <para>Negative values are allowed and cause the timer to run backwards.</para>
+        /// <para>Must not be read from or written to until 'IsReady' is true. Note that 'IsReady' is true as
+        /// soon as 'OnTimerReady' is being raised.</para>
+        /// </summary>
         [PublicAPI] public float Speed
         {
             get => speed;
@@ -62,6 +81,10 @@ namespace JanSharp
                 SettingsChanged();
             }
         }
+        /// <summary>
+        /// <para>Must not be read from or written to until 'IsReady' is true. Note that 'IsReady' is true as
+        /// soon as 'OnTimerReady' is being raised.</para>
+        /// </summary>
         [PublicAPI] public bool IsPaused
         {
             get => isPaused;
@@ -80,6 +103,7 @@ namespace JanSharp
         private UdonSharpBehaviour[] onReadyListeners = new UdonSharpBehaviour[ArrList.MinCapacity];
         private int onReadyListenersCount = 0;
         private bool flaggedForOnReady = false;
+        private bool readyEventHasBeenRaised = false;
 
         // Public just so intellisense users can see that this exists.
         [PublicAPI] public const string OnTimerSettingsChangedEventName = "OnTimerSettingsChanged";
@@ -91,7 +115,8 @@ namespace JanSharp
 
         private void SettingsChanged()
         {
-            FlagForOnSettingsChanged();
+            if (readyEventHasBeenRaised)
+                FlagForOnSettingsChanged();
             if (receivingData || !syncTimer)
                 return;
             Networking.SetOwner(Networking.LocalPlayer, this.gameObject);
@@ -159,29 +184,30 @@ namespace JanSharp
         /// <para>Register a behaviour for the 'OnTimerReady' event.</para>
         /// <para>Guaranteed to be raised before 'OnTimerSettingsChanged', so long as this one is registered
         /// first.</para>
-        /// <para>By the time 'OnTimerReady' is raised, all values have been assigned their initial values,
-        /// including when the timer gets initialized for late joiners.</para>
+        /// <para>By the time 'OnTimerReady' is raised, 'IsReady' is true and all values are correct and
+        /// readable.</para>
         /// </summary>
         [PublicAPI] public void RegisterOnTimerReady(UdonSharpBehaviour listener)
         {
             ArrList.Add(ref onReadyListeners, ref onReadyListenersCount, listener);
-            if (IsReady) // RegisterOnTimerReady could be called before Start on this behaviour.
-                listener.SendCustomEvent(OnTimerReadyEventName);
+            // Users are free to register for this event at any point in time. Since this is a one time event,
+            // if someone registers for it, they're doing so to get the event. If it has already been raised
+            // however, then simply raise it for this newly registered listener.
+            if (readyEventHasBeenRaised)
+                listener.SendCustomEventDelayedFrames(OnTimerReadyEventName, 1);
         }
 
         /// <summary>
         /// <para>Register a behaviour for the 'OnTimerSettingsChanged' event.</para>
         /// <para>Guaranteed to be raised after 'OnTimerReady', so long as this one is registered
         /// second.</para>
-        /// <para>Is instantly raised after 'OnTimerReady'.</para>
-        /// <para>After that, 'OnTimerSettingsChanged' is raised whenever 'CurrentTime', 'Speed' or 'IsPaused'
-        /// is changed, 1 frame delayed in order to prevent recursion.</para>
+        /// <para>Is not instantly raised after 'OnTimerReady', only under the conditions below.</para>
+        /// <para>'OnTimerSettingsChanged' is raised whenever any of 'CurrentTime', 'Speed' or 'IsPaused' are
+        /// changed, 1 frame delayed in order to prevent recursion.</para>
         /// </summary>
         [PublicAPI] public void RegisterOnTimerSettingsChanged(UdonSharpBehaviour listener)
         {
             ArrList.Add(ref onSettingsChangedListeners, ref onSettingsChangedListenersCount, listener);
-            if (IsReady) // RegisterOnTimerSettingsChanged could be called before Start on this behaviour.
-                listener.SendCustomEvent(OnTimerSettingsChangedEventName);
         }
 
         private void FlagForOnTimerReady()
@@ -208,6 +234,7 @@ namespace JanSharp
         public void InternalRaiseOnTimerReady()
         {
             flaggedForOnReady = false;
+            readyEventHasBeenRaised = true;
             for (int i = 0; i < onReadyListenersCount; i++)
                 onReadyListeners[i].SendCustomEvent(OnTimerReadyEventName);
         }
