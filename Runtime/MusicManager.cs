@@ -1,4 +1,4 @@
-using UdonSharp;
+﻿using UdonSharp;
 using UnityEngine;
 using VRC.SDKBase;
 using VRC.Udon;
@@ -77,7 +77,15 @@ namespace JanSharp
         public override void OnPreSerialization()
         {
             if (syncGlobalStartTime)
+            {
                 syncedGlobalStartTime = Time.time + InternalGlobalStartTimeOffset;
+                #if MusicControlDebug
+                Debug.Log($"[MusicControl] OnPreSerialization - "
+                    + $"syncedGlobalStartTime: {syncedGlobalStartTime},    "
+                    + $"Time.time: {Time.time},    "
+                    + $"InternalGlobalStartTimeOffset: {InternalGlobalStartTimeOffset}");
+                #endif
+            }
         }
 
         public override void OnDeserialization(DeserializationResult result)
@@ -91,6 +99,16 @@ namespace JanSharp
 
             if (syncGlobalStartTime && float.IsNaN(InternalGlobalStartTimeOffset))
             {
+                #if MusicControlDebug
+                Debug.Log($"[MusicControl] OnPreSerialization - "
+                    + $"result.receiveTime: {result.receiveTime},    "
+                    + $"result.sendTime: {result.sendTime},    "
+                    + $"result.receiveTime - result.sendTime: {result.receiveTime - result.sendTime},    "
+                    + $"original syncedGlobalStartTime: {syncedGlobalStartTime},    "
+                    + $"modified syncedGlobalStartTime: {syncedGlobalStartTime + result.receiveTime - result.sendTime},    "
+                    + $"Time.time: {Time.time},    "
+                    + $"InternalGlobalStartTimeOffset: {(syncedGlobalStartTime + result.receiveTime - result.sendTime) - Time.time}");
+                #endif
                 syncedGlobalStartTime += result.receiveTime - result.sendTime;
                 InternalGlobalStartTimeOffset = syncedGlobalStartTime - Time.time;
                 ReceivedGlobalStartTime();

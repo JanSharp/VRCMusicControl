@@ -210,6 +210,9 @@ namespace JanSharp
 
         private void SetTime(float time)
         {
+            #if MusicControlDebug
+            Debug.Log($"[MusicControl] {this.name} setting time to {time}");
+            #endif
             AudioClip clip = audioSource.clip;
             time = (time * audioSource.pitch) % clip.length;
             if (time < 0f)
