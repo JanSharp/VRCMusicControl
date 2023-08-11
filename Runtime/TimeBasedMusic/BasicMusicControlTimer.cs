@@ -104,7 +104,7 @@ namespace JanSharp
         {
             if (!syncTimer)
                 return;
-            syncedValues.x = Time.time + currentTimeOffset;
+            syncedValues.x = CurrentTime;
             syncedValues.y = speed;
             // Paused is synced without special handling.
         }
@@ -116,7 +116,7 @@ namespace JanSharp
             receivingData = true;
             // The fact that it reassigns these values every time it syncs will cause it to jump back and
             // forth in time by a few milliseconds, but it should not be noticeable, hopefully.
-            StartTime = syncedValues.x + result.receiveTime - result.sendTime;
+            CurrentTime = syncedValues.x + result.receiveTime - result.sendTime;
             Speed = syncedValues.y;
             receivingData = false;
             RaiseOnTimerSettingsChanged();
