@@ -1,4 +1,4 @@
-﻿using UdonSharp;
+using UdonSharp;
 using UnityEngine;
 using VRC.SDKBase;
 using VRC.Udon;
@@ -10,7 +10,7 @@ namespace JanSharp
     // 2 on one object are nonsensical because they'd use the same descriptors, which is not supported.
     [DisallowMultipleComponent]
     [DefaultExecutionOrder(-2000)]
-    #if !AdvancedMusicManager
+    #if !AdvancedMusicControl
     [UdonBehaviourSyncMode(BehaviourSyncMode.Manual)]
     #endif
     public class MusicManager : UdonSharpBehaviour
@@ -20,7 +20,7 @@ namespace JanSharp
         /// Must not modify this array, it is read only.
         /// </summary>
         [PublicAPI] public MusicDescriptor[] Descriptors => descriptors;
-        #if AdvancedMusicManager
+        #if AdvancedMusicControl
         [Header("The sync mode must either be Manual or None.", order = 0)]
         [Space(-8f, order = 1)]
         [Header("Note that even when 'Sync Current Default Music'", order = 2)]

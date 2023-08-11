@@ -6,12 +6,12 @@ using JetBrains.Annotations;
 
 namespace JanSharp
 {
-    #if !AdvancedMusicManager
+    #if !AdvancedMusicControl
     [UdonBehaviourSyncMode(BehaviourSyncMode.Manual)]
     #endif
     public class MusicArea : UdonSharpBehaviour
     {
-        #if AdvancedMusicManager
+        #if AdvancedMusicControl
         [Header("The sync mode must either be Manual or None.", order = 0)]
         [Space(16f, order = 1)]
         #endif
