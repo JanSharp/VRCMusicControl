@@ -57,6 +57,7 @@ namespace JanSharp
         /// 'OnTimerReady' is being raised.</para>
         /// <para>Attempts to write to this while 'IsReady' is false are ignored.</para>
         /// <para>Attempts to set this value to NaN are ignored.</para>
+        /// <para>When set, raises the 'OnSettingsChanged' event, 1 frame delayed to prevent recursion.</para>
         /// </summary>
         [PublicAPI] public float CurrentTime
         {
@@ -75,6 +76,8 @@ namespace JanSharp
         /// <para>Must not be read from until 'IsReady' is true. Note that 'IsReady' is true as soon as
         /// 'OnTimerReady' is being raised.</para>
         /// <para>Attempts to write to this while 'IsReady' is false are ignored.</para>
+        /// <para>Attempts to set the value its current value are ignored.</para>
+        /// <para>When set, raises the 'OnSettingsChanged' event, 1 frame delayed to prevent recursion.</para>
         /// </summary>
         [PublicAPI] public float Speed
         {
@@ -92,6 +95,8 @@ namespace JanSharp
         /// <para>Must not be read from until 'IsReady' is true. Note that 'IsReady' is true as soon as
         /// 'OnTimerReady' is being raised.</para>
         /// <para>Attempts to write to this while 'IsReady' is false are ignored.</para>
+        /// <para>Attempts to set the value its current value are ignored.</para>
+        /// <para>When set, raises the 'OnSettingsChanged' event, 1 frame delayed to prevent recursion.</para>
         /// </summary>
         [PublicAPI] public bool IsPaused
         {
@@ -111,6 +116,7 @@ namespace JanSharp
         private UdonSharpBehaviour[] onReadyListeners = new UdonSharpBehaviour[ArrList.MinCapacity];
         private int onReadyListenersCount = 0;
         private bool flaggedForOnReady = false;
+        /// <summary>Also indicates the current IsReady state.</summary>
         private bool readyEventHasBeenRaised = false;
 
         // Public just so intellisense users can see that this exists.
