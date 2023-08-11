@@ -55,26 +55,33 @@ namespace JanSharp
         /// correct value.</para>
         /// <para>Must not be written to until 'IsReady' is true. Note that 'IsReady' is true as soon as
         /// 'OnTimerReady' is being raised.</para>
+        /// <para>Attempts to write to this while 'IsReady' is false are ignored.</para>
+        /// <para>Attempts to set this value to NaN are ignored.</para>
         /// </summary>
         [PublicAPI] public float CurrentTime
         {
             // Returns NaN if it's not initialized yet, which makes the TimeBasedMusicBase script "wait".
             // Only the time passed since startTime is affected by speed.
             get => isPaused ? startTime : startTime + speed * (Time.time + currentTimeOffset - startTime);
-            set => StartTime = value;
+            set
+            {
+                if (readyEventHasBeenRaised)
+                    StartTime = value;
+            }
         }
         /// <summary>
         /// <para>The current speed, 1 == 1 unit per second, 2 == 2 units per second.</para>
         /// <para>Negative values are allowed and cause the timer to run backwards.</para>
-        /// <para>Must not be read from or written to until 'IsReady' is true. Note that 'IsReady' is true as
-        /// soon as 'OnTimerReady' is being raised.</para>
+        /// <para>Must not be read from until 'IsReady' is true. Note that 'IsReady' is true as soon as
+        /// 'OnTimerReady' is being raised.</para>
+        /// <para>Attempts to write to this while 'IsReady' is false are ignored.</para>
         /// </summary>
         [PublicAPI] public float Speed
         {
             get => speed;
             set
             {
-                if (value == speed)
+                if (!readyEventHasBeenRaised || value == speed)
                     return;
                 StartTime = CurrentTime; // Before setting speed, because speed affects CurrentTime.
                 speed = value;
@@ -82,15 +89,16 @@ namespace JanSharp
             }
         }
         /// <summary>
-        /// <para>Must not be read from or written to until 'IsReady' is true. Note that 'IsReady' is true as
-        /// soon as 'OnTimerReady' is being raised.</para>
+        /// <para>Must not be read from until 'IsReady' is true. Note that 'IsReady' is true as soon as
+        /// 'OnTimerReady' is being raised.</para>
+        /// <para>Attempts to write to this while 'IsReady' is false are ignored.</para>
         /// </summary>
         [PublicAPI] public bool IsPaused
         {
             get => isPaused;
             set
             {
-                if (value == isPaused)
+                if (!readyEventHasBeenRaised || value == isPaused)
                     return;
                 StartTime = CurrentTime; // Before setting isPaused, because isPaused affects CurrentTime.
                 isPaused = value;
