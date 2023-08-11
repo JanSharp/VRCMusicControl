@@ -60,17 +60,32 @@ namespace JanSharp
             }
         }
         [UdonSynced] private int defaultMusicIndex;
-        [UdonSynced] private float syncedGlobalStartTime;
+        [UdonSynced] private float syncedGlobalTime;
+        private float globalStartTime = float.NaN;
         // Offset from Time.time to the proper start time (which is also in the Time.time scale) where music
         // started playing on a different client, in order to sync this one up with the other one.
+        private float currentGlobalTimeOffset;
+        private float GlobalStartTime
+        {
+            get => globalStartTime;
+            set
+            {
+                globalStartTime = value;
+                currentGlobalTimeOffset = globalStartTime - Time.time;
+            }
+        }
         /// <summary>
         /// This is not public API, do not use this property.
         /// </summary>
-        public float InternalGlobalStartTimeOffset { get; private set; } = float.NaN;
+        public bool InternalHasReceivedGlobalTime => !float.IsNaN(GlobalStartTime);
         /// <summary>
         /// This is not public API, do not use this property.
         /// </summary>
-        public bool InternalHasReceivedGlobalStartTime => !float.IsNaN(InternalGlobalStartTimeOffset);
+        public float InternalCurrentGlobalTime
+        {
+            get => Time.time + currentGlobalTimeOffset;
+            set => GlobalStartTime = value;
+        }
         private bool receivingData;
         [SerializeField] [HideInInspector] private bool syncGlobalStartTime; // Set in OnBuild.
 
@@ -78,12 +93,12 @@ namespace JanSharp
         {
             if (syncGlobalStartTime)
             {
-                syncedGlobalStartTime = Time.time + InternalGlobalStartTimeOffset;
+                syncedGlobalTime = InternalCurrentGlobalTime;
                 #if MusicControlDebug
                 Debug.Log($"[MusicControl] OnPreSerialization - "
-                    + $"syncedGlobalStartTime: {syncedGlobalStartTime},    "
+                    + $"syncedGlobalStartTime: {syncedGlobalTime},    "
                     + $"Time.time: {Time.time},    "
-                    + $"InternalGlobalStartTimeOffset: {InternalGlobalStartTimeOffset}");
+                    + $"InternalGlobalStartTimeOffset: {currentGlobalTimeOffset}");
                 #endif
             }
         }
@@ -97,20 +112,21 @@ namespace JanSharp
                 receivingData = false;
             }
 
-            if (syncGlobalStartTime && float.IsNaN(InternalGlobalStartTimeOffset))
+            if (syncGlobalStartTime && !InternalHasReceivedGlobalTime)
             {
+                InternalCurrentGlobalTime = syncedGlobalTime + result.receiveTime - result.sendTime;
                 #if MusicControlDebug
                 Debug.Log($"[MusicControl] OnPreSerialization - "
                     + $"result.receiveTime: {result.receiveTime},    "
                     + $"result.sendTime: {result.sendTime},    "
                     + $"result.receiveTime - result.sendTime: {result.receiveTime - result.sendTime},    "
-                    + $"original syncedGlobalStartTime: {syncedGlobalStartTime},    "
-                    + $"modified syncedGlobalStartTime: {syncedGlobalStartTime + result.receiveTime - result.sendTime},    "
+                    + $"original syncedGlobalStartTime: {syncedGlobalTime},    "
+                    + $"modified syncedGlobalStartTime: {syncedGlobalTime + result.receiveTime - result.sendTime},    "
+                    + $"GlobalStartTime: {GlobalStartTime},    "
+                    + $"currentGlobalTimeOffset: {currentGlobalTimeOffset},    "
                     + $"Time.time: {Time.time},    "
-                    + $"InternalGlobalStartTimeOffset: {(syncedGlobalStartTime + result.receiveTime - result.sendTime) - Time.time}");
+                    + $"InternalCurrentGlobalTime: {InternalCurrentGlobalTime}");
                 #endif
-                syncedGlobalStartTime += result.receiveTime - result.sendTime;
-                InternalGlobalStartTimeOffset = syncedGlobalStartTime - Time.time;
                 ReceivedGlobalStartTime();
             }
         }
@@ -156,7 +172,7 @@ namespace JanSharp
             {
                 if (Networking.LocalPlayer.isMaster)
                 {
-                    InternalGlobalStartTimeOffset = -Time.time;
+                    GlobalStartTime = 0f;
                     ReceivedGlobalStartTime();
                     RequestSerialization();
                 }
@@ -174,11 +190,11 @@ namespace JanSharp
         /// </summary>
         public void InternalGlobalStartTimeFallback()
         {
-            if (InternalHasReceivedGlobalStartTime)
+            if (InternalHasReceivedGlobalTime)
                 return;
             // Just in case we just don't receive the synced time, set it to the current time and inform all
             // scripts, that way music is guaranteed to play, be it different for this player.
-            InternalGlobalStartTimeOffset = -Time.time;
+            GlobalStartTime = 0f;
             ReceivedGlobalStartTime();
         }
 

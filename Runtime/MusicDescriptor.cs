@@ -165,7 +165,10 @@ namespace JanSharp
         /// </summary>
         public void InternalReceivedGlobalStartTime()
         {
-            globalTimeStart = -(Time.time + Manager.InternalGlobalStartTimeOffset);
+            // Adding Time.time to it again because this start time gets subtracted from Time.time every time
+            // it is used. In other words, it calculates how much time has passed since this function here has
+            // run, plus the current internal time, which accounts for global time offset.
+            globalTimeStart = Time.time - Manager.InternalCurrentGlobalTime;
             if (waitingOnGlobalTimeSync)
             {
                 waitingOnGlobalTimeSync = false;
@@ -243,7 +246,7 @@ namespace JanSharp
         public void InternalPlay()
         {
             if (startType == MusicStartType.GlobalTimeSinceWorldStartSynced
-                && !Manager.InternalHasReceivedGlobalStartTime)
+                && !Manager.InternalHasReceivedGlobalTime)
             {
                 waitingOnGlobalTimeSync = true;
                 return;
