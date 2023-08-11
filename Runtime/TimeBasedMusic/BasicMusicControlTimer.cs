@@ -39,7 +39,7 @@ namespace JanSharp
                 startTime = value;
                 currentTimeOffset = startTime - Time.time;
                 if (gotReady)
-                    RaiseOnTimerReady();
+                    FlagForOnTimerReady();
                 SettingsChanged();
             }
         }
@@ -79,22 +79,20 @@ namespace JanSharp
         [PublicAPI] public const string OnTimerReadyEventName = "OnTimerReady";
         private UdonSharpBehaviour[] onReadyListeners = new UdonSharpBehaviour[ArrList.MinCapacity];
         private int onReadyListenersCount = 0;
+        private bool flaggedForOnReady = false;
 
         // Public just so intellisense users can see that this exists.
         [PublicAPI] public const string OnTimerSettingsChangedEventName = "OnTimerSettingsChanged";
         private UdonSharpBehaviour[] onSettingsChangedListeners = new UdonSharpBehaviour[ArrList.MinCapacity];
         private int onSettingsChangedListenersCount = 0;
+        private bool flaggedForOnSettingsChanged = false;
 
         private bool receivingData;
 
         private void SettingsChanged()
         {
-            if (receivingData)
-                return;
-            // OnDeserialization raises it manually, otherwise it would raise twice. So only raise it when not
-            // receiving data.
-            RaiseOnTimerSettingsChanged();
-            if (!syncTimer)
+            FlagForOnSettingsChanged();
+            if (receivingData || !syncTimer)
                 return;
             Networking.SetOwner(Networking.LocalPlayer, this.gameObject);
             RequestSerialization();
@@ -119,7 +117,6 @@ namespace JanSharp
             CurrentTime = syncedValues.x + result.receiveTime - result.sendTime;
             Speed = syncedValues.y;
             receivingData = false;
-            RaiseOnTimerSettingsChanged();
         }
 
         private void Start()
@@ -159,38 +156,68 @@ namespace JanSharp
         }
 
         /// <summary>
-        /// <para>Raises the 'OnTimerReady' event as soon as the timer knows what time it is.</para>
-        /// <para>Guaranteed to run before 'OnTimerSettingsChanged', so long as this one is registered first.</para>
-        /// <para>By the time this runs CurrentTime is ready to be read, however other values may change
-        /// nearly instantly after this event runs. However the OnTimerSettingsChanged event will be raised
-        /// for those cases anyway, and even when nothing else changes, the OnTimerSettingsChanged event will
-        /// get raised right after this. This isn't the best API at the moment, but it's better than nothing</para>
+        /// <para>Register a behaviour for the 'OnTimerReady' event.</para>
+        /// <para>Guaranteed to be raised before 'OnTimerSettingsChanged', so long as this one is registered
+        /// first.</para>
+        /// <para>By the time 'OnTimerReady' is raised, all values have been assigned their initial values,
+        /// including when the timer gets initialized for late joiners.</para>
         /// </summary>
         [PublicAPI] public void RegisterOnTimerReady(UdonSharpBehaviour listener)
         {
             ArrList.Add(ref onReadyListeners, ref onReadyListenersCount, listener);
-            if (IsReady) // Just in case something has a higher execution order than 1000.
+            if (IsReady) // RegisterOnTimerReady could be called before Start on this behaviour.
                 listener.SendCustomEvent(OnTimerReadyEventName);
         }
 
         /// <summary>
-        /// Raises the 'OnTimerSettingsChanged' event as soon as the timer knows what time it is.
+        /// <para>Register a behaviour for the 'OnTimerSettingsChanged' event.</para>
+        /// <para>Guaranteed to be raised after 'OnTimerReady', so long as this one is registered
+        /// second.</para>
+        /// <para>Is instantly raised after 'OnTimerReady'.</para>
+        /// <para>After that, 'OnTimerSettingsChanged' is raised whenever 'CurrentTime', 'Speed' or 'IsPaused'
+        /// is changed, 1 frame delayed in order to prevent recursion.</para>
         /// </summary>
         [PublicAPI] public void RegisterOnTimerSettingsChanged(UdonSharpBehaviour listener)
         {
             ArrList.Add(ref onSettingsChangedListeners, ref onSettingsChangedListenersCount, listener);
-            if (IsReady) // Just in case something has a higher execution order than 1000.
+            if (IsReady) // RegisterOnTimerSettingsChanged could be called before Start on this behaviour.
                 listener.SendCustomEvent(OnTimerSettingsChangedEventName);
         }
 
-        private void RaiseOnTimerReady()
+        private void FlagForOnTimerReady()
         {
+            if (flaggedForOnReady)
+                return;
+            flaggedForOnReady = true;
+            // I sure as hell hope that VRChat actually guarantees that events are fired in the order in which
+            // they are sent when they are run on the same frame. I sure hope... you know what that means.
+            SendCustomEventDelayedFrames(nameof(InternalRaiseOnTimerReady), 1);
+        }
+
+        private void FlagForOnSettingsChanged()
+        {
+            if (flaggedForOnSettingsChanged)
+                return;
+            flaggedForOnSettingsChanged = true;
+            SendCustomEventDelayedFrames(nameof(InternalRaiseOnTimerSettingsChanged), 1);
+        }
+
+        /// <summary>
+        /// This is not public API, do not call this function.
+        /// </summary>
+        public void InternalRaiseOnTimerReady()
+        {
+            flaggedForOnReady = false;
             for (int i = 0; i < onReadyListenersCount; i++)
                 onReadyListeners[i].SendCustomEvent(OnTimerReadyEventName);
         }
 
-        private void RaiseOnTimerSettingsChanged()
+        /// <summary>
+        /// This is not public API, do not call this function.
+        /// </summary>
+        public void InternalRaiseOnTimerSettingsChanged()
         {
+            flaggedForOnSettingsChanged = false;
             for (int i = 0; i < onSettingsChangedListenersCount; i++)
                 onSettingsChangedListeners[i].SendCustomEvent(OnTimerSettingsChangedEventName);
         }
