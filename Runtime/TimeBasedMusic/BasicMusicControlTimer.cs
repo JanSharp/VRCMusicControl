@@ -224,6 +224,8 @@ namespace JanSharp
         /// <para>Is not instantly raised after 'OnTimerReady', only under the conditions below.</para>
         /// <para>'OnTimerSettingsChanged' is raised whenever any of 'CurrentTime', 'Speed' or 'IsPaused' are
         /// changed, 1 frame delayed in order to prevent recursion.</para>
+        /// <para>Since it is 1 frame delayed, if the settings change multiple times within a frame, this
+        /// event will only be raised once next frame for the latest change.</para>
         /// </summary>
         [PublicAPI] public void RegisterOnTimerSettingsChanged(UdonSharpBehaviour listener)
         {

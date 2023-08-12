@@ -428,6 +428,8 @@ namespace JanSharp
         /// <para>Register a behaviour for the 'OnDefaultMusicChanged' event.</para>
         /// <para>'OnDefaultMusicChanged' is raised whenever the 'DefaultMusic' is changed, 1 frame delayed in
         /// order to prevent recursion.</para>
+        /// <para>Since it is 1 frame delayed, if the default music changes multiple times within a frame,
+        /// this event will only be raised once next frame for the latest change.</para>
         /// </summary>
         [PublicAPI] public void RegisterOnDefaultMusicChanged(UdonSharpBehaviour listener)
         {
