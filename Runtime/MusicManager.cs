@@ -145,6 +145,21 @@ namespace JanSharp
 
         private MusicDescriptor currentlyPlaying;
         /// <summary>
+        /// <para>Can be null, which has the same effect as a silence descriptor.</para>
+        /// <para>This is the currently main active music descriptor. The descriptor with highest priority in
+        /// the music list at this point in time. This is separate from IsPlaying on the descriptor because
+        /// they may be fading in, fading out or muted.</para>
+        /// </summary>
+        [PublicAPI] public MusicDescriptor CurrentlyPlaying
+        {
+            get
+            {
+                if (!isInitialized)
+                    InternalInitialize();
+                return currentlyPlaying;
+            }
+        }
+        /// <summary>
         /// This isn't actually truly a stack. There's no push/pop, it inserts using priority and removes
         /// based on an id obtained when inserting. Default music always lives at index 0, even when null.
         /// </summary>

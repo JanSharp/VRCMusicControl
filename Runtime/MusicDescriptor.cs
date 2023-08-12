@@ -144,6 +144,13 @@ namespace JanSharp
 
         private bool isPlaying;
         private bool waitingOnGlobalTimeSync;
+        /// <summary>
+        /// <para>Is this music descriptor currently making any sound? In other words, is it fading in, fading
+        /// out or playing music at normal volume?</para>
+        /// <para>Technically there is one case where it is not making sound and yet this returns true, which
+        /// is when this descriptor is using global time synced and the synced time has not been received
+        /// yet.</para>
+        /// </summary>
         [PublicAPI] public bool IsPlaying
         {
             get
