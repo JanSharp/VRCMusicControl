@@ -19,7 +19,8 @@ namespace JanSharp
     /// <summary>
     /// <para>The API can be used in Awake, OnEnable or Start. It will be initialized in time.</para>
     /// <para>However the DefaultMusic may not be correct yet if SyncCurrentDefaultMusic is true, since that
-    /// gets updated in the OnDeserialization event for this script.</para>
+    /// gets updated in the OnDeserialization event for this script. Listen to the 'OnDefaultMusicChanged'
+    /// event if knowing the current default music is needed.</para>
     /// </summary>
     public class MusicManager : UdonSharpBehaviour
     {
@@ -67,6 +68,7 @@ namespace JanSharp
                     Networking.SetOwner(Networking.LocalPlayer, this.gameObject);
                     RequestSerialization();
                 }
+                FlagForOnDefaultMusicChanged();
             }
         }
         [UdonSynced] private int defaultMusicIndex;
@@ -192,6 +194,12 @@ namespace JanSharp
                 muted = value;
             }
         }
+
+        // Public just so intellisense users can see that this exists.
+        [PublicAPI] public const string OnDefaultMusicChangedEventName = "OnDefaultMusicChanged";
+        private UdonSharpBehaviour[] onDefaultMusicListeners = new UdonSharpBehaviour[ArrList.MinCapacity];
+        private int onDefaultMusicListenersCount = 0;
+        private bool flaggedForOnDefaultMusic = false;
 
         private void Start() => InternalInitialize();
 
@@ -414,6 +422,34 @@ namespace JanSharp
             musicList[index] = descriptor;
             if (index == musicListCount - 1)
                 SwitchToTop();
+        }
+
+        /// <summary>
+        /// <para>Register a behaviour for the 'OnDefaultMusicChanged' event.</para>
+        /// <para>'OnDefaultMusicChanged' is raised whenever the 'DefaultMusic' is changed, 1 frame delayed in
+        /// order to prevent recursion.</para>
+        /// </summary>
+        [PublicAPI] public void RegisterOnDefaultMusicChanged(UdonSharpBehaviour listener)
+        {
+            ArrList.Add(ref onDefaultMusicListeners, ref onDefaultMusicListenersCount, listener);
+        }
+
+        private void FlagForOnDefaultMusicChanged()
+        {
+            if (flaggedForOnDefaultMusic)
+                return;
+            flaggedForOnDefaultMusic = true;
+            SendCustomEventDelayedFrames(nameof(InternalRaiseOnDefaultMusicChanged), 1);
+        }
+
+        /// <summary>
+        /// This is not public API, do not call this function.
+        /// </summary>
+        public void InternalRaiseOnDefaultMusicChanged()
+        {
+            flaggedForOnDefaultMusic = false;
+            for (int i = 0; i < onDefaultMusicListenersCount; i++)
+                onDefaultMusicListeners[i].SendCustomEvent(OnDefaultMusicChangedEventName);
         }
     }
 }
