@@ -6,6 +6,9 @@ using VRC.Udon;
 namespace JanSharp
 {
     [UdonBehaviourSyncMode(BehaviourSyncMode.None)]
+    /// <summary>
+    /// <para>The API can be used in Awake, OnEnable or Start. It will be initialized in time.</para>
+    /// </summary>
     public class BasicTimeBasedMusic : TimeBasedMusicBase
     {
         [SerializeField] private BasicMusicControlTimer sharedTimer;

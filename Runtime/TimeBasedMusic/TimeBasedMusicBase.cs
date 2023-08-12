@@ -7,6 +7,9 @@ using JetBrains.Annotations;
 
 namespace JanSharp
 {
+    /// <summary>
+    /// <para>The API can be used in Awake, OnEnable or Start. It will be initialized in time.</para>
+    /// </summary>
     public abstract class TimeBasedMusicBase : UdonSharpBehaviour
     {
         [SerializeField] private float[] timeStamps;

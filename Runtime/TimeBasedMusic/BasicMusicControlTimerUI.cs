@@ -8,6 +8,9 @@ using TMPro;
 namespace JanSharp
 {
     [UdonBehaviourSyncMode(BehaviourSyncMode.None)]
+    /// <summary>
+    /// <para>This script does not have a public api at this time.</para>
+    /// </summary>
     public class BasicMusicControlTimerUI : UdonSharpBehaviour
     {
         [SerializeField] private BasicMusicControlTimer sharedTimer;

@@ -9,6 +9,9 @@ namespace JanSharp
     #if !AdvancedMusicControl
     [UdonBehaviourSyncMode(BehaviourSyncMode.Manual)]
     #endif
+    /// <summary>
+    /// <para>The API can be used in Awake, OnEnable or Start. It will be initialized in time.</para>
+    /// </summary>
     public class MusicArea : UdonSharpBehaviour
     {
         #if AdvancedMusicControl

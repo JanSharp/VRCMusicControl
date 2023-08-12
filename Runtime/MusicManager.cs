@@ -1,4 +1,4 @@
-using UdonSharp;
+﻿using UdonSharp;
 using UnityEngine;
 using VRC.SDKBase;
 using VRC.Udon;
@@ -16,6 +16,11 @@ namespace JanSharp
     #if !AdvancedMusicControl
     [UdonBehaviourSyncMode(BehaviourSyncMode.Manual)]
     #endif
+    /// <summary>
+    /// <para>The API can be used in Awake, OnEnable or Start. It will be initialized in time.</para>
+    /// <para>However the DefaultMusic may not be correct yet if SyncCurrentDefaultMusic is true, since that
+    /// gets updated in the OnDeserialization event for this script.</para>
+    /// </summary>
     public class MusicManager : UdonSharpBehaviour
     {
         [SerializeField] [HideInInspector] private MusicDescriptor[] descriptors;
@@ -50,6 +55,8 @@ namespace JanSharp
             get => defaultMusic;
             set
             {
+                if (!isInitialized)
+                    InternalInitialize();
                 if (defaultMusic == value)
                     return;
                 ReplaceMusic(0, value);
@@ -91,6 +98,8 @@ namespace JanSharp
         }
         private bool receivingData;
         [SerializeField] [HideInInspector] private bool syncGlobalStartTime; // Set in OnBuild.
+
+        private bool isInitialized = false;
 
         public override void OnPreSerialization()
         {
@@ -169,8 +178,23 @@ namespace JanSharp
             }
         }
 
-        private void Start()
+        private void Start() => InternalInitialize();
+
+        /// <summary>
+        /// This is not public API, do not call this function.
+        /// </summary>
+        public void InternalInitialize()
         {
+            // If you look at all the usages of this function you'll see everything that requires the system
+            // to be initialized before being used. This is important because there is no fixed execution
+            // order for UdonBehaviours, and other scripts could also be using this api inside of Awake or
+            // OnEnable, which happen before Start regardless. So everything that requires the system to be
+            // initialized must make sure itself that it is in fact initialized.
+
+            if (isInitialized)
+                return;
+            isInitialized = true;
+
             if (syncGlobalStartTime)
             {
                 if (Networking.LocalPlayer.isMaster)
@@ -263,6 +287,8 @@ namespace JanSharp
         /// </summary>
         [PublicAPI] public uint AddMusic(MusicDescriptor toAdd, int priority)
         {
+            if (!isInitialized)
+                InternalInitialize();
             if (toAdd == null)
             {
                 Debug.LogError($"[MusicControl] Attempt to {nameof(AddMusic)} a null "
@@ -318,6 +344,8 @@ namespace JanSharp
 
         [PublicAPI] public void RemoveMusic(uint id)
         {
+            if (!isInitialized)
+                InternalInitialize();
             if (musicListCount == 0)
             {
                 Debug.LogWarning($"[MusicControl] Attempt to {nameof(RemoveMusic)} the id {id} "
