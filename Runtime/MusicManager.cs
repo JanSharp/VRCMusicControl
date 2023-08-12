@@ -1,4 +1,4 @@
-﻿using UdonSharp;
+using UdonSharp;
 using UnityEngine;
 using VRC.SDKBase;
 using VRC.Udon;
@@ -9,7 +9,10 @@ namespace JanSharp
 {
     // 2 on one object are nonsensical because they'd use the same descriptors, which is not supported.
     [DisallowMultipleComponent]
-    [DefaultExecutionOrder(-2000)]
+    // NOTE: Given that this class is ultimately used to generate Udon assembly which is then used on the ...
+    // component type UdonBehaviour for every single script, the concept of DefaultExecutionOrder doesn't
+    // actually exist. Udon would require implementation for that itself, which I don't think it does.
+    // [DefaultExecutionOrder(-2000)]
     #if !AdvancedMusicControl
     [UdonBehaviourSyncMode(BehaviourSyncMode.Manual)]
     #endif

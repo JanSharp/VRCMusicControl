@@ -7,7 +7,10 @@ using JetBrains.Annotations;
 
 namespace JanSharp
 {
-    [DefaultExecutionOrder(1000)]
+    // NOTE: Given that this class is ultimately used to generate Udon assembly which is then used on the ...
+    // component type UdonBehaviour for every single script, the concept of DefaultExecutionOrder doesn't
+    // actually exist. Udon would require implementation for that itself, which I don't think it does.
+    // [DefaultExecutionOrder(1000)]
     [UdonBehaviourSyncMode(BehaviourSyncMode.Manual)]
     public class BasicMusicControlTimer : UdonSharpBehaviour
     {
