@@ -13,6 +13,7 @@ namespace JanSharp
     /// </summary>
     public class BasicMusicControlTimerUI : UdonSharpBehaviour
     {
+        [Tooltip("Must not be null.")]
         [SerializeField] private BasicMusicControlTimer sharedTimer;
         [Tooltip("The time frame is the timer working with. It starts at minTime, and goes until maxTime and "
             + "loops back around.\n"

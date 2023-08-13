@@ -11,6 +11,7 @@ namespace JanSharp
     /// </summary>
     public class BasicTimeBasedMusic : TimeBasedMusicBase
     {
+        [Tooltip("Must not be null.")]
         [SerializeField] private BasicMusicControlTimer sharedTimer;
 
         protected override void Start()
