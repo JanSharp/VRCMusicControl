@@ -1,4 +1,4 @@
-﻿using UdonSharp;
+using UdonSharp;
 using UnityEngine;
 using VRC.SDKBase;
 using VRC.Udon;
@@ -34,7 +34,7 @@ namespace JanSharp
             if ((targetManager.SyncCurrentDefaultMusic && !Networking.LocalPlayer.isMaster)
                 || isStepLoopRunning) // It should always be false here, but order of operation trust issues.
             {
-                return;   
+                return;
             }
             isStepLoopRunning = true;
             SendCustomEventDelayedSeconds(nameof(InternalStep), updateInterval);
