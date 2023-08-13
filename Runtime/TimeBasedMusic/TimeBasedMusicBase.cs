@@ -12,12 +12,25 @@ namespace JanSharp
     /// </summary>
     public abstract class TimeBasedMusicBase : UdonSharpBehaviour
     {
+        [Tooltip("Defines the start times at which the corresponding Music At Time Stamps starts playing. "
+            + "The first timestamp defines the start of the time range used to determine the total length of "
+            + "all time ranges, because when the current time is outside of this time frame it will use "
+            + "modulo to move it into the range and then determines what music to play.\n"
+            + "Must have the same length as Music At Time Stamps array.\n"
+            + "Must be sequential, ascending and not equal to each other.")]
         [SerializeField] private float[] timeStamps;
+        [Tooltip("Defines the end time for the last entry in the Time Stamps and Music At Time Stamps array. "
+            + "Must be greater than the last entry in Time Stamps.")]
         [SerializeField] private float lastMusicEndTime;
+        [Tooltip("Defines what music to play at at the corresponding time in Time Stamps. Null entires have "
+            + "have the same effect as a silence MusicDescriptor.\n"
+            + "Must have the same length as the Time Stamps array.")]
         [SerializeField] private MusicDescriptor[] musicAtTimeStamps;
         [Space(8f)]
         [PublicAPI] public float updateInterval = 10f;
         [PublicAPI] public bool callResetBeforeEachSwitch = true;
+        [Tooltip("Must not be null. All MusicDescriptors in Music At Time Stamps must also be apart of this "
+            + "MusicManager.")]
         [SerializeField] private MusicManager targetManager;
 
         [SerializeField] [HideInInspector] private float musicStartTime;
