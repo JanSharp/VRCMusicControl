@@ -20,8 +20,8 @@ namespace JanSharp
         [PublicAPI] public bool callResetBeforeEachSwitch = true;
         [SerializeField] private MusicManager targetManager;
 
-        private float musicStartTime;
-        private float totalMusicLength;
+        [SerializeField] [HideInInspector] private float musicStartTime;
+        [SerializeField] [HideInInspector] private float totalMusicLength;
         // -1 is evaluated at runtime too and means null. -2 here means that if -1 is evaluated as the first
         // index to use, it will actually set the current default music to null instead of not doing anything.
         private int currentIndex = -2;
@@ -31,8 +31,6 @@ namespace JanSharp
 
         protected virtual void Start()
         {
-            musicStartTime = timeStamps[0];
-            totalMusicLength = lastMusicEndTime - musicStartTime;
             if ((targetManager.SyncCurrentDefaultMusic && !Networking.LocalPlayer.isMaster)
                 || isStepLoopRunning) // It should always be false here, but order of operation trust issues.
             {
