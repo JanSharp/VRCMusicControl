@@ -1,6 +1,40 @@
 
 # Changelog
 
+## [1.1.0] - 2023-08-14
+
+_Several changes could be breaking changes in specific situations._
+
+### Changed
+
+- Change OnTimerReady to guarantee all values have been initialized before it is raised ([`a223bc6`](https://github.com/JanSharp/VRCMusicControl/commit/a223bc665eb0018d41a96affde47ca5e412c62f6))
+- Change dependency on `com.jansharp.common` to `0.2.0` for editor scripting ([`c5cc6cd`](https://github.com/JanSharp/VRCMusicControl/commit/c5cc6cd74e8554510082af2b039b9bebcf0e41d5))
+- Ensure every API is usable at any point, even in Awake ([`4e2a14b`](https://github.com/JanSharp/VRCMusicControl/commit/4e2a14bfb171f27fa94640382e6ab80f5e99c879))
+- Change BasicMusicControlTimer to ignore writes when not ready ([`71bff5b`](https://github.com/JanSharp/VRCMusicControl/commit/71bff5bca5ddf5efd6109c1d479b1bf9a641833c))
+- Ensure references to Shared Timer exist at build time ([`b070000`](https://github.com/JanSharp/VRCMusicControl/commit/b0700007690e970f6e6e08cc5576c04f97562390))
+- Change events to be raised 1 frame delayed to prevent recursion ([`a223bc6`](https://github.com/JanSharp/VRCMusicControl/commit/a223bc665eb0018d41a96affde47ca5e412c62f6), [`e16f175`](https://github.com/JanSharp/VRCMusicControl/commit/e16f175d138e2be5ba12edce1a0e4bb9e0bcc8d5))
+- Improve summaries for BasicMusicControlTimer event register functions ([`a223bc6`](https://github.com/JanSharp/VRCMusicControl/commit/a223bc665eb0018d41a96affde47ca5e412c62f6))
+- Rename preprocessor define from `AdvancedMusicManager` to `AdvancedMusicControl` ([`a70e7cf`](https://github.com/JanSharp/VRCMusicControl/commit/a70e7cf434596b8fafe8c37f5a290f4c1a588671))
+- Disable UI navigation on HiddenOverlay button ([`8714647`](https://github.com/JanSharp/VRCMusicControl/commit/8714647031537299f81920e77431d078e99c0b69))
+
+### Added
+
+- Add MusicAreaToggleOnInteract plus validation at build time ([`acc938f`](https://github.com/JanSharp/VRCMusicControl/commit/acc938fce31a3797b97ac91821d7129e8c632658))
+- Add OnDefaultMusicChanged event on MusicManager ([`9b1671e`](https://github.com/JanSharp/VRCMusicControl/commit/9b1671e9b0a83f27be2358f940758eb5351b949b), [`e16f175`](https://github.com/JanSharp/VRCMusicControl/commit/e16f175d138e2be5ba12edce1a0e4bb9e0bcc8d5))
+- Add tooltips to TimeBasedMusicBase ([`e5545d3`](https://github.com/JanSharp/VRCMusicControl/commit/e5545d3b038c5238778fd21dd220441209204cee))
+- Add note in summaries about setting BasicMusicControlTimer values raising event ([`d3bd98c`](https://github.com/JanSharp/VRCMusicControl/commit/d3bd98c598b8dd8719a334b83ad28158b351fb44))
+- Add editor scripting for TimeBasedMusicBase to validate data at build time ([`c5cc6cd`](https://github.com/JanSharp/VRCMusicControl/commit/c5cc6cd74e8554510082af2b039b9bebcf0e41d5))
+- Add debug only debug messages enabled with the MusicControlDebug preprocessor define ([`996ac02`](https://github.com/JanSharp/VRCMusicControl/commit/996ac029eee5b34412993a61164c2e6035b2b667))
+
+### Removed
+
+- Remove DefaultExecutionOrder attribute, I'm pretty sure it doesn't do anything ([`05f69b7`](https://github.com/JanSharp/VRCMusicControl/commit/05f69b78ab23bf6ff1a2564896185bbe1f5eb07f))
+
+### Fixed
+
+- Refactor global time syncing. It may have been broken, it is now fixed ([`b656c40`](https://github.com/JanSharp/VRCMusicControl/commit/b656c404b9fce6bc842424752d684f6dcef02dad))
+- Fix time syncing not including speed in calc ([`8551fa4`](https://github.com/JanSharp/VRCMusicControl/commit/8551fa4e3737fe10aff6567f298fea13e79c7caa))
+
 ## [1.0.1] - 2023-08-07
 
 ### Changed
@@ -139,6 +173,7 @@ _First version of this package that is in the VCC listing._
 - Add concept of a music stack, used by trigger zones which change music ([`3c33f1d`](https://github.com/JanSharp/VRCMusicControl/commit/3c33f1d1b8cf1bc5da6cb86c8ca8d8fdebf58822), [`eb6ebd3`](https://github.com/JanSharp/VRCMusicControl/commit/eb6ebd399a66753a392cf45b57a4b6eda4267dd5), [`ec5a4c7`](https://github.com/JanSharp/VRCMusicControl/commit/ec5a4c762d25ae5e80ec96be3ada19906f506722), [`4211fe2`](https://github.com/JanSharp/VRCMusicControl/commit/4211fe2ad233802a516cb3560102a5c5a4721b84), [`b4707fb`](https://github.com/JanSharp/VRCMusicControl/commit/b4707fbeed41edfc805a1fd94c6d80befc1648f5), [`9f72b56`](https://github.com/JanSharp/VRCMusicControl/commit/9f72b56ece6257f22cd21710a65ababbcf5d360d))
 - Add script to change default music ([`c5f49d9`](https://github.com/JanSharp/VRCMusicControl/commit/c5f49d9a0fbd3eff0578b1d8afe69f0165c05c64))
 
+[1.1.0]: https://github.com/JanSharp/VRCMusicControl/releases/tag/v1.1.0
 [1.0.1]: https://github.com/JanSharp/VRCMusicControl/releases/tag/v1.0.1
 [1.0.0]: https://github.com/JanSharp/VRCMusicControl/releases/tag/v1.0.0
 [0.2.3]: https://github.com/JanSharp/VRCMusicControl/releases/tag/v0.2.3
