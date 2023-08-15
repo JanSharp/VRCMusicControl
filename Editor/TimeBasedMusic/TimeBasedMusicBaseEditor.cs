@@ -36,6 +36,13 @@ namespace JanSharp
                 return false;
             }
 
+            if (timeStampsProp.arraySize == 0)
+            {
+                Debug.LogError($"[MusicControl] There must be at least 1 entry in Time Stamps and Music At "
+                    + $"Time Stamps for {timeBasedMusicBase.name}.", timeBasedMusicBase);
+                return false;
+            }
+
             float prevTimeStamp = float.NegativeInfinity;
             foreach (SerializedProperty timeStampProp in EditorUtil.EnumerateArrayProperty(timeStampsProp))
             {
