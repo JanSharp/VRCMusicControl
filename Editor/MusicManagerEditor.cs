@@ -48,7 +48,7 @@ namespace JanSharp
                 descriptorProxy.FindProperty("index").intValue = i++;
                 descriptorProxy.ApplyModifiedProperties();
 
-                if (descriptor.IsSilenceDescriptor)
+                if (descriptorProxy.FindProperty("isSilenceDescriptor").boolValue)
                 {
                     descriptorProxy.ApplyModifiedProperties();
                     continue;
@@ -63,6 +63,7 @@ namespace JanSharp
                 }
                 audioSources.Add(audioSource);
                 descriptorProxy.FindProperty("audioSource").objectReferenceValue = audioSource;
+                descriptorProxy.FindProperty("forcedSilenceDescriptor").boolValue = audioSource.clip == null;
                 descriptorProxy.FindProperty("maxVolume").floatValue = audioSource.volume;
                 descriptorProxy.FindProperty("firstFadeInInterval").floatValue
                     = MusicDescriptor.CalculateUpdateInterval(descriptor.FirstFadeInSeconds);

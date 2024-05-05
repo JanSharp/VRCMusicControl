@@ -7,6 +7,7 @@ using UnityEditor;
 using UdonSharpEditor;
 using System.Linq;
 using System.Collections.Generic;
+using System.Reflection;
 
 namespace JanSharp
 {
@@ -32,6 +33,13 @@ namespace JanSharp
     [CustomEditor(typeof(MusicDescriptor))]
     public class MusicDescriptorEditor : Editor
     {
+        private static bool GetIsSilenceDescriptor(MusicDescriptor descriptor)
+        {
+            return (bool)typeof(MusicDescriptor)
+                .GetField("isSilenceDescriptor", BindingFlags.Instance | BindingFlags.NonPublic)
+                .GetValue(descriptor);
+        }
+
         public override void OnInspectorGUI()
         {
             if (UdonSharpGUI.DrawDefaultUdonSharpBehaviourHeader(targets))
@@ -43,7 +51,7 @@ namespace JanSharp
             EditorUtil.ConditionalButton(
                 new GUIContent("Add Audio Source", "An Audio Source is required for non silence descriptors."),
                 targets.Cast<MusicDescriptor>()
-                    .Where(d => !d.IsSilenceDescriptor && d.GetComponent<AudioSource>() == null),
+                    .Where(d => !GetIsSilenceDescriptor(d) && d.GetComponent<AudioSource>() == null),
                 descriptors => {
                     foreach (MusicDescriptor descriptor in descriptors)
                         descriptor.gameObject.AddComponent<AudioSource>();
@@ -56,7 +64,7 @@ namespace JanSharp
                         + "(Play On Awake gets disabled automatically when entering play mode or publishing.)"
                 ),
                 targets.Cast<MusicDescriptor>()
-                    .Where(d => !d.IsSilenceDescriptor)
+                    .Where(d => !GetIsSilenceDescriptor(d))
                     .Select(d => d.GetComponent<AudioSource>())
                     .Where(a => a != null && a.playOnAwake),
                 audioSources => {
@@ -72,7 +80,7 @@ namespace JanSharp
                         + "(Loop gets enabled automatically when entering play mode or publishing.)"
                 ),
                 targets.Cast<MusicDescriptor>()
-                    .Where(d => !d.IsSilenceDescriptor)
+                    .Where(d => !GetIsSilenceDescriptor(d))
                     .Select(d => d.GetComponent<AudioSource>())
                     .Where(a => a != null && !a.loop),
                 audioSources => {
@@ -87,7 +95,7 @@ namespace JanSharp
                     "Pretty sure these are essentially required for VRChat, but I could be wrong."
                 ),
                 targets.Cast<MusicDescriptor>()
-                    .Where(d => !d.IsSilenceDescriptor && d.GetComponent<VRCSpatialAudioSource>() == null),
+                    .Where(d => !GetIsSilenceDescriptor(d) && d.GetComponent<VRCSpatialAudioSource>() == null),
                 descriptors => {
                     foreach (MusicDescriptor descriptor in descriptors)
                         descriptor.gameObject.AddComponent<VRCSpatialAudioSource>();
@@ -102,7 +110,7 @@ namespace JanSharp
                         + "I could be wrong."
                 ),
                 targets.Cast<MusicDescriptor>()
-                    .Where(d => !d.IsSilenceDescriptor)
+                    .Where(d => !GetIsSilenceDescriptor(d))
                     .Select(d => d.GetComponent<VRCSpatialAudioSource>())
                     .Where(s => s != null && s.EnableSpatialization),
                 vrcAudioSources => {

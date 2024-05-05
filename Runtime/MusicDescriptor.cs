@@ -31,9 +31,11 @@ namespace JanSharp
         [Space(16f, order = 1)]
         #endif
         [Tooltip("A music descriptor describing the absence of music. When true, "
-            + "other properties get ignored, except for default priority.")]
+            + "other properties get ignored, except for default priority.\n"
+            + "When the AudioSource has no audio clip, this is forced to true at runtime.")]
         [SerializeField] private bool isSilenceDescriptor;
-        [PublicAPI] public bool IsSilenceDescriptor => isSilenceDescriptor;
+        [HideInInspector] [SerializeField] private bool forcedSilenceDescriptor;
+        [PublicAPI] public bool IsSilenceDescriptor => isSilenceDescriptor || forcedSilenceDescriptor;
 
         [SerializeField] [Min(0f)] private float fadeInSeconds = 1f;
         [SerializeField] [Min(0f)] private float fadeOutSeconds = 1f;
@@ -268,7 +270,7 @@ namespace JanSharp
                 waitingOnGlobalTimeSync = true;
                 return;
             }
-            if (isSilenceDescriptor)
+            if (IsSilenceDescriptor)
                 return;
             if (!isPlaying)
             {
@@ -325,7 +327,7 @@ namespace JanSharp
                 waitingOnGlobalTimeSync = false;
                 return;
             }
-            if (isSilenceDescriptor || !isPlaying)
+            if (IsSilenceDescriptor || !isPlaying)
                 return;
             fadingIn = false;
             fadingOut = true;
