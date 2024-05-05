@@ -1,6 +1,12 @@
 
 # Changelog
 
+## [1.1.2] - 2024-05-05
+
+### Fixed
+
+- Fix AudioSources without AudioClips erroring ([`de57885`](https://github.com/JanSharp/VRCMusicControl/commit/de578852969dcb888cfa7d4cfd03b0ed5ede7060))
+
 ## [1.1.1] - 2023-10-12
 
 ### Changed
@@ -187,6 +193,7 @@ _First version of this package that is in the VCC listing._
 - Add concept of a music stack, used by trigger zones which change music ([`3c33f1d`](https://github.com/JanSharp/VRCMusicControl/commit/3c33f1d1b8cf1bc5da6cb86c8ca8d8fdebf58822), [`eb6ebd3`](https://github.com/JanSharp/VRCMusicControl/commit/eb6ebd399a66753a392cf45b57a4b6eda4267dd5), [`ec5a4c7`](https://github.com/JanSharp/VRCMusicControl/commit/ec5a4c762d25ae5e80ec96be3ada19906f506722), [`4211fe2`](https://github.com/JanSharp/VRCMusicControl/commit/4211fe2ad233802a516cb3560102a5c5a4721b84), [`b4707fb`](https://github.com/JanSharp/VRCMusicControl/commit/b4707fbeed41edfc805a1fd94c6d80befc1648f5), [`9f72b56`](https://github.com/JanSharp/VRCMusicControl/commit/9f72b56ece6257f22cd21710a65ababbcf5d360d))
 - Add script to change default music ([`c5f49d9`](https://github.com/JanSharp/VRCMusicControl/commit/c5f49d9a0fbd3eff0578b1d8afe69f0165c05c64))
 
+[1.1.2]: https://github.com/JanSharp/VRCMusicControl/releases/tag/v1.1.2
 [1.1.1]: https://github.com/JanSharp/VRCMusicControl/releases/tag/v1.1.1
 [1.1.0]: https://github.com/JanSharp/VRCMusicControl/releases/tag/v1.1.0
 [1.0.1]: https://github.com/JanSharp/VRCMusicControl/releases/tag/v1.0.1
