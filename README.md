@@ -50,7 +50,7 @@ Priority is pretty straight forward: If music has higher priority, it will get p
 
 # Runtime API
 
-At this time there is no documentation unfortunately, however each script (except BasicMusicControlTimerUI) has each public member that's actually apart of the API marked with teh PublicAPI attribute, and each public member that isn't apart of the API has a summary stating as such, and several of these also have a prefix of "Internal".
+At this time there is no documentation unfortunately, however each script (except BasicMusicControlTimerUI) has each public member that's actually part of the API marked with the PublicAPI attribute, and each public member that isn't apart of the API has a summary stating as such, and several of these also have a prefix of "Internal".
 
 There are a few summaries for functions which is a bare minimum of documentation which can be read whenever using the functions or by reading through the source scripts.
 
