@@ -7,10 +7,7 @@ using JetBrains.Annotations;
 
 namespace JanSharp
 {
-    // NOTE: Given that this class is ultimately used to generate Udon assembly which is then used on the ...
-    // component type UdonBehaviour for every single script, the concept of DefaultExecutionOrder doesn't
-    // actually exist. Udon would require implementation for that itself, which I don't think it does.
-    // [DefaultExecutionOrder(1000)]
+    [DefaultExecutionOrder(1000)] // Udon does actually have this concept and UdonSharp explicitly supports it.
     [UdonBehaviourSyncMode(BehaviourSyncMode.Manual)]
     /// <summary>
     /// <para>The API can be used in Awake, OnEnable or Start. It will be initialized in time.</para>

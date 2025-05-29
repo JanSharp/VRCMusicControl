@@ -9,10 +9,7 @@ namespace JanSharp
 {
     // 2 on one object are nonsensical because they'd use the same descriptors, which is not supported.
     [DisallowMultipleComponent]
-    // NOTE: Given that this class is ultimately used to generate Udon assembly which is then used on the ...
-    // component type UdonBehaviour for every single script, the concept of DefaultExecutionOrder doesn't
-    // actually exist. Udon would require implementation for that itself, which I don't think it does.
-    // [DefaultExecutionOrder(-2000)]
+    [DefaultExecutionOrder(-2000)] // Udon does actually have this concept and UdonSharp explicitly supports it.
     #if !AdvancedMusicControl
     [UdonBehaviourSyncMode(BehaviourSyncMode.Manual)]
     #endif
