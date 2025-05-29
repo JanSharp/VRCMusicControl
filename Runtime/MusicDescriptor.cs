@@ -2,7 +2,6 @@
 using UnityEngine;
 using UnityEngine.Serialization;
 using VRC.SDKBase;
-using VRC.Udon;
 using JetBrains.Annotations;
 
 namespace JanSharp

@@ -1,12 +1,6 @@
-using UdonSharp;
 using UnityEngine;
-using VRC.SDKBase;
-using VRC.Udon;
-using VRC.SDK3.Components;
 using UnityEditor;
-using UdonSharpEditor;
 using System.Linq;
-using System.Collections.Generic;
 
 namespace JanSharp
 {
@@ -15,7 +9,7 @@ namespace JanSharp
     {
         // Uses order 1 in order to run after all MusicDescriptors have been assigned the MusicManager.
         static TimeBasedMusicBaseOnBuild()
-            => JanSharp.OnBuildUtil.RegisterType<TimeBasedMusicBase>(OnBuild, 1);
+            => OnBuildUtil.RegisterType<TimeBasedMusicBase>(OnBuild, 1);
 
         private static bool Validate(
             TimeBasedMusicBase timeBasedMusicBase,
@@ -25,7 +19,7 @@ namespace JanSharp
         {
             firstTimeStamp = 0f;
             lastMusicEndTime = 0f;
-            
+
             SerializedProperty timeStampsProp = proxy.FindProperty("timeStamps");
             SerializedProperty musicAtTimeStampsProp = proxy.FindProperty("musicAtTimeStamps");
 

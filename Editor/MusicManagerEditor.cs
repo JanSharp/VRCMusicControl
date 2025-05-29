@@ -1,9 +1,5 @@
-using UdonSharp;
 using UnityEngine;
-using VRC.SDKBase;
-using VRC.Udon;
 using UnityEditor;
-using UdonSharpEditor;
 using System.Linq;
 using System.Collections.Generic;
 
@@ -12,7 +8,7 @@ namespace JanSharp
     [InitializeOnLoad]
     public static class MusicManagerOnBuild
     {
-        static MusicManagerOnBuild() => JanSharp.OnBuildUtil.RegisterType<MusicManager>(OnBuild);
+        static MusicManagerOnBuild() => OnBuildUtil.RegisterType<MusicManager>(OnBuild);
 
         private static bool OnBuild(MusicManager musicManager)
         {

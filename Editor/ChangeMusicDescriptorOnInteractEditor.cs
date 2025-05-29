@@ -1,11 +1,6 @@
-using UdonSharp;
 using UnityEngine;
-using VRC.SDKBase;
-using VRC.Udon;
 using UnityEditor;
-using UdonSharpEditor;
 using System.Linq;
-using System.Collections.Generic;
 
 namespace JanSharp
 {
@@ -13,7 +8,7 @@ namespace JanSharp
     public static class ChangeMusicDescriptorOnInteractOnBuild
     {
         static ChangeMusicDescriptorOnInteractOnBuild()
-            => JanSharp.OnBuildUtil.RegisterType<ChangeMusicDescriptorOnInteract>(OnBuild);
+            => OnBuildUtil.RegisterType<ChangeMusicDescriptorOnInteract>(OnBuild);
 
         private static bool OnBuild(ChangeMusicDescriptorOnInteract changeMusicDescriptorOnInteract)
         {

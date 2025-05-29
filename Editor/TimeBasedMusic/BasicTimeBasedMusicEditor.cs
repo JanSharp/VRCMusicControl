@@ -1,12 +1,5 @@
-using UdonSharp;
 using UnityEngine;
-using VRC.SDKBase;
-using VRC.Udon;
-using VRC.SDK3.Components;
 using UnityEditor;
-using UdonSharpEditor;
-using System.Linq;
-using System.Collections.Generic;
 
 namespace JanSharp
 {
@@ -14,7 +7,7 @@ namespace JanSharp
     public static class BasicTimeBasedMusicOnBuild
     {
         static BasicTimeBasedMusicOnBuild()
-            => JanSharp.OnBuildUtil.RegisterType<BasicTimeBasedMusic>(OnBuild);
+            => OnBuildUtil.RegisterType<BasicTimeBasedMusic>(OnBuild);
 
         private static bool OnBuild(BasicTimeBasedMusic basicTimeBasedMusic)
         {

@@ -1,18 +1,14 @@
-﻿using UdonSharp;
-using UnityEngine;
-using VRC.SDKBase;
-using VRC.Udon;
+﻿using UnityEngine;
 using UnityEditor;
 using UdonSharpEditor;
 using System.Linq;
-using System.Collections.Generic;
 
 namespace JanSharp
 {
     [InitializeOnLoad]
     public static class MusicAreaOnBuild
     {
-        static MusicAreaOnBuild() => JanSharp.OnBuildUtil.RegisterType<MusicArea>(OnBuild);
+        static MusicAreaOnBuild() => OnBuildUtil.RegisterType<MusicArea>(OnBuild);
 
         private static bool OnBuild(MusicArea musicArea)
         {
