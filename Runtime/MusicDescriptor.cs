@@ -18,7 +18,7 @@ namespace JanSharp
 
     // 2 on one object are disallowed because they'd use the same audio source which is not supported.
     [DisallowMultipleComponent]
-    #if !AdvancedMusicControl
+    #if !ADVANCED_MUSIC_CONTROL
     [UdonBehaviourSyncMode(BehaviourSyncMode.Manual)]
     #endif
     /// <summary>
@@ -26,7 +26,7 @@ namespace JanSharp
     /// </summary>
     public class MusicDescriptor : UdonSharpBehaviour
     {
-        #if AdvancedMusicControl
+        #if ADVANCED_MUSIC_CONTROL
         [Header("The sync mode must either be Manual or None.", order = 0)]
         [Space(16f, order = 1)]
         #endif

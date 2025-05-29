@@ -10,7 +10,7 @@ namespace JanSharp
     // 2 on one object are nonsensical because they'd use the same descriptors, which is not supported.
     [DisallowMultipleComponent]
     [DefaultExecutionOrder(-2000)] // Udon does actually have this concept and UdonSharp explicitly supports it.
-    #if !AdvancedMusicControl
+    #if !ADVANCED_MUSIC_CONTROL
     [UdonBehaviourSyncMode(BehaviourSyncMode.Manual)]
     #endif
     /// <summary>
@@ -26,7 +26,7 @@ namespace JanSharp
         /// Must not modify this array, it is read only.
         /// </summary>
         [PublicAPI] public MusicDescriptor[] Descriptors => descriptors;
-        #if AdvancedMusicControl
+        #if ADVANCED_MUSIC_CONTROL
         [Header("The sync mode must either be Manual or None.", order = 0)]
         [Space(-8f, order = 1)]
         [Header("Note that even when 'Sync Current Default Music'", order = 2)]
