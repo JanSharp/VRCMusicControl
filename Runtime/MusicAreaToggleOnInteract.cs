@@ -12,7 +12,8 @@ namespace JanSharp
     {
         [Tooltip("The MusicArea to toggle the Is Active state on. Must not be null.")]
         [SerializeField] private MusicArea areaToToggle;
-        [PublicAPI] public MusicArea AreaToToggle
+        [PublicAPI]
+        public MusicArea AreaToToggle
         {
             get => areaToToggle;
             set

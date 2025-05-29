@@ -17,30 +17,31 @@ namespace JanSharp
 
     // 2 on one object are disallowed because they'd use the same audio source which is not supported.
     [DisallowMultipleComponent]
-    #if !ADVANCED_MUSIC_CONTROL
+#if !ADVANCED_MUSIC_CONTROL
     [UdonBehaviourSyncMode(BehaviourSyncMode.Manual)]
-    #endif
+#endif
     /// <summary>
     /// <para>The API can be used in Awake, OnEnable or Start. It will be initialized in time.</para>
     /// </summary>
     public class MusicDescriptor : UdonSharpBehaviour
     {
-        #if ADVANCED_MUSIC_CONTROL
+#if ADVANCED_MUSIC_CONTROL
         [Header("The sync mode must either be Manual or None.", order = 0)]
         [Space(16f, order = 1)]
-        #endif
+#endif
         [Tooltip("A music descriptor describing the absence of music. When true, "
             + "other properties get ignored, except for default priority.\n"
             + "When the AudioSource has no audio clip, this is forced to true at runtime.")]
         [SerializeField] private bool isSilenceDescriptor;
-        [HideInInspector] [SerializeField] private bool forcedSilenceDescriptor;
+        [HideInInspector][SerializeField] private bool forcedSilenceDescriptor;
         [PublicAPI] public bool IsSilenceDescriptor => isSilenceDescriptor || forcedSilenceDescriptor;
 
-        [SerializeField] [Min(0f)] private float fadeInSeconds = 1f;
-        [SerializeField] [Min(0f)] private float fadeOutSeconds = 1f;
-        [HideInInspector] [SerializeField] private float fadeInInterval;
-        [HideInInspector] [SerializeField] private float fadeOutInterval;
-        [PublicAPI] public float FadeInSeconds
+        [SerializeField][Min(0f)] private float fadeInSeconds = 1f;
+        [SerializeField][Min(0f)] private float fadeOutSeconds = 1f;
+        [HideInInspector][SerializeField] private float fadeInInterval;
+        [HideInInspector][SerializeField] private float fadeOutInterval;
+        [PublicAPI]
+        public float FadeInSeconds
         {
             get => fadeInSeconds;
             set
@@ -52,7 +53,8 @@ namespace JanSharp
                 CheckSync();
             }
         }
-        [PublicAPI] public float FadeOutSeconds
+        [PublicAPI]
+        public float FadeOutSeconds
         {
             get => fadeOutSeconds;
             set
@@ -86,8 +88,9 @@ namespace JanSharp
         [PublicAPI] public MusicStartType StartType => startType;
 
         [Tooltip("When true, the below fade in seconds are used the very first time this music is played.")]
-        [SerializeField] [UdonSynced] private bool useDifferentFadeForFirstPlay = false;
-        [PublicAPI] public bool UseDifferentFadeForFirstPlay
+        [SerializeField][UdonSynced] private bool useDifferentFadeForFirstPlay = false;
+        [PublicAPI]
+        public bool UseDifferentFadeForFirstPlay
         {
             get => useDifferentFadeForFirstPlay;
             set
@@ -102,9 +105,10 @@ namespace JanSharp
             }
         }
         [Tooltip("Likely makes sense to use with 'Global Time Since First Play' or 'Pause'.")]
-        [SerializeField] [Min(0f)] private float firstFadeInSeconds = 0.5f;
-        [HideInInspector] [SerializeField] private float firstFadeInInterval;
-        [PublicAPI] public float FirstFadeInSeconds
+        [SerializeField][Min(0f)] private float firstFadeInSeconds = 0.5f;
+        [HideInInspector][SerializeField] private float firstFadeInInterval;
+        [PublicAPI]
+        public float FirstFadeInSeconds
         {
             get => firstFadeInSeconds;
             set
@@ -132,12 +136,12 @@ namespace JanSharp
         [UdonSynced] private Vector3 syncedFadeSeconds;
         private bool receivingData;
 
-        [HideInInspector] [SerializeField] private MusicManager manager;
-        [HideInInspector] [SerializeField] private int index;
+        [HideInInspector][SerializeField] private MusicManager manager;
+        [HideInInspector][SerializeField] private int index;
         [PublicAPI] public MusicManager Manager => manager;
         [PublicAPI] public int Index => index;
-        [HideInInspector] [SerializeField] private AudioSource audioSource;
-        [HideInInspector] [SerializeField] private float maxVolume;
+        [HideInInspector][SerializeField] private AudioSource audioSource;
+        [HideInInspector][SerializeField] private float maxVolume;
         private float lastFadeInTime;
         private bool fadingIn;
         private float lastFadeOutTime;
@@ -152,7 +156,8 @@ namespace JanSharp
         /// is when this descriptor is using global time synced and the synced time has not been received
         /// yet.</para>
         /// </summary>
-        [PublicAPI] public bool IsPlaying
+        [PublicAPI]
+        public bool IsPlaying
         {
             get
             {
@@ -231,9 +236,9 @@ namespace JanSharp
 
         private void SetTime(float time)
         {
-            #if MUSIC_CONTROL_DEBUG
+#if MUSIC_CONTROL_DEBUG
             Debug.Log($"[MusicControl] {this.name} setting time to {time}");
-            #endif
+#endif
             AudioClip clip = audioSource.clip;
             time = (time * audioSource.pitch) % clip.length;
             if (time < 0f)
@@ -252,7 +257,8 @@ namespace JanSharp
         /// beginning again.</para>
         /// <para>Does not do any syncing.</para>
         /// </summary>
-        [PublicAPI] public void Reset()
+        [PublicAPI]
+        public void Reset()
         {
             isFirstPlay = true;
             pausedTimeSamples = 0;

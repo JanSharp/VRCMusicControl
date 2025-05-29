@@ -25,7 +25,7 @@ namespace JanSharp
         private float currentTimeOffset = float.NaN;
         [SerializeField] private float initialTime = 0f;
         [SerializeField] private float speed = 1f;
-        [SerializeField] [UdonSynced] private bool isPaused = false;
+        [SerializeField][UdonSynced] private bool isPaused = false;
         [Tooltip("When enabled, all values above will be synced whenever they are changed on any client. "
             + "This setting does not affect the network impact of this script when the values are never "
             + "changed at runtime.")]
@@ -61,7 +61,8 @@ namespace JanSharp
         /// <para>Attempts to set this value to NaN are ignored.</para>
         /// <para>When set, raises the 'OnSettingsChanged' event, 1 frame delayed to prevent recursion.</para>
         /// </summary>
-        [PublicAPI] public float CurrentTime
+        [PublicAPI]
+        public float CurrentTime
         {
             // Returns NaN if it's not initialized yet, which makes the TimeBasedMusicBase script "wait".
             // Only the time passed since startTime is affected by speed.
@@ -81,7 +82,8 @@ namespace JanSharp
         /// <para>Attempts to set the value its current value are ignored.</para>
         /// <para>When set, raises the 'OnSettingsChanged' event, 1 frame delayed to prevent recursion.</para>
         /// </summary>
-        [PublicAPI] public float Speed
+        [PublicAPI]
+        public float Speed
         {
             get => speed;
             set
@@ -100,7 +102,8 @@ namespace JanSharp
         /// <para>Attempts to set the value its current value are ignored.</para>
         /// <para>When set, raises the 'OnSettingsChanged' event, 1 frame delayed to prevent recursion.</para>
         /// </summary>
-        [PublicAPI] public bool IsPaused
+        [PublicAPI]
+        public bool IsPaused
         {
             get => isPaused;
             set
@@ -203,7 +206,8 @@ namespace JanSharp
         /// <para>By the time 'OnTimerReady' is raised, 'IsReady' is true and all values are correct and
         /// readable.</para>
         /// </summary>
-        [PublicAPI] public void RegisterOnTimerReady(UdonSharpBehaviour listener)
+        [PublicAPI]
+        public void RegisterOnTimerReady(UdonSharpBehaviour listener)
         {
             ArrList.Add(ref onReadyListeners, ref onReadyListenersCount, listener);
             // Users are free to register for this event at any point in time. Since this is a one time event,
@@ -223,7 +227,8 @@ namespace JanSharp
         /// <para>Since it is 1 frame delayed, if the settings change multiple times within a frame, this
         /// event will only be raised once next frame for the latest change.</para>
         /// </summary>
-        [PublicAPI] public void RegisterOnTimerSettingsChanged(UdonSharpBehaviour listener)
+        [PublicAPI]
+        public void RegisterOnTimerSettingsChanged(UdonSharpBehaviour listener)
         {
             ArrList.Add(ref onSettingsChangedListeners, ref onSettingsChangedListenersCount, listener);
         }

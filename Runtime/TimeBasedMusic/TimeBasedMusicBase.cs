@@ -32,8 +32,8 @@ namespace JanSharp
             + "MusicManager.")]
         [SerializeField] private MusicManager targetManager;
 
-        [SerializeField] [HideInInspector] private float musicStartTime;
-        [SerializeField] [HideInInspector] private float totalMusicLength;
+        [SerializeField][HideInInspector] private float musicStartTime;
+        [SerializeField][HideInInspector] private float totalMusicLength;
         // -1 is evaluated at runtime too and means null. -2 here means that if -1 is evaluated as the first
         // index to use, it will actually set the current default music to null instead of not doing anything.
         private int currentIndex = -2;
@@ -78,7 +78,8 @@ namespace JanSharp
             SendCustomEventDelayedSeconds(nameof(InternalStep), updateInterval);
         }
 
-        [PublicAPI] public void UpdateCurrentMusic()
+        [PublicAPI]
+        public void UpdateCurrentMusic()
         {
             float time = GetTime();
             if (float.IsNaN(time))

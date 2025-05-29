@@ -48,7 +48,8 @@ namespace JanSharp
                 new GUIContent("Add Audio Source", "An Audio Source is required for non silence descriptors."),
                 targets.Cast<MusicDescriptor>()
                     .Where(d => !GetIsSilenceDescriptor(d) && d.GetComponent<AudioSource>() == null),
-                descriptors => {
+                descriptors =>
+                {
                     foreach (MusicDescriptor descriptor in descriptors)
                         descriptor.gameObject.AddComponent<AudioSource>();
                 }
@@ -63,7 +64,8 @@ namespace JanSharp
                     .Where(d => !GetIsSilenceDescriptor(d))
                     .Select(d => d.GetComponent<AudioSource>())
                     .Where(a => a != null && a.playOnAwake),
-                audioSources => {
+                audioSources =>
+                {
                     SerializedObject audioSourceProxy = new SerializedObject(audioSources.ToArray());
                     audioSourceProxy.FindProperty("m_PlayOnAwake").boolValue = false;
                     audioSourceProxy.ApplyModifiedProperties();
@@ -79,7 +81,8 @@ namespace JanSharp
                     .Where(d => !GetIsSilenceDescriptor(d))
                     .Select(d => d.GetComponent<AudioSource>())
                     .Where(a => a != null && !a.loop),
-                audioSources => {
+                audioSources =>
+                {
                     SerializedObject audioSourceProxy = new SerializedObject(audioSources.ToArray());
                     audioSourceProxy.FindProperty("Loop").boolValue = true;
                     audioSourceProxy.ApplyModifiedProperties();
@@ -92,7 +95,8 @@ namespace JanSharp
                 ),
                 targets.Cast<MusicDescriptor>()
                     .Where(d => !GetIsSilenceDescriptor(d) && d.GetComponent<VRCSpatialAudioSource>() == null),
-                descriptors => {
+                descriptors =>
+                {
                     foreach (MusicDescriptor descriptor in descriptors)
                         descriptor.gameObject.AddComponent<VRCSpatialAudioSource>();
                 }
@@ -109,7 +113,8 @@ namespace JanSharp
                     .Where(d => !GetIsSilenceDescriptor(d))
                     .Select(d => d.GetComponent<VRCSpatialAudioSource>())
                     .Where(s => s != null && s.EnableSpatialization),
-                vrcAudioSources => {
+                vrcAudioSources =>
+                {
                     SerializedObject audioSourceProxy = new SerializedObject(vrcAudioSources.ToArray());
                     audioSourceProxy.FindProperty("EnableSpatialization").boolValue = false;
                     audioSourceProxy.ApplyModifiedProperties();

@@ -5,23 +5,24 @@ using JetBrains.Annotations;
 
 namespace JanSharp
 {
-    #if !ADVANCED_MUSIC_CONTROL
+#if !ADVANCED_MUSIC_CONTROL
     [UdonBehaviourSyncMode(BehaviourSyncMode.Manual)]
-    #endif
+#endif
     /// <summary>
     /// <para>The API can be used in Awake, OnEnable or Start. It will be initialized in time.</para>
     /// </summary>
     public class MusicArea : UdonSharpBehaviour
     {
-        #if ADVANCED_MUSIC_CONTROL
+#if ADVANCED_MUSIC_CONTROL
         [Header("The sync mode must either be Manual or None.", order = 0)]
         [Space(16f, order = 1)]
-        #endif
+#endif
         [Tooltip("When false it still keeps track of the player, but music will not be played. "
             + "Generally speaking use this instead of toggling the entire object or toggling this component "
             + "- unless you really, really know what you're doing.")]
         [SerializeField] private bool isActive = true;
-        [PublicAPI] public bool IsActive
+        [PublicAPI]
+        public bool IsActive
         {
             get => isActive;
             set
@@ -39,7 +40,8 @@ namespace JanSharp
         }
         [Tooltip("Must never be null.")]
         [SerializeField] private MusicDescriptor musicForThisArea;
-        [PublicAPI] public MusicDescriptor MusicForThisArea
+        [PublicAPI]
+        public MusicDescriptor MusicForThisArea
         {
             get => musicForThisArea;
             set
@@ -72,7 +74,8 @@ namespace JanSharp
         [Tooltip("When true, the Default Priority from the Music Descriptor is used, "
             + "otherwise the priority defined below is used.")]
         [SerializeField] private bool useDefaultPriority = true;
-        [PublicAPI] public bool UseDefaultPriority
+        [PublicAPI]
+        public bool UseDefaultPriority
         {
             get => useDefaultPriority;
             set
@@ -87,7 +90,8 @@ namespace JanSharp
 
         [Tooltip("Only used if 'Use Default Priority' is false.")]
         [SerializeField] private int priority = 0;
-        [PublicAPI] public int Priority
+        [PublicAPI]
+        public int Priority
         {
             get => priority;
             set

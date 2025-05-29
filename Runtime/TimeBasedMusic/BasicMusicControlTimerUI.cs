@@ -23,7 +23,7 @@ namespace JanSharp
             + "loops back around.\n"
             + "Used to properly scale the time slider. The input field will move the input value into this "
             + "range using modulo.")]
-        [SerializeField] [Min(1f)] private float maxTime = 1f;
+        [SerializeField][Min(1f)] private float maxTime = 1f;
         [Tooltip("The min speed that can be set using the speed slider. "
             + "The input field allows exceeding this limitation.")]
         [SerializeField] private float minSliderSpeed = 1f;
@@ -34,7 +34,7 @@ namespace JanSharp
             + "updates can be expensive when done every frame, however keep in mind that the 2 settings "
             + "below cause the UI to be hidden 99% of the time when it is not used, therefore some more "
             + "frequent updates are acceptable.")]
-        [SerializeField] [Min(0f)] private float uiUpdatesPerSecond = 10f;
+        [SerializeField][Min(0f)] private float uiUpdatesPerSecond = 10f;
         [Tooltip("When true, the UI is hidden from the start of the world and the player must click on it in "
             + "order for it to start updating. This saves performance for everyone who never needs to touch "
             + "nor see the UI ever, because UI updates are expensive because Udon is slow.")]
@@ -42,7 +42,7 @@ namespace JanSharp
         [Tooltip("If the player is more than this distance away from the UI position in world space, the UI"
             + "will automatically hide itself, which pauses UI updates and therefore saves performance. "
             + "Useful for those who do touch and see the UI, while still remaining performant.")]
-        [SerializeField] [Min(0f)] private float autoHideDistance = 16f;
+        [SerializeField][Min(0f)] private float autoHideDistance = 16f;
         [Header("Internal")]
         [SerializeField] private Slider timeSlider;
         [SerializeField] private Slider speedSlider;

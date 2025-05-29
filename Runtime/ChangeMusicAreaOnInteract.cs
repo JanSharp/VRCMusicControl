@@ -24,7 +24,8 @@ namespace JanSharp
         [Space(8f)]
         [PublicAPI] public MusicArea[] targets;
 
-        [PublicAPI] public override void Interact()
+        [PublicAPI]
+        public override void Interact()
         {
             if (targets == null)
             {

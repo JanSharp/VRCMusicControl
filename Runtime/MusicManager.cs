@@ -9,9 +9,9 @@ namespace JanSharp
     // 2 on one object are nonsensical because they'd use the same descriptors, which is not supported.
     [DisallowMultipleComponent]
     [DefaultExecutionOrder(-2000)] // Udon does actually have this concept and UdonSharp explicitly supports it.
-    #if !ADVANCED_MUSIC_CONTROL
+#if !ADVANCED_MUSIC_CONTROL
     [UdonBehaviourSyncMode(BehaviourSyncMode.Manual)]
-    #endif
+#endif
     /// <summary>
     /// <para>The API can be used in Awake, OnEnable or Start. It will be initialized in time.</para>
     /// <para>However the DefaultMusic may not be correct yet if SyncCurrentDefaultMusic is true, since that
@@ -20,12 +20,12 @@ namespace JanSharp
     /// </summary>
     public class MusicManager : UdonSharpBehaviour
     {
-        [SerializeField] [HideInInspector] private MusicDescriptor[] descriptors;
+        [SerializeField][HideInInspector] private MusicDescriptor[] descriptors;
         /// <summary>
         /// Must not modify this array, it is read only.
         /// </summary>
         [PublicAPI] public MusicDescriptor[] Descriptors => descriptors;
-        #if ADVANCED_MUSIC_CONTROL
+#if ADVANCED_MUSIC_CONTROL
         [Header("The sync mode must either be Manual or None.", order = 0)]
         [Space(-8f, order = 1)]
         [Header("Note that even when 'Sync Current Default Music'", order = 2)]
@@ -36,7 +36,7 @@ namespace JanSharp
         [Space(-8f, order = 7)]
         [Header("this manager are using the synced music start type.", order = 8)]
         [Space(16f, order = 9)]
-        #endif
+#endif
         [Header("Music Descriptors managed by this Manager must be children of this object.", order = 10)]
         [Space(8f, order = 11)]
         [Tooltip("Music played when nothing else is playing, priority is not used for this. "
@@ -47,7 +47,8 @@ namespace JanSharp
             + "are never changed at runtime.")]
         [SerializeField] private bool syncCurrentDefaultMusic = true;
         [PublicAPI] public bool SyncCurrentDefaultMusic => syncCurrentDefaultMusic;
-        [PublicAPI] public MusicDescriptor DefaultMusic
+        [PublicAPI]
+        public MusicDescriptor DefaultMusic
         {
             get => defaultMusic;
             set
@@ -95,7 +96,7 @@ namespace JanSharp
             set => GlobalStartTime = value;
         }
         private bool receivingData;
-        [SerializeField] [HideInInspector] private bool syncGlobalStartTime; // Set in OnBuild.
+        [SerializeField][HideInInspector] private bool syncGlobalStartTime; // Set in OnBuild.
 
         private bool isInitialized = false;
 
@@ -104,12 +105,12 @@ namespace JanSharp
             if (syncGlobalStartTime)
             {
                 syncedGlobalTime = InternalCurrentGlobalTime;
-                #if MUSIC_CONTROL_DEBUG
+#if MUSIC_CONTROL_DEBUG
                 Debug.Log($"[MusicControl] OnPreSerialization - "
                     + $"syncedGlobalStartTime: {syncedGlobalTime},    "
                     + $"Time.time: {Time.time},    "
                     + $"InternalGlobalStartTimeOffset: {currentGlobalTimeOffset}");
-                #endif
+#endif
             }
         }
 
@@ -125,7 +126,7 @@ namespace JanSharp
             if (syncGlobalStartTime && !InternalHasReceivedGlobalTime)
             {
                 InternalCurrentGlobalTime = syncedGlobalTime + result.receiveTime - result.sendTime;
-                #if MUSIC_CONTROL_DEBUG
+#if MUSIC_CONTROL_DEBUG
                 Debug.Log($"[MusicControl] OnPreSerialization - "
                     + $"result.receiveTime: {result.receiveTime},    "
                     + $"result.sendTime: {result.sendTime},    "
@@ -136,7 +137,7 @@ namespace JanSharp
                     + $"currentGlobalTimeOffset: {currentGlobalTimeOffset},    "
                     + $"Time.time: {Time.time},    "
                     + $"InternalCurrentGlobalTime: {InternalCurrentGlobalTime}");
-                #endif
+#endif
                 ReceivedGlobalStartTime();
             }
         }
@@ -148,7 +149,8 @@ namespace JanSharp
         /// the music list at this point in time. This is separate from IsPlaying on the descriptor because
         /// they may be fading in, fading out or muted.</para>
         /// </summary>
-        [PublicAPI] public MusicDescriptor CurrentlyPlaying
+        [PublicAPI]
+        public MusicDescriptor CurrentlyPlaying
         {
             get
             {
@@ -167,7 +169,8 @@ namespace JanSharp
         private int musicListCount = 0;
         private uint nextMusicId;
         private bool muted;
-        [PublicAPI] public bool Muted
+        [PublicAPI]
+        public bool Muted
         {
             get => muted;
             set
@@ -296,7 +299,8 @@ namespace JanSharp
         /// <para>Returns an id used by `RemoveMusic` to remove the descriptor from the music list again.</para>
         /// <para>Uses the default priority of the given music descriptor.</para>
         /// </summary>
-        [PublicAPI] public uint AddMusic(MusicDescriptor toAdd)
+        [PublicAPI]
+        public uint AddMusic(MusicDescriptor toAdd)
         {
             return AddMusic(toAdd, toAdd.DefaultPriority);
         }
@@ -304,7 +308,8 @@ namespace JanSharp
         /// <summary>
         /// Returns an id used by `RemoveMusic` to remove the descriptor from the music list again.
         /// </summary>
-        [PublicAPI] public uint AddMusic(MusicDescriptor toAdd, int priority)
+        [PublicAPI]
+        public uint AddMusic(MusicDescriptor toAdd, int priority)
         {
             if (!isInitialized)
                 InternalInitialize();
@@ -361,7 +366,8 @@ namespace JanSharp
             musicListIds = newMusicListIds;
         }
 
-        [PublicAPI] public void RemoveMusic(uint id)
+        [PublicAPI]
+        public void RemoveMusic(uint id)
         {
             if (!isInitialized)
                 InternalInitialize();
@@ -427,7 +433,8 @@ namespace JanSharp
         /// <para>Since it is 1 frame delayed, if the default music changes multiple times within a frame,
         /// this event will only be raised once next frame for the latest change.</para>
         /// </summary>
-        [PublicAPI] public void RegisterOnDefaultMusicChanged(UdonSharpBehaviour listener)
+        [PublicAPI]
+        public void RegisterOnDefaultMusicChanged(UdonSharpBehaviour listener)
         {
             ArrList.Add(ref onDefaultMusicListeners, ref onDefaultMusicListenersCount, listener);
         }
