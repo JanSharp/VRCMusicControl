@@ -113,7 +113,7 @@ namespace JanSharp
         private const int SyncedMusicIndexShift = 2;
         // The music index itself is left shifted by 2 and the first 2 bits are actually used for the IsActive
         // and UseDefaultPriority flags. Synced booleans would be such a waste of space, and at the end of the
-        // day this still supports 1 million music descriptors.
+        // day this still supports 1 billion music descriptors.
         [UdonSynced] private uint syncedMusicIndex;
         [UdonSynced] private int syncedPriority;
 
