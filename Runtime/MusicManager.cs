@@ -105,7 +105,7 @@ namespace JanSharp
             if (syncGlobalStartTime)
             {
                 syncedGlobalTime = InternalCurrentGlobalTime;
-                #if MusicControlDebug
+                #if MUSIC_CONTROL_DEBUG
                 Debug.Log($"[MusicControl] OnPreSerialization - "
                     + $"syncedGlobalStartTime: {syncedGlobalTime},    "
                     + $"Time.time: {Time.time},    "
@@ -126,7 +126,7 @@ namespace JanSharp
             if (syncGlobalStartTime && !InternalHasReceivedGlobalTime)
             {
                 InternalCurrentGlobalTime = syncedGlobalTime + result.receiveTime - result.sendTime;
-                #if MusicControlDebug
+                #if MUSIC_CONTROL_DEBUG
                 Debug.Log($"[MusicControl] OnPreSerialization - "
                     + $"result.receiveTime: {result.receiveTime},    "
                     + $"result.sendTime: {result.sendTime},    "

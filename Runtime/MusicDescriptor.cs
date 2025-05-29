@@ -232,7 +232,7 @@ namespace JanSharp
 
         private void SetTime(float time)
         {
-            #if MusicControlDebug
+            #if MUSIC_CONTROL_DEBUG
             Debug.Log($"[MusicControl] {this.name} setting time to {time}");
             #endif
             AudioClip clip = audioSource.clip;
