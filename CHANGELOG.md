@@ -1,6 +1,18 @@
 
 # Changelog
 
+## [1.2.0] - 2025-06-27
+
+### Changed
+
+- **Breaking:** Rename AdvancedMusicControl ADVANCED_MUSIC_CONTROL ([`14808c6`](https://github.com/JanSharp/VRCMusicControl/commit/14808c63dfda419de265c62f1c89a8e326bc17c7))
+- Rename MusicControlDebug to MUSIC_CONTROL_DEBUG ([`a9902de`](https://github.com/JanSharp/VRCMusicControl/commit/a9902de38d4e418bdb5fe4fadca1f7dfb7f790ea))
+- Use DefaultExecutionOrder attribute because it does work ([`1d259d6`](https://github.com/JanSharp/VRCMusicControl/commit/1d259d62ef888c6a7ff0c941cd181a45e7329de2))
+
+### Fixed
+
+- Fix basic timer late joiner sync not setting time, causing it to reset and even sync that reset to everybody else 15 seconds after Start ([`315cfeb`](https://github.com/JanSharp/VRCMusicControl/commit/315cfeb4bd8a454087e44600da671bb517237456))
+
 ## [1.1.2] - 2024-05-05
 
 ### Fixed
@@ -193,6 +205,7 @@ _First version of this package that is in the VCC listing._
 - Add concept of a music stack, used by trigger zones which change music ([`3c33f1d`](https://github.com/JanSharp/VRCMusicControl/commit/3c33f1d1b8cf1bc5da6cb86c8ca8d8fdebf58822), [`eb6ebd3`](https://github.com/JanSharp/VRCMusicControl/commit/eb6ebd399a66753a392cf45b57a4b6eda4267dd5), [`ec5a4c7`](https://github.com/JanSharp/VRCMusicControl/commit/ec5a4c762d25ae5e80ec96be3ada19906f506722), [`4211fe2`](https://github.com/JanSharp/VRCMusicControl/commit/4211fe2ad233802a516cb3560102a5c5a4721b84), [`b4707fb`](https://github.com/JanSharp/VRCMusicControl/commit/b4707fbeed41edfc805a1fd94c6d80befc1648f5), [`9f72b56`](https://github.com/JanSharp/VRCMusicControl/commit/9f72b56ece6257f22cd21710a65ababbcf5d360d))
 - Add script to change default music ([`c5f49d9`](https://github.com/JanSharp/VRCMusicControl/commit/c5f49d9a0fbd3eff0578b1d8afe69f0165c05c64))
 
+[1.2.0]: https://github.com/JanSharp/VRCMusicControl/releases/tag/v1.2.0
 [1.1.2]: https://github.com/JanSharp/VRCMusicControl/releases/tag/v1.1.2
 [1.1.1]: https://github.com/JanSharp/VRCMusicControl/releases/tag/v1.1.1
 [1.1.0]: https://github.com/JanSharp/VRCMusicControl/releases/tag/v1.1.0
