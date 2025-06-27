@@ -167,7 +167,8 @@ namespace JanSharp
             receivingData = true;
             // The fact that it reassigns these values every time it syncs will cause it to jump back and
             // forth in time by a few milliseconds, but it should not be noticeable, hopefully.
-            CurrentTime = syncedValues.x + result.receiveTime - result.sendTime;
+            // Assign to StartTime directly instead of CurrentTime to bypass the ready check.
+            StartTime = syncedValues.x + result.receiveTime - result.sendTime;
             Speed = syncedValues.y;
             receivingData = false;
 #if MUSIC_CONTROL_DEBUG
