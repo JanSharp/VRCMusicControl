@@ -1,8 +1,8 @@
-﻿using UdonSharp;
+﻿using JetBrains.Annotations;
+using UdonSharp;
 using UnityEngine;
 using VRC.SDKBase;
 using VRC.Udon.Common;
-using JetBrains.Annotations;
 
 namespace JanSharp
 {
@@ -134,6 +134,9 @@ namespace JanSharp
 
         private void SettingsChanged()
         {
+#if MUSIC_CONTROL_DEBUG
+            Debug.Log($"[MusicControl] BasicMusicControlTimer  SettingsChanged - receivingData: {receivingData}, syncTimer: {syncTimer}");
+#endif
             if (readyEventHasBeenRaised)
                 FlagForOnSettingsChanged();
             if (receivingData || !syncTimer)
@@ -144,6 +147,9 @@ namespace JanSharp
 
         public override void OnPreSerialization()
         {
+#if MUSIC_CONTROL_DEBUG
+            Debug.Log($"[MusicControl] BasicMusicControlTimer  OnPreSerialization - CurrentTime: {CurrentTime}, speed: {speed}, isPaused: {isPaused}");
+#endif
             if (!syncTimer)
                 return;
             syncedValues.x = CurrentTime;
@@ -153,6 +159,9 @@ namespace JanSharp
 
         public override void OnDeserialization(DeserializationResult result)
         {
+#if MUSIC_CONTROL_DEBUG
+            Debug.Log($"[MusicControl] BasicMusicControlTimer  OnDeserialization - CurrentTime: {CurrentTime}, speed: {speed}, isPaused: {isPaused}, syncedValues.x: {syncedValues.x}, result.receiveTime: {result.receiveTime}, result.sendTime: {result.sendTime}");
+#endif
             if (!syncTimer)
                 return;
             receivingData = true;
@@ -161,10 +170,16 @@ namespace JanSharp
             CurrentTime = syncedValues.x + result.receiveTime - result.sendTime;
             Speed = syncedValues.y;
             receivingData = false;
+#if MUSIC_CONTROL_DEBUG
+            Debug.Log($"[MusicControl] BasicMusicControlTimer  OnDeserialization (inner) - CurrentTime: {CurrentTime}, speed: {speed}, isPaused: {isPaused}");
+#endif
         }
 
         private void Start()
         {
+#if MUSIC_CONTROL_DEBUG
+            Debug.Log($"[MusicControl] BasicMusicControlTimer  Start - Networking.LocalPlayer.isMaster: {Networking.LocalPlayer.isMaster}, Networking.IsMaster: {Networking.IsMaster}");
+#endif
             if (!syncTimer)
             {
                 StartTime = initialTime;
@@ -182,6 +197,9 @@ namespace JanSharp
 
         public override void OnOwnershipTransferred(VRCPlayerApi player)
         {
+#if MUSIC_CONTROL_DEBUG
+            Debug.Log($"[MusicControl] BasicMusicControlTimer  OnOwnershipTransferred - player.isLocal: {player.isLocal}");
+#endif
             // Make sure new players receive the proper synced value.
             if (syncTimer && player.isLocal)
                 RequestSerialization();
@@ -192,6 +210,9 @@ namespace JanSharp
         /// </summary>
         public void InternalGlobalStartTimeFallback()
         {
+#if MUSIC_CONTROL_DEBUG
+            Debug.Log($"[MusicControl] BasicMusicControlTimer  InternalGlobalStartTimeFallback - IsReady: {IsReady}");
+#endif
             if (IsReady)
                 return;
             // Just in case we just don't receive the synced time, set it to the current time and inform all
