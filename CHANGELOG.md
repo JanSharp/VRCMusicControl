@@ -1,6 +1,13 @@
 
 # Changelog
 
+## [1.2.1] - 2025-06-28
+
+### Fixed
+
+- Fix paused timers having different time on different clients, as though the timer kept running from the point when the sync was sent until it was received ([`2fb48a5`](https://github.com/JanSharp/VRCMusicControl/commit/2fb48a56f9b94c25970408281abd946dc222243b))
+- Fix basic timer late joiner syncing for speed always being the default ([`7de5b19`](https://github.com/JanSharp/VRCMusicControl/commit/7de5b196dddf44a0de431db41ca6f97264a2de19))
+
 ## [1.2.0] - 2025-06-27
 
 ### Changed
@@ -205,6 +212,7 @@ _First version of this package that is in the VCC listing._
 - Add concept of a music stack, used by trigger zones which change music ([`3c33f1d`](https://github.com/JanSharp/VRCMusicControl/commit/3c33f1d1b8cf1bc5da6cb86c8ca8d8fdebf58822), [`eb6ebd3`](https://github.com/JanSharp/VRCMusicControl/commit/eb6ebd399a66753a392cf45b57a4b6eda4267dd5), [`ec5a4c7`](https://github.com/JanSharp/VRCMusicControl/commit/ec5a4c762d25ae5e80ec96be3ada19906f506722), [`4211fe2`](https://github.com/JanSharp/VRCMusicControl/commit/4211fe2ad233802a516cb3560102a5c5a4721b84), [`b4707fb`](https://github.com/JanSharp/VRCMusicControl/commit/b4707fbeed41edfc805a1fd94c6d80befc1648f5), [`9f72b56`](https://github.com/JanSharp/VRCMusicControl/commit/9f72b56ece6257f22cd21710a65ababbcf5d360d))
 - Add script to change default music ([`c5f49d9`](https://github.com/JanSharp/VRCMusicControl/commit/c5f49d9a0fbd3eff0578b1d8afe69f0165c05c64))
 
+[1.2.1]: https://github.com/JanSharp/VRCMusicControl/releases/tag/v1.2.1
 [1.2.0]: https://github.com/JanSharp/VRCMusicControl/releases/tag/v1.2.0
 [1.1.2]: https://github.com/JanSharp/VRCMusicControl/releases/tag/v1.1.2
 [1.1.1]: https://github.com/JanSharp/VRCMusicControl/releases/tag/v1.1.1
