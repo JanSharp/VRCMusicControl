@@ -167,9 +167,10 @@ namespace JanSharp
             receivingData = true;
             // The fact that it reassigns these values every time it syncs will cause it to jump back and
             // forth in time by a few milliseconds, but it should not be noticeable, hopefully.
+            speed = syncedValues.y; // The Speed setter does way more than what is required here.
             // Assign to StartTime directly instead of CurrentTime to bypass the ready check.
-            StartTime = syncedValues.x + result.receiveTime - result.sendTime;
-            Speed = syncedValues.y;
+            StartTime = syncedValues.x + speed * (result.receiveTime - result.sendTime);
+            // No need to call SettingsChanged(), the StartTime setter already does it.
             receivingData = false;
 #if MUSIC_CONTROL_DEBUG
             Debug.Log($"[MusicControl] BasicMusicControlTimer  OnDeserialization (inner) - CurrentTime: {CurrentTime}, speed: {speed}, isPaused: {isPaused}");
