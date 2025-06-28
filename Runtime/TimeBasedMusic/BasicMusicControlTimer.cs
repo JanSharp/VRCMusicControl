@@ -169,7 +169,7 @@ namespace JanSharp
             // forth in time by a few milliseconds, but it should not be noticeable, hopefully.
             speed = syncedValues.y; // The Speed setter does way more than what is required here.
             // Assign to StartTime directly instead of CurrentTime to bypass the ready check.
-            StartTime = syncedValues.x + speed * (result.receiveTime - result.sendTime);
+            StartTime = isPaused ? syncedValues.x : syncedValues.x + speed * (result.receiveTime - result.sendTime);
             // No need to call SettingsChanged(), the StartTime setter already does it.
             receivingData = false;
 #if MUSIC_CONTROL_DEBUG
