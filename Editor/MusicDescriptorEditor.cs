@@ -1,9 +1,9 @@
-using UnityEngine;
-using VRC.SDK3.Components;
-using UnityEditor;
-using UdonSharpEditor;
 using System.Linq;
 using System.Reflection;
+using UdonSharpEditor;
+using UnityEditor;
+using UnityEngine;
+using VRC.SDK3.Components;
 
 namespace JanSharp
 {
@@ -14,7 +14,7 @@ namespace JanSharp
 
         private static bool OnBuild(MusicDescriptor musicDescriptor)
         {
-            if (musicDescriptor.GetComponentInParent<MusicManager>() == null)
+            if (musicDescriptor.GetComponentInParent<MusicManager>(includeInactive: true) == null)
             {
                 Debug.LogError($"[MusicControl] {nameof(MusicDescriptor)} {musicDescriptor.name} "
                     + $"must be a child of a {nameof(MusicManager)}.", musicDescriptor);
