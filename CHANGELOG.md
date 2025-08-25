@@ -1,6 +1,21 @@
 
 # Changelog
 
+## [1.2.2] - 2025-08-25
+
+### Changed
+
+- Add initial Volume field to MusicManager inspector ([`a88c3dc`](https://github.com/JanSharp/VRCMusicControl/commit/a88c3dc94fd5555e4f56e6ce26f2a14865f414a9))
+- Add MusicVolumeSlider helper script with assisting editor scripting ([`121d4e1`](https://github.com/JanSharp/VRCMusicControl/commit/121d4e1da40a7f929aa850fa23534497749de900))
+- Add Volume API to MusicManager ([`a88c3dc`](https://github.com/JanSharp/VRCMusicControl/commit/a88c3dc94fd5555e4f56e6ce26f2a14865f414a9))
+- Add OnVolumeChanged event to the MusicManager API ([`5edd8c1`](https://github.com/JanSharp/VRCMusicControl/commit/5edd8c1dbe25296b1bbc6c3253703eaf3b74c802))
+- Add manager volume and volume slider to the readme ([`7d6bd9d`](https://github.com/JanSharp/VRCMusicControl/commit/7d6bd9d7bb36b511487cffedde52dbf32f668d96))
+
+### Fixed
+
+- Fix Music Descriptor inspector showing the script field twice ([`6251662`](https://github.com/JanSharp/VRCMusicControl/commit/62516626f9c92ba6465c70065da6c762c75a19ae))
+- Fix error on build when music manager is disabled ([`f43ff7a`](https://github.com/JanSharp/VRCMusicControl/commit/f43ff7ae9933ce82c0672b436b206d9ef0ab47d8))
+
 ## [1.2.1] - 2025-06-28
 
 ### Fixed
@@ -212,6 +227,7 @@ _First version of this package that is in the VCC listing._
 - Add concept of a music stack, used by trigger zones which change music ([`3c33f1d`](https://github.com/JanSharp/VRCMusicControl/commit/3c33f1d1b8cf1bc5da6cb86c8ca8d8fdebf58822), [`eb6ebd3`](https://github.com/JanSharp/VRCMusicControl/commit/eb6ebd399a66753a392cf45b57a4b6eda4267dd5), [`ec5a4c7`](https://github.com/JanSharp/VRCMusicControl/commit/ec5a4c762d25ae5e80ec96be3ada19906f506722), [`4211fe2`](https://github.com/JanSharp/VRCMusicControl/commit/4211fe2ad233802a516cb3560102a5c5a4721b84), [`b4707fb`](https://github.com/JanSharp/VRCMusicControl/commit/b4707fbeed41edfc805a1fd94c6d80befc1648f5), [`9f72b56`](https://github.com/JanSharp/VRCMusicControl/commit/9f72b56ece6257f22cd21710a65ababbcf5d360d))
 - Add script to change default music ([`c5f49d9`](https://github.com/JanSharp/VRCMusicControl/commit/c5f49d9a0fbd3eff0578b1d8afe69f0165c05c64))
 
+[1.2.2]: https://github.com/JanSharp/VRCMusicControl/releases/tag/v1.2.2
 [1.2.1]: https://github.com/JanSharp/VRCMusicControl/releases/tag/v1.2.1
 [1.2.0]: https://github.com/JanSharp/VRCMusicControl/releases/tag/v1.2.0
 [1.1.2]: https://github.com/JanSharp/VRCMusicControl/releases/tag/v1.1.2
