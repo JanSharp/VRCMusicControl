@@ -77,7 +77,11 @@ namespace JanSharp
             get => volume;
             set
             {
+                float prevVolume = volume;
                 volume = Mathf.Clamp01(value);
+                if (volume == prevVolume)
+                    return;
+                FlagForOnVolumeChanged();
                 if (currentlyPlaying == null)
                     return;
                 currentlyPlaying.InternalUpdateVolume();
@@ -213,6 +217,11 @@ namespace JanSharp
         private UdonSharpBehaviour[] onDefaultMusicListeners = new UdonSharpBehaviour[ArrList.MinCapacity];
         private int onDefaultMusicListenersCount = 0;
         private bool flaggedForOnDefaultMusic = false;
+        // Public just so intellisense users can see that this exists.
+        [PublicAPI] public const string OnVolumeChangedEventName = "OnVolumeChanged";
+        private UdonSharpBehaviour[] onVolumeListeners = new UdonSharpBehaviour[ArrList.MinCapacity];
+        private int onVolumeListenersCount = 0;
+        private bool flaggedForOnVolume = false;
 
         private void Start() => InternalInitialize();
 
@@ -469,6 +478,37 @@ namespace JanSharp
             flaggedForOnDefaultMusic = false;
             for (int i = 0; i < onDefaultMusicListenersCount; i++)
                 onDefaultMusicListeners[i].SendCustomEvent(OnDefaultMusicChangedEventName);
+        }
+
+        /// <summary>
+        /// <para>Register a behaviour for the 'OnVolumeChanged' event.</para>
+        /// <para>'OnVolumeChanged' is raised whenever the 'Volume' is changed, 1 frame delayed in order to
+        /// prevent recursion.</para>
+        /// <para>Since it is 1 frame delayed, if the volume changes multiple times within a frame, this event
+        /// will only be raised once next frame for the latest change.</para>
+        /// </summary>
+        [PublicAPI]
+        public void RegisterOnVolumeChanged(UdonSharpBehaviour listener)
+        {
+            ArrList.Add(ref onVolumeListeners, ref onVolumeListenersCount, listener);
+        }
+
+        private void FlagForOnVolumeChanged()
+        {
+            if (flaggedForOnVolume)
+                return;
+            flaggedForOnVolume = true;
+            SendCustomEventDelayedFrames(nameof(InternalRaiseOnVolumeChanged), 1);
+        }
+
+        /// <summary>
+        /// This is not public API, do not call this function.
+        /// </summary>
+        public void InternalRaiseOnVolumeChanged()
+        {
+            flaggedForOnVolume = false;
+            for (int i = 0; i < onVolumeListenersCount; i++)
+                onVolumeListeners[i].SendCustomEvent(OnVolumeChangedEventName);
         }
     }
 }

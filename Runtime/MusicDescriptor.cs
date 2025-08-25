@@ -370,6 +370,9 @@ namespace JanSharp
             SendCustomEventDelayedSeconds(nameof(InternalFadeOut), fadeOutInterval);
         }
 
+        /// <summary>
+        /// This is not public API, do not call this function.
+        /// </summary>
         public void InternalUpdateVolume()
         {
             if (IsSilenceDescriptor || !isInitialized)

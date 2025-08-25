@@ -14,6 +14,19 @@ namespace JanSharp
         public Slider VolumeSlider => volumeSlider;
 #endif
 
+        public void Start()
+        {
+            manager.RegisterOnVolumeChanged(this);
+            OnVolumeChanged(); // Something might have changed it before this registered for the event.
+        }
+
+        public void OnVolumeChanged()
+        {
+            float minValue = volumeSlider.minValue;
+            float maxValue = volumeSlider.maxValue;
+            volumeSlider.SetValueWithoutNotify(minValue + manager.Volume * (maxValue - minValue));
+        }
+
         public void OnSliderValueChanged()
         {
             float minValue = volumeSlider.minValue;
