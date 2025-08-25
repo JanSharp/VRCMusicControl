@@ -20,6 +20,8 @@ This project uses [custom git filters](.gitattributes) to reduce the amount of n
   - Can sync its current default music automatically
   - There can be multiple MusicManager, but each MusicDescriptor can only be managed by one
   - Can be muted for the local player
+  - Volume value affecting MusicDescriptors managed by this manager
+- MusicVolumeSlider - A helper script to make a slider using the Volume API from the MusicManager
 - MusicDescriptor - a core script wrapping an AudioSource defining fade values, music start type and default priority
   - Can have its fade values changed at runtime
   - Can sync its current fade values automatically
