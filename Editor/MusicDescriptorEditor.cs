@@ -41,7 +41,9 @@ namespace JanSharp
             if (UdonSharpGUI.DrawDefaultUdonSharpBehaviourHeader(targets))
                 return;
             EditorGUILayout.Space();
-            base.OnInspectorGUI(); // draws public/serializable fields
+            serializedObject.Update();
+            DrawPropertiesExcluding(serializedObject, "m_Script");
+            serializedObject.ApplyModifiedProperties();
             EditorGUILayout.Space();
 
             EditorUtil.ConditionalButton(
