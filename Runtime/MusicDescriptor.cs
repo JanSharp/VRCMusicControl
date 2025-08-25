@@ -1,8 +1,8 @@
-﻿using UdonSharp;
+﻿using JetBrains.Annotations;
+using UdonSharp;
 using UnityEngine;
 using UnityEngine.Serialization;
 using VRC.SDKBase;
-using JetBrains.Annotations;
 
 namespace JanSharp
 {
@@ -142,6 +142,7 @@ namespace JanSharp
         [PublicAPI] public int Index => index;
         [HideInInspector][SerializeField] private AudioSource audioSource;
         [HideInInspector][SerializeField] private float maxVolume;
+        private float currentVolumeFraction;
         private float lastFadeInTime;
         private bool fadingIn;
         private float lastFadeOutTime;
@@ -282,6 +283,7 @@ namespace JanSharp
                 if (!isInitialized)
                 {
                     isInitialized = true;
+                    currentVolumeFraction = 0f;
                     audioSource.volume = 0;
                 }
                 if (isFirstPlay && startType == MusicStartType.GlobalTimeSinceFirstPlay)
@@ -306,15 +308,16 @@ namespace JanSharp
         {
             if (!fadingIn)
                 return;
-            float currentVolume = audioSource.volume;
-            float volumePerSecond = maxVolume / CurrentFadeInSeconds;
+            // float currentVolumeFraction = audioSource.volume;
+            // float scaledMaxVolume = maxVolume * manager.Volume;
+            float volumeFractionPerSecond = 1f / CurrentFadeInSeconds;
             float currentTime = Time.time;
             float deltaTime = currentTime - lastFadeInTime;
             lastFadeInTime = currentTime;
-            float step = volumePerSecond * deltaTime;
-            currentVolume = Mathf.Min(currentVolume + step, maxVolume);
-            audioSource.volume = currentVolume;
-            if (currentVolume == maxVolume)
+            float step = volumeFractionPerSecond * deltaTime;
+            currentVolumeFraction = Mathf.Min(currentVolumeFraction + step, 1f);
+            audioSource.volume = maxVolume * manager.Volume * currentVolumeFraction;
+            if (currentVolumeFraction == 1f)
             {
                 fadingIn = false;
                 return;
@@ -348,15 +351,14 @@ namespace JanSharp
         {
             if (!fadingOut)
                 return;
-            float currentVolume = audioSource.volume;
-            float volumePerSecond = maxVolume / FadeOutSeconds;
+            float volumeFractionPerSecond = 1f / FadeOutSeconds;
             float currentTime = Time.time;
             float deltaTime = currentTime - lastFadeOutTime;
             lastFadeOutTime = currentTime;
-            float step = volumePerSecond * deltaTime;
-            currentVolume = Mathf.Max(currentVolume - step, 0);
-            audioSource.volume = currentVolume;
-            if (currentVolume == 0)
+            float step = volumeFractionPerSecond * deltaTime;
+            currentVolumeFraction = Mathf.Max(currentVolumeFraction - step, 0);
+            audioSource.volume = maxVolume * manager.Volume * currentVolumeFraction;
+            if (currentVolumeFraction == 0f)
             {
                 fadingOut = false;
                 if (startType == MusicStartType.Pause)
@@ -366,6 +368,13 @@ namespace JanSharp
                 return;
             }
             SendCustomEventDelayedSeconds(nameof(InternalFadeOut), fadeOutInterval);
+        }
+
+        public void InternalUpdateVolume()
+        {
+            if (IsSilenceDescriptor || !isInitialized)
+                return;
+            audioSource.volume = maxVolume * manager.Volume * currentVolumeFraction;
         }
     }
 }

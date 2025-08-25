@@ -1,8 +1,8 @@
-﻿using UdonSharp;
+﻿using JetBrains.Annotations;
+using UdonSharp;
 using UnityEngine;
 using VRC.SDKBase;
 using VRC.Udon.Common;
-using JetBrains.Annotations;
 
 namespace JanSharp
 {
@@ -69,6 +69,20 @@ namespace JanSharp
             }
         }
         [UdonSynced] private int defaultMusicIndex;
+        [Range(0f, 1f)]
+        [SerializeField] private float volume = 1f;
+        [PublicAPI]
+        public float Volume
+        {
+            get => volume;
+            set
+            {
+                volume = Mathf.Clamp01(value);
+                if (currentlyPlaying == null)
+                    return;
+                currentlyPlaying.InternalUpdateVolume();
+            }
+        }
         [UdonSynced] private float syncedGlobalTime;
         private float globalStartTime = float.NaN;
         // Offset from Time.time to the proper start time (which is also in the Time.time scale) where music
