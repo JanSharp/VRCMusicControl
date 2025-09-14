@@ -6,3 +6,4 @@
 - [ ] Improve the readme
   - [ ] Explain how the "stack", which is more so a priority list, works
   - [ ] Maybe explain the differences between a silence descriptor, muting and volume of 0
+- [ ] Deactivate and reactivate audio sources when they stop playing, that is a performance improvement
