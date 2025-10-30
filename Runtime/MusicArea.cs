@@ -1,7 +1,7 @@
-﻿using UdonSharp;
+﻿using JetBrains.Annotations;
+using UdonSharp;
 using UnityEngine;
 using VRC.SDKBase;
-using JetBrains.Annotations;
 
 namespace JanSharp
 {
@@ -104,6 +104,11 @@ namespace JanSharp
             }
         }
 
+        [PublicAPI]
+        public int ResolvedPriority => UseDefaultPriority
+            ? MusicForThisArea.DefaultPriority
+            : Priority;
+
         [Tooltip("When enabled, all values above will be synced whenever they are changed on any client. "
             + "This setting does not affect the network impact of this script when the values are never "
             + "changed at runtime.")]
@@ -120,11 +125,29 @@ namespace JanSharp
         [UdonSynced] private uint syncedMusicIndex;
         [UdonSynced] private int syncedPriority;
 
+        [Tooltip("The count of trigger collider component(s) on this game object that overlap with all "
+            + "spawn points.\n"
+            + "Having a trigger collider overlap only some spawn points is not supported.")]
+        [Min(0f)]
+        [SerializeField] private int overlappingWithSpawnPoints = 0;
+
         private uint id;
         // To support having multiple trigger colliders on one object, as the enter and exit events get fired
         // for each collider on the object, so this keeps track of how many colliders the player is in.
         private int triggerCount;
         [PublicAPI] public bool IsInArea => triggerCount != 0;
+
+        public void InternalInitialize()
+        {
+            if (triggerCount == overlappingWithSpawnPoints)
+                return;
+            int prevTriggerCount = triggerCount;
+            triggerCount = overlappingWithSpawnPoints;
+            if (prevTriggerCount == 0 && IsActive)
+                AddMusicToManager();
+            else if (overlappingWithSpawnPoints == 0 && IsActive)
+                RemoveMusicFromManager();
+        }
 
         private void CheckSync()
         {

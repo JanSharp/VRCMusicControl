@@ -25,6 +25,7 @@ namespace JanSharp
         /// Must not modify this array, it is read only.
         /// </summary>
         [PublicAPI] public MusicDescriptor[] Descriptors => descriptors;
+        [SerializeField][HideInInspector] private MusicArea[] musicAreasAtSpawnPoints;
 #if ADVANCED_MUSIC_CONTROL
         [Header("The sync mode must either be Manual or None.", order = 0)]
         [Space(-8f, order = 1)]
@@ -252,9 +253,14 @@ namespace JanSharp
                     SendCustomEventDelayedSeconds(nameof(InternalGlobalStartTimeFallback), 15f);
             }
 
-            musicListCount++;
+            // musicListCount is 0 here. SetMusic is not going to start playing music yet,
+            // musicListCount would have to be 1 for it to do so.
             SetMusic(0, DefaultMusic, int.MinValue, nextMusicId++);
+            musicListCount++;
             defaultMusicIndex = GetMusicDescriptorIndex(DefaultMusic);
+            foreach (MusicArea musicArea in musicAreasAtSpawnPoints)
+                musicArea.InternalInitialize();
+            SwitchToTop(); // Now actually start playing. Needed for when musicAreasAtSpawnPoints.Length is 0.
         }
 
         /// <summary>

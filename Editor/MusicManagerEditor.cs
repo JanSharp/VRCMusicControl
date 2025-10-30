@@ -1,14 +1,29 @@
-using UnityEngine;
-using UnityEditor;
-using System.Linq;
 using System.Collections.Generic;
+using System.Linq;
+using UnityEditor;
+using UnityEngine;
 
 namespace JanSharp
 {
     [InitializeOnLoad]
     public static class MusicManagerOnBuild
     {
-        static MusicManagerOnBuild() => OnBuildUtil.RegisterType<MusicManager>(OnBuild);
+        public static Dictionary<MusicManager, List<MusicArea>> musicAreasAtSpawnPointsLut = new();
+
+        static MusicManagerOnBuild()
+        {
+            OnBuildUtil.RegisterAction(OnPreBuild, order: -1);
+            OnBuildUtil.RegisterType<MusicManager>(OnBuild, order: 0);
+            // MusicArea on build uses order 1.
+            OnBuildUtil.RegisterType<MusicManager>(OnPostBuild, order: 2);
+            OnBuildUtil.RegisterAction(OnPostBuildCleanup, order: 3);
+        }
+
+        private static bool OnPreBuild()
+        {
+            musicAreasAtSpawnPointsLut.Clear();
+            return true;
+        }
 
         private static bool OnBuild(MusicManager musicManager)
         {
@@ -90,6 +105,26 @@ namespace JanSharp
                 return false;
             }
 
+            return true;
+        }
+
+        private static bool OnPostBuild(MusicManager musicManager)
+        {
+            SerializedObject so = new SerializedObject(musicManager);
+            if (musicAreasAtSpawnPointsLut.TryGetValue(musicManager, out var areas))
+                EditorUtil.SetArrayProperty(
+                    so.FindProperty("musicAreasAtSpawnPoints"),
+                    areas.OrderByDescending(a => a.ResolvedPriority).ToList(),
+                    (p, v) => p.objectReferenceValue = v);
+            else
+                so.FindProperty("musicAreasAtSpawnPoints").arraySize = 0;
+            so.ApplyModifiedProperties();
+            return true;
+        }
+
+        private static bool OnPostBuildCleanup()
+        {
+            musicAreasAtSpawnPointsLut.Clear();
             return true;
         }
     }
