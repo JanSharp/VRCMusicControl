@@ -252,9 +252,23 @@ namespace JanSharp
                     SendCustomEventDelayedSeconds(nameof(InternalGlobalStartTimeFallback), 15f);
             }
 
-            musicListCount++;
+            // musicListCount is 0 here. SetMusic is not going to start playing music yet,
+            // musicListCount would have to be 1 for it to do so.
             SetMusic(0, DefaultMusic, int.MinValue, nextMusicId++);
+            musicListCount++;
             defaultMusicIndex = GetMusicDescriptorIndex(DefaultMusic);
+            // Start playing default musing a quarter of a second later, that way if there is a MusicArea at
+            // spawn and VRChat does raise a trigger enter event for it, that music starts playing rather than
+            // default music briefly starting and immediately fading out.
+            SendCustomEventDelayedSeconds(nameof(InternalInitializeDelayed), 0.25f);
+        }
+
+        /// <summary>
+        /// This is not public API, do not call this function.
+        /// </summary>
+        public void InternalInitializeDelayed()
+        {
+            SwitchToTop();
         }
 
         /// <summary>

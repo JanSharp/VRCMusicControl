@@ -43,7 +43,7 @@ This project uses [custom git filters](.gitattributes) to reduce the amount of n
 # Limitations
 
 - Every script that has syncing should never be disabled. The MusicManager, MusicDescriptor and MusicArea scripts should not be disabled even when syncing is disabled. Note that MusicArea has its own IsActive field
-- There mustn't be a MusicArea at the spawn point of the world, the system wouldn't get the on player trigger enter event (I'm quite certain)
+- MusicAreas can be at spawn point(s), and VRChat might raise a trigger enter event for them so they might work in VRChat, you would have to test. However in client sim (in the unity editor), it is not going to work regardless
 - Each MusicDescriptor can only have 1 AudioSource and each MusicManager can only have 1 MusicDescriptor currently playing. This is a limitation which both significantly simplifies the implementation and encourages people to have fewer audio sources for music active at the same time which is also a performance improvement. However there are times where multiple audio sources are totally necessary to achieve certain effects, like having music and ambiance, in which case using multiple MusicManagers would be required. Note that an object can have multiple MusicArea components, and they can have differing sync settings
 
 # Documentation
