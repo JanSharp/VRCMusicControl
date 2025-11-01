@@ -1,6 +1,21 @@
 
 # Changelog
 
+## [1.2.3] - 2025-11-01
+
+### Changed
+
+- Improve readme just ever so slightly ([`fb20788`](https://github.com/JanSharp/VRCMusicControl/commit/fb2078866b6f6aa51ba11e8d9b4450489d19c331))
+- Improve performance of MusicDescriptors which were active in the past due to a VRChat issue ([`2afce43`](https://github.com/JanSharp/VRCMusicControl/commit/2afce43d951275467310ebb5e08eea867ed9dcb8))
+
+### Added
+
+- Add potential support for MusicAreas at spawn points, at least within VRChat ([`c19bdfc`](https://github.com/JanSharp/VRCMusicControl/commit/c19bdfcce48092c8ce93d1874bcec9c82147ea5d))
+
+### Removed
+
+- Remove the note of an idea for volume sliders, because it's implemented ([`cf8df29`](https://github.com/JanSharp/VRCMusicControl/commit/cf8df29fd0653da56be32b36fc9ff104fe2ddef7))
+
 ## [1.2.2] - 2025-08-25
 
 ### Changed
@@ -227,6 +242,7 @@ _First version of this package that is in the VCC listing._
 - Add concept of a music stack, used by trigger zones which change music ([`3c33f1d`](https://github.com/JanSharp/VRCMusicControl/commit/3c33f1d1b8cf1bc5da6cb86c8ca8d8fdebf58822), [`eb6ebd3`](https://github.com/JanSharp/VRCMusicControl/commit/eb6ebd399a66753a392cf45b57a4b6eda4267dd5), [`ec5a4c7`](https://github.com/JanSharp/VRCMusicControl/commit/ec5a4c762d25ae5e80ec96be3ada19906f506722), [`4211fe2`](https://github.com/JanSharp/VRCMusicControl/commit/4211fe2ad233802a516cb3560102a5c5a4721b84), [`b4707fb`](https://github.com/JanSharp/VRCMusicControl/commit/b4707fbeed41edfc805a1fd94c6d80befc1648f5), [`9f72b56`](https://github.com/JanSharp/VRCMusicControl/commit/9f72b56ece6257f22cd21710a65ababbcf5d360d))
 - Add script to change default music ([`c5f49d9`](https://github.com/JanSharp/VRCMusicControl/commit/c5f49d9a0fbd3eff0578b1d8afe69f0165c05c64))
 
+[1.2.3]: https://github.com/JanSharp/VRCMusicControl/releases/tag/v1.2.3
 [1.2.2]: https://github.com/JanSharp/VRCMusicControl/releases/tag/v1.2.2
 [1.2.1]: https://github.com/JanSharp/VRCMusicControl/releases/tag/v1.2.1
 [1.2.0]: https://github.com/JanSharp/VRCMusicControl/releases/tag/v1.2.0
