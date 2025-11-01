@@ -364,6 +364,11 @@ namespace JanSharp
                 if (startType == MusicStartType.Pause)
                     pausedTimeSamples = audioSource.timeSamples;
                 audioSource.Stop();
+                // VRChat has permanent performance cost for each AudioSource which has played audio, even if
+                // it has stopped playing. Disabling and reenabling the AudioSource or deactivating and
+                // activating the GameObject removes this permanent performance hit.
+                audioSource.enabled = false;
+                audioSource.enabled = true;
                 isPlaying = false;
                 return;
             }
