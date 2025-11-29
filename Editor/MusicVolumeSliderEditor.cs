@@ -4,7 +4,6 @@ using UdonSharpEditor;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
-using VRC.Udon;
 
 namespace JanSharp
 {
@@ -38,29 +37,13 @@ namespace JanSharp
             float minValue = musicVolumeSlider.VolumeSlider.minValue;
             float maxValue = musicVolumeSlider.VolumeSlider.maxValue;
             sliderSo.FindProperty("m_Value").floatValue = minValue + musicVolumeSlider.Manager.Volume * (maxValue - minValue);
-            SetupOnValueChangedListener(musicVolumeSlider, sliderSo);
+            EditorUtil.EnsureHasPersistentSendCustomEventListener(
+                sliderSo.FindProperty("m_OnValueChanged"),
+                UdonSharpEditorUtility.GetBackingUdonBehaviour(musicVolumeSlider),
+                nameof(MusicVolumeSlider.OnSliderValueChanged));
             sliderSo.ApplyModifiedProperties();
 
             return true;
-        }
-
-        private static void SetupOnValueChangedListener(MusicVolumeSlider musicVolumeSlider, SerializedObject sliderSo)
-        {
-            SerializedProperty onValueChangedProperty = sliderSo.FindProperty("m_OnValueChanged");
-            UdonBehaviour udonBehaviour = UdonSharpEditorUtility.GetBackingUdonBehaviour(musicVolumeSlider);
-
-            if (EditorUtil.HasCustomEventListener(
-                onValueChangedProperty,
-                udonBehaviour,
-                nameof(MusicVolumeSlider.OnSliderValueChanged)))
-            {
-                return;
-            }
-
-            EditorUtil.AddPersistentSendCustomEventListener(
-                onValueChangedProperty,
-                udonBehaviour,
-                nameof(MusicVolumeSlider.OnSliderValueChanged));
         }
     }
 
