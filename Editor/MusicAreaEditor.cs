@@ -1,7 +1,7 @@
-﻿using UnityEngine;
-using UnityEditor;
+﻿using System.Linq;
 using UdonSharpEditor;
-using System.Linq;
+using UnityEditor;
+using UnityEngine;
 
 namespace JanSharp
 {
@@ -33,6 +33,9 @@ namespace JanSharp
         private SerializedProperty priorityProp;
         private SerializedProperty syncCurrentMusicAndPriorityProp;
 
+        private static GUIContent priorityLabel = new GUIContent("Priority");
+        private static GUIContent useDefaultLabel = new GUIContent("Use Default");
+
         private void OnEnable()
         {
             isActiveProp = serializedObject.FindProperty("isActive");
@@ -48,25 +51,60 @@ namespace JanSharp
                 return;
             EditorGUILayout.Space();
 
-            // Intentionally not using this, as I want the 'default priority' label in the middle of the props
-            // base.OnInspectorGUI(); // draws public/serializable fields
+            serializedObject.Update();
 
             EditorGUILayout.PropertyField(isActiveProp);
             EditorGUILayout.PropertyField(musicForThisAreaProp);
-            EditorGUILayout.PropertyField(useDefaultPriorityProp);
-
-            var defaultPriorities = targets.Cast<MusicArea>()
-                .Select(a => a.MusicForThisArea?.DefaultPriority ?? null)
-                .GroupBy(p => p)
-                .ToList();
-            if (defaultPriorities.Count > 1 || defaultPriorities.First().Key != null)
-                EditorGUILayout.LabelField($"Default Priority from Music Descriptor: "
-                    + (defaultPriorities.Count > 1 ? "Mixed" : defaultPriorities.First().Key.ToString()));
-
-            EditorGUILayout.PropertyField(priorityProp);
+            DrawPriority();
             EditorGUILayout.PropertyField(syncCurrentMusicAndPriorityProp);
 
             serializedObject.ApplyModifiedProperties();
+        }
+
+        private bool TryGetDefaultPriority(out int priority)
+        {
+            bool result = false;
+            priority = 0;
+            foreach (MusicArea target in targets.Cast<MusicArea>())
+            {
+                if (target.MusicForThisArea == null)
+                    continue;
+                if (result && priority != target.MusicForThisArea.DefaultPriority)
+                    return false;
+                result = true;
+                priority = target.MusicForThisArea.DefaultPriority;
+            }
+            return result;
+        }
+
+        private void DrawPriority()
+        {
+            Rect rect = EditorGUILayout.GetControlRect(hasLabel: true, EditorGUIUtility.singleLineHeight);
+
+            bool cannotEditPriority = useDefaultPriorityProp.hasMultipleDifferentValues || useDefaultPriorityProp.boolValue;
+            using (var priorityScope = new EditorGUI.PropertyScope(rect, priorityLabel, priorityProp))
+            using (new EditorGUI.DisabledScope(cannotEditPriority))
+            {
+                EditorGUI.PrefixLabel(rect, priorityScope.content);
+                rect.x += EditorGUIUtility.labelWidth;
+                Rect rightRect = rect;
+                rightRect.x += 90f;
+                if (!cannotEditPriority)
+                    EditorGUI.PropertyField(rightRect, priorityProp, GUIContent.none);
+                else
+                {
+                    int defaultPriority = 0;
+                    EditorGUI.showMixedValue = useDefaultPriorityProp.hasMultipleDifferentValues
+                        || !TryGetDefaultPriority(out defaultPriority);
+                    EditorGUI.IntField(rightRect, defaultPriority);
+                }
+            }
+
+            rect.width = 90f;
+            using var useDefaultScope = new EditorGUI.PropertyScope(rect, useDefaultLabel, useDefaultPriorityProp);
+            EditorGUI.PrefixLabel(rect, useDefaultScope.content);
+            rect.x += 70f;
+            EditorGUI.PropertyField(rect, useDefaultPriorityProp, GUIContent.none);
         }
     }
 }
