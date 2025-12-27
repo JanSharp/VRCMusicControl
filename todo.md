@@ -8,4 +8,4 @@
   - [ ] Maybe explain the differences between a silence descriptor, muting and volume of 0
 - [x] Deactivate and reactivate audio sources when they stop playing, that is a performance improvement
 - [ ] Add support for non looped descriptors
-- [ ] Add support for synced playback of a music descriptor specifically... or maybe just some kind of
+- [ ] Add support for synced playback of a music descriptor specifically... or maybe just some kind of standalone synced audio
