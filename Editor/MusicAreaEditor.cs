@@ -5,10 +5,10 @@ using UnityEngine;
 
 namespace JanSharp
 {
-    [InitializeOnLoad]
     public static class MusicAreaOnBuild
     {
-        static MusicAreaOnBuild() => OnBuildUtil.RegisterType<MusicArea>(OnBuild);
+        [OrderedInitializeOnLoad]
+        private static void OnAssemblyLoad() => OnBuildUtil.RegisterType<MusicArea>(OnBuild);
 
         private static bool OnBuild(MusicArea musicArea)
         {

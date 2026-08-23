@@ -1,14 +1,14 @@
-using UnityEngine;
-using UnityEditor;
 using System.Linq;
+using UnityEditor;
+using UnityEngine;
 
 namespace JanSharp
 {
-    [InitializeOnLoad]
     public static class TimeBasedMusicBaseOnBuild
     {
         // Uses order 1 in order to run after all MusicDescriptors have been assigned the MusicManager.
-        static TimeBasedMusicBaseOnBuild()
+        [OrderedInitializeOnLoad]
+        private static void OnAssemblyLoad()
             => OnBuildUtil.RegisterType<TimeBasedMusicBase>(OnBuild, 1);
 
         private static bool Validate(

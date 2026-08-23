@@ -1,12 +1,12 @@
-using UnityEngine;
 using UnityEditor;
+using UnityEngine;
 
 namespace JanSharp
 {
-    [InitializeOnLoad]
     public static class BasicMusicControlTimerUIOnBuild
     {
-        static BasicMusicControlTimerUIOnBuild()
+        [OrderedInitializeOnLoad]
+        private static void OnAssemblyLoad()
             => OnBuildUtil.RegisterType<BasicMusicControlTimerUI>(OnBuild);
 
         private static bool OnBuild(BasicMusicControlTimerUI basicMusicControlTimerUI)

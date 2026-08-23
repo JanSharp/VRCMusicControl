@@ -7,10 +7,10 @@ using VRC.SDK3.Components;
 
 namespace JanSharp
 {
-    [InitializeOnLoad]
     public static class MusicDescriptorOnBuild
     {
-        static MusicDescriptorOnBuild() => OnBuildUtil.RegisterType<MusicDescriptor>(OnBuild);
+        [OrderedInitializeOnLoad]
+        private static void OnAssemblyLoad() => OnBuildUtil.RegisterType<MusicDescriptor>(OnBuild);
 
         private static bool OnBuild(MusicDescriptor musicDescriptor)
         {

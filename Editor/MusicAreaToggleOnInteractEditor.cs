@@ -1,12 +1,12 @@
-using UnityEngine;
 using UnityEditor;
+using UnityEngine;
 
 namespace JanSharp
 {
-    [InitializeOnLoad]
     public static class MusicAreaToggleOnInteractOnBuild
     {
-        static MusicAreaToggleOnInteractOnBuild()
+        [OrderedInitializeOnLoad]
+        private static void OnAssemblyLoad()
             => OnBuildUtil.RegisterType<MusicAreaToggleOnInteract>(OnBuild);
 
         private static bool OnBuild(MusicAreaToggleOnInteract musicAreaToggleOnInteract)

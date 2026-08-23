@@ -1,14 +1,14 @@
-using UnityEngine;
-using UnityEditor;
-using System.Linq;
 using System.Collections.Generic;
+using System.Linq;
+using UnityEditor;
+using UnityEngine;
 
 namespace JanSharp
 {
-    [InitializeOnLoad]
     public static class MusicManagerOnBuild
     {
-        static MusicManagerOnBuild() => OnBuildUtil.RegisterType<MusicManager>(OnBuild);
+        [OrderedInitializeOnLoad]
+        private static void OnAssemblyLoad() => OnBuildUtil.RegisterType<MusicManager>(OnBuild);
 
         private static bool OnBuild(MusicManager musicManager)
         {

@@ -1,13 +1,12 @@
-using UnityEngine;
-using UnityEditor;
 using System.Linq;
+using UnityEngine;
 
 namespace JanSharp
 {
-    [InitializeOnLoad]
     public static class ChangeMusicAreaOnInteractOnBuild
     {
-        static ChangeMusicAreaOnInteractOnBuild()
+        [OrderedInitializeOnLoad]
+        private static void OnAssemblyLoad()
             => OnBuildUtil.RegisterType<ChangeMusicAreaOnInteract>(OnBuild);
 
         private static bool OnBuild(ChangeMusicAreaOnInteract changeMusicAreaOnInteract)

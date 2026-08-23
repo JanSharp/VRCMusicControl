@@ -7,10 +7,10 @@ using UnityEngine.UI;
 
 namespace JanSharp
 {
-    [InitializeOnLoad]
     public static class MusicVolumeSliderOnBuild
     {
-        static MusicVolumeSliderOnBuild() => OnBuildUtil.RegisterType<MusicVolumeSlider>(OnBuild);
+        [OrderedInitializeOnLoad]
+        private static void OnAssemblyLoad() => OnBuildUtil.RegisterType<MusicVolumeSlider>(OnBuild);
 
         private static bool OnBuild(MusicVolumeSlider musicVolumeSlider)
         {

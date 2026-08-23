@@ -1,12 +1,12 @@
-using UnityEngine;
 using UnityEditor;
+using UnityEngine;
 
 namespace JanSharp
 {
-    [InitializeOnLoad]
     public static class BasicTimeBasedMusicOnBuild
     {
-        static BasicTimeBasedMusicOnBuild()
+        [OrderedInitializeOnLoad]
+        private static void OnAssemblyLoad()
             => OnBuildUtil.RegisterType<BasicTimeBasedMusic>(OnBuild);
 
         private static bool OnBuild(BasicTimeBasedMusic basicTimeBasedMusic)
