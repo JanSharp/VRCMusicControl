@@ -1,6 +1,14 @@
 
 # Changelog
 
+## [1.2.4] - 2026-08-23
+
+### Changed
+
+- Update `com.jansharp.common` dependency to 1.4.0 ([`ef75f96`](https://github.com/JanSharp/VRCMusicControl/commit/ef75f96e0a5870e4b4e9d9fa7a64cdcfa84ccd85))
+- Improve the Music Area inspector for priority ([`b061ab5`](https://github.com/JanSharp/VRCMusicControl/commit/b061ab5af2982329440ff8c11cff6bb0d98bed9c))
+- No longer use a deprecated function from com.jansharp.common ([`f244da9`](https://github.com/JanSharp/VRCMusicControl/commit/f244da9c629f0957b2c4c8d75f9282c9a5246e8d))
+
 ## [1.2.3] - 2025-11-01
 
 ### Changed
@@ -242,6 +250,7 @@ _First version of this package that is in the VCC listing._
 - Add concept of a music stack, used by trigger zones which change music ([`3c33f1d`](https://github.com/JanSharp/VRCMusicControl/commit/3c33f1d1b8cf1bc5da6cb86c8ca8d8fdebf58822), [`eb6ebd3`](https://github.com/JanSharp/VRCMusicControl/commit/eb6ebd399a66753a392cf45b57a4b6eda4267dd5), [`ec5a4c7`](https://github.com/JanSharp/VRCMusicControl/commit/ec5a4c762d25ae5e80ec96be3ada19906f506722), [`4211fe2`](https://github.com/JanSharp/VRCMusicControl/commit/4211fe2ad233802a516cb3560102a5c5a4721b84), [`b4707fb`](https://github.com/JanSharp/VRCMusicControl/commit/b4707fbeed41edfc805a1fd94c6d80befc1648f5), [`9f72b56`](https://github.com/JanSharp/VRCMusicControl/commit/9f72b56ece6257f22cd21710a65ababbcf5d360d))
 - Add script to change default music ([`c5f49d9`](https://github.com/JanSharp/VRCMusicControl/commit/c5f49d9a0fbd3eff0578b1d8afe69f0165c05c64))
 
+[1.2.4]: https://github.com/JanSharp/VRCMusicControl/releases/tag/v1.2.4
 [1.2.3]: https://github.com/JanSharp/VRCMusicControl/releases/tag/v1.2.3
 [1.2.2]: https://github.com/JanSharp/VRCMusicControl/releases/tag/v1.2.2
 [1.2.1]: https://github.com/JanSharp/VRCMusicControl/releases/tag/v1.2.1
