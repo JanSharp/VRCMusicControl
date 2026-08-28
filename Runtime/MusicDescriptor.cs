@@ -2,6 +2,7 @@
 using UdonSharp;
 using UnityEngine;
 using UnityEngine.Serialization;
+using VRC.SDK3.UdonNetworkCalling;
 using VRC.SDKBase;
 
 namespace JanSharp
@@ -259,6 +260,7 @@ namespace JanSharp
         /// <para>Does not do any syncing.</para>
         /// </summary>
         [PublicAPI]
+        [NetworkCallable]
         public void Reset()
         {
             isFirstPlay = true;
